@@ -22,3 +22,5 @@
 /node_modules
 
 docker_volumes/
+
+config/secrets\.yml
