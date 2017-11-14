@@ -1,0 +1,38 @@
+version: '2'
+services:
+  db:
+    container_name: runners_bikers_db
+    image: mysql
+    env_file: .env_docker_compose
+    ports:
+      - '33306:3306'
+    volumes:
+      - './docker_volumes/db:/var/lib/mysql'
+#  redis:
+#    container_name: spchains_redis
+#    image: 'redis:3.2-alpine'
+#    ports:
+#      - '26379:6379'
+#  nosql:
+#    image: mongo
+#    container_name: spchains_mongo
+#    volumes:
+#      - './docker_volumes/nosql:/data/db'
+#    ports:
+#      - '27017:27017'
+#  app:
+#    build: .
+#    command: rails server --port 3000 --binding 0.0.0.0
+#    volumes:
+#      - '.:/usr/share/www'
+#    ports:
+#      - '3000:3000'
+#    env_file: .env_docker_compose
+#    links:
+#      - db
+#      - redis
+#      - nosql
+#    depends_on:
+#      - db
+#      - redis
+#      - nosql
