@@ -24,3 +24,6 @@
 docker_volumes/
 
 config/secrets\.yml
+
+# Ignore encrypted secrets key file.
+config/secrets.yml.key
