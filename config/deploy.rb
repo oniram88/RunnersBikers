@@ -24,7 +24,7 @@ set :deploy_to, "/home/marinobonetti/hosting_mio/RunnerBikers"
 append :linked_files, "config/database.yml" ,"config/secrets.yml.key"#, "config/secrets.yml"
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "node_modules"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
