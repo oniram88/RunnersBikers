@@ -76,3 +76,4 @@ gem 'omniauth-facebook'
 gem 'strava-api-v3'
 gem "pundit"
 gem "rolify"
+gem "js-routes"

@@ -10,6 +10,7 @@ import App from '../app.vue'
 import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
+import axios from 'axios'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -28,6 +29,11 @@ new Vuex.Store({
     // }
   }
 })
+
+
+let token = document.getElementsByName('csrf-token')[0].getAttribute('content');
+axios.defaults.headers.common['X-CSRF-Token'] = token;
+axios.defaults.headers.common['Accept'] = 'application/json';
 
 
 

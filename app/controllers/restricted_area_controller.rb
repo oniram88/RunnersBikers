@@ -9,7 +9,15 @@ class RestrictedAreaController < ApplicationController
   private
 
   def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    redirect_to(request.referrer || root_path)
+    respond_to do |f|
+      f.json {
+        render json: { success: false, error: 'Unauthorized' }, status: :unauthorized
+      }
+      f.html {
+        flash[:alert] = "You are not authorized to perform this action."
+        redirect_to(request.referrer || root_path)
+      }
+    end
+
   end
 end

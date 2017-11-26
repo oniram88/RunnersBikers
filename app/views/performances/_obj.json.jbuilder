@@ -1,0 +1,1 @@
+json.(obj, *obj.attribute_names)

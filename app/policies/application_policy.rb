@@ -15,7 +15,7 @@ class ApplicationPolicy
   end
 
   def create?
-    false
+    user.is_admin? or is_mine?
   end
 
   def new?
@@ -23,7 +23,7 @@ class ApplicationPolicy
   end
 
   def update?
-    false
+    user.is_admin? or is_mine?
   end
 
   def edit?
@@ -31,7 +31,16 @@ class ApplicationPolicy
   end
 
   def destroy?
-    false
+    user.is_admin? or is_mine?
+  end
+
+  # Metodo standard per controllare se il record mi appartiene
+  def is_mine?
+    if record.persisted?
+      scope.include?(record.id)
+    else
+      record.user_id==user.id
+    end
   end
 
   def scope
