@@ -24,11 +24,16 @@
 #
 
 class User < ApplicationRecord
+  rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, omniauth_providers: [:strava, :facebook]
+
+  after_create :assign_default_role
+
+
 
 
   def self.from_omniauth(auth)
@@ -56,6 +61,11 @@ class User < ApplicationRecord
       # uncomment the line below to skip the confirmation emails.
       #user.skip_confirmation!
     end
+  end
+
+  private
+  def assign_default_role
+    self.add_role(:newuser) if self.roles.blank?
   end
 
 end

@@ -74,3 +74,5 @@ gem 'devise-bootstrapped', github: 'king601/devise-bootstrapped', branch: 'boots
 gem 'omniauth-strava'
 gem 'omniauth-facebook'
 gem 'strava-api-v3'
+gem "pundit"
+gem "rolify"
