@@ -1,7 +1,7 @@
 class DashboardController < RestrictedAreaController
 
-  def index
-
+  def main
+    authorize :dashboard
   end
 
 end
