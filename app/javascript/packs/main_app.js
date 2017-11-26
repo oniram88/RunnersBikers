@@ -8,8 +8,28 @@
 import Vue from 'vue'
 import App from '../app.vue'
 import BootstrapVue from 'bootstrap-vue'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
+Vue.use(Vuex);
+Vue.use(VueRouter);
+
+
+new Vuex.Store({
+  state: {
+    // count: 0
+  },
+  mutations: {
+    // increment (state) {
+    //   state.count++
+    // }
+  }
+})
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(document.createElement('main_app'))
