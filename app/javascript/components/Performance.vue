@@ -8,25 +8,34 @@
     <b-form @submit.prevent="onSubmit">
 
 
-      <b-form-group label="Distanza:">
+      <b-form-group label="Distanza:"
+                    :state="distance_state"
+                    :feedback="distance_feedback">
         <b-form-input type="number" v-model="form.distance" required
                       placeholder="Inserisci la distanza in Km"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Ritmo Medio:">
-        <b-form-input type="text" v-model="form.pace" required
+      <b-form-group label="Ritmo Medio:"
+                    :state="pace_state"
+                    :validated="show_errors"
+                    :feedback="pace_feedback">
+        <b-form-input type="text"
+                      :state="pace_state"
+                      v-model="form.pace" required
                       placeholder="Inserisci il ritmo in m/km 00:00"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Dislivello Positivo:">
+      <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
+                    :feedback="positive_gain_feedback">
         <b-form-input type="number" v-model="form.positive_gain" required
                       placeholder="Dislivello in m"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Url sito:">
+      <b-form-group label="Url sito:" :state="url_state"
+                    :feedback="url_feedback">
         <b-form-input type="text" v-model="form.url" required
                       placeholder="Url della prestazione"
         ></b-form-input>
@@ -51,6 +60,7 @@
 <script>
 
   import axios from 'axios'
+  import {mapStateFeedbackListCmp} from '../packs/helpers'
 
   export default {
     data: function () {
@@ -65,10 +75,14 @@
           count_down: 0,
           type: 'success',
           message: 'Performance inserita correttamente'
-        }
+        },
+        errors: {},
+        show_errors:false
       }
     },
-    computed: {},
+    computed: {
+      ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url')
+    },
     methods: {
       dismiss_success_CountDown(counter) {
         this.callback_message.count_down = counter;
@@ -84,6 +98,9 @@
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';
           }
+          me.errors = ris.data.errors;
+          me.show_errors=true;
+
           me.callback_message.count_down = 3;
           console.log(ris);
 
