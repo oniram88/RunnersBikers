@@ -48,7 +48,8 @@
 
 
       <b-button type="submit" variant="primary">Salva</b-button>
-      <b-button type="reset" variant="secondary">Reset</b-button>
+      <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
+      </b-button>
     </b-form>
 
     <b-alert :show="callback_message.count_down"
@@ -89,7 +90,12 @@
       }
     },
     computed: {
-      ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url')
+      ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url'),
+
+      reset_disabled() {
+        return this.$route.params.id;
+      }
+
     },
     watch: {
       // call again the method if the route changes

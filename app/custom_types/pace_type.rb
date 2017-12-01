@@ -10,12 +10,14 @@ class PaceType < ActiveRecord::Type::Value
   def deserialize(value)
     if value.is_a?(String)
       to_seconds(value)
+    elsif value.is_a?(Integer)
+      "%02d:%02d" % value.divmod(60)
     else
       super
     end
   end
 
-  def serialize(value) # value here is a StringInquiry
+  def serialize(value) # value here is a String
     to_seconds(value)
   end
 
