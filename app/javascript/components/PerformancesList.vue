@@ -78,6 +78,11 @@
             label: 'Dislivello Positivo'
           },
           {
+            key: 'points',
+            sortable: true,
+            label: 'Punti'
+          },
+          {
             key: 'url',
             sortable: false,
             label: 'Link Prestazione'
