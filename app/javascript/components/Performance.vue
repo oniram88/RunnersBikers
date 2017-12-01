@@ -4,7 +4,9 @@
 </style>
 
 <template>
-  <div>
+
+  <b-card title="Nuova Prestazione" class="mb-12">
+
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
 
 
@@ -45,7 +47,7 @@
       </b-form-group>
 
 
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="submit" variant="primary">Salva</b-button>
       <b-button type="reset" variant="secondary">Reset</b-button>
     </b-form>
 
@@ -56,7 +58,7 @@
              @dismiss-count-down="dismiss_success_CountDown">
       {{callback_message.message}}
     </b-alert>
-  </div>
+  </b-card>
 
 </template>
 
@@ -99,6 +101,7 @@
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
+            me.$router.push({ name: 'performance_list'});
           } else {
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';

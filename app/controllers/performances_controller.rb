@@ -5,7 +5,7 @@ class PerformancesController < RestrictedAreaController
 
 
   def index
-    policy_scope(Performance).where(user_id: @user_id)
+    @objs = policy_scope(Performance).where(user: @user).order(:created_at)
   end
 
   def create
