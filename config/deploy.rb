@@ -21,7 +21,7 @@ set :deploy_to, "/home/marinobonetti/hosting_mio/RunnerBikers"
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml" ,"config/secrets.yml.key"#, "config/secrets.yml"
+append :linked_files, "config/database.yml" ,"config/secrets.yml"#, "config/secrets.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "node_modules"
