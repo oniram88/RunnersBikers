@@ -1,7 +1,7 @@
 class PerformancesController < RestrictedAreaController
 
   before_action :load_user
-  before_action :load_obj, only: [:update, :destroy]
+  before_action :load_obj, only: [:show,:update, :destroy]
 
 
   def index
@@ -18,6 +18,7 @@ class PerformancesController < RestrictedAreaController
   end
 
   def update
+    authorize(@obj)
     @operation_result = @obj.update_attributes(clear_params)
     respond_to do |f|
       f.json
@@ -25,10 +26,15 @@ class PerformancesController < RestrictedAreaController
   end
 
   def destroy
+    authorize(@obj)
     @operation_result = @obj.destroy
     respond_to do |f|
       f.json
     end
+  end
+
+  def show
+
   end
 
 

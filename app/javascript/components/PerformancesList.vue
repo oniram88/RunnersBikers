@@ -68,6 +68,11 @@
             label: 'Distanza'
           },
           {
+            key: 'pace',
+            sortable: false,
+            label: 'Ritmo'
+          },
+          {
             key: 'positive_gain',
             sortable: true,
             label: 'Dislivello Positivo'

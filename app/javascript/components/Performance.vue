@@ -69,6 +69,8 @@
 
   export default {
     data: function () {
+
+
       return {
         form: {
           distance: null,
@@ -89,19 +91,44 @@
     computed: {
       ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url')
     },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'load_data'
+    },
+    created() {
+      this.load_data();
+    },
     methods: {
+      load_data() {
+        if (this.$route.params.id) {
+          this.onReset();
+          axios.get(Routes.performance_path(this.$route.params.id)).then(ris => {
+            console.log(ris);
+            this.form = ris.data;
+          });
+        }
+      },
       dismiss_success_CountDown(counter) {
         this.callback_message.count_down = counter;
       },
       onSubmit(evt) {
         const me = this;
-        axios.post(Routes.performances_path(), this.form
-        ).then(ris => {
+
+        let make_action = null;
+
+        if (this.$route.params.id) {
+          make_action = axios.put(Routes.performance_path(this.$route.params.id), this.form);
+        } else {
+          make_action = axios.post(Routes.performances_path(), this.form);
+        }
+
+
+        make_action.then(ris => {
           if (ris.data.success) {
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
-            me.$router.push({ name: 'performance_list'});
+            me.$router.push({name: 'performance_list'});
           } else {
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';
@@ -120,6 +147,8 @@
         this.form.pace = null;
         this.form.positive_gain = null;
         this.form.url = null;
+        this.errors = {};
+        this.show_errors = false;
         // Trick to reset/clear native browser form validation state
         this.show = false;
         this.$nextTick(() => {
