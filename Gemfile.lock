@@ -118,6 +118,8 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
+    i18n-debug (1.1.0)
+      i18n (< 1)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -289,6 +291,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise
   devise-bootstrapped!
+  i18n-debug
   jbuilder (~> 2.5)
   js-routes
   listen (>= 3.0.5, < 3.2)

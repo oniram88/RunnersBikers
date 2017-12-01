@@ -20,10 +20,10 @@ class Performance < ApplicationRecord
 
   attribute :pace, :pace, default: '00:00'
 
-  validates :distance, presence: true, numericality: { greater_than: 0 }
-  validates :pace, presence: true #, format: /([0-9]+):([0-9]+)/
+  validates :distance, presence: true, numericality: { greater_than: 0,less_than_or_equal_to: 9999.9999 }
+  validates :pace, presence: true, format: PaceType.reg_exp
   validates :positive_gain, presence: true, numericality: { greater_than: 0, only_integer: true }
-  validates :url, :presence => true, uniqueness: true
+  validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//
 
 
 end

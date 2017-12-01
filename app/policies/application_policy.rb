@@ -37,7 +37,7 @@ class ApplicationPolicy
   # Metodo standard per controllare se il record mi appartiene
   def is_mine?
     if record.persisted?
-      scope.include?(record.id)
+      scope.exists?(record.id)
     else
       record.user_id==user.id
     end

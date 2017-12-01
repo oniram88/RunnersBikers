@@ -1,11 +1,11 @@
 class PerformancesController < RestrictedAreaController
 
   before_action :load_user
-  before_action :load_obj, only: [:update, :destroy]
+  before_action :load_obj, only: [:show,:update, :destroy]
 
 
   def index
-    policy_scope(Performance).where(user_id: @user_id)
+    @objs = policy_scope(Performance).where(user: @user).order(:created_at)
   end
 
   def create
@@ -18,6 +18,7 @@ class PerformancesController < RestrictedAreaController
   end
 
   def update
+    authorize(@obj)
     @operation_result = @obj.update_attributes(clear_params)
     respond_to do |f|
       f.json
@@ -25,10 +26,15 @@ class PerformancesController < RestrictedAreaController
   end
 
   def destroy
+    authorize(@obj)
     @operation_result = @obj.destroy
     respond_to do |f|
       f.json
     end
+  end
+
+  def show
+
   end
 
 

@@ -16,9 +16,10 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <b-nav-item to="/new_performance" >Nuova Prestazione
+          <b-nav-item :to="{name:'performance_list'}" >Lista Prestazioni
           </b-nav-item>
-          <b-nav-item href="#/new_performance">Disabled</b-nav-item>
+          <b-nav-item :to="{name:'new_performance'}" >Nuova Prestazione
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -60,11 +61,28 @@
 
   import VueRouter from 'vue-router'
   import Performance from 'components/Performance.vue'
+  import PerformancesList from 'components/PerformancesList.vue'
   import logo from './images/logo_mini.jpg'
 
   const router = new VueRouter({
     routes: [
-      {path: '/new_performance', component: Performance}
+      {
+        path: '/performances',
+        name:'performance_list',
+        component: PerformancesList,
+        children:[
+          {
+            path: 'new',
+            name:'new_performance',
+            component: Performance
+          },
+          {
+            path: ':id/edit',
+            name:'performance_edit',
+            component: Performance
+          }
+        ]
+      }
     ] // short for `routes: routes`
   });
 
@@ -79,7 +97,8 @@
       }
     },
     components: {
-      Performance
+      Performance,
+      PerformancesList
     }
   }
 </script>

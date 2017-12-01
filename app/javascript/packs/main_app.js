@@ -12,12 +12,19 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '../styles/style.scss';
+
+import {icon} from 'vue-fontawesome';
 
 Vue.use(BootstrapVue);
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
+Vue.component('vf-icon', icon);
+
+import moment from 'moment';
+moment.locale('it');
 
 new Vuex.Store({
   state: {
@@ -34,7 +41,6 @@ new Vuex.Store({
 let token = document.getElementsByName('csrf-token')[0].getAttribute('content');
 axios.defaults.headers.common['X-CSRF-Token'] = token;
 axios.defaults.headers.common['Accept'] = 'application/json';
-
 
 
 document.addEventListener('DOMContentLoaded', () => {

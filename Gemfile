@@ -77,3 +77,4 @@ gem 'strava-api-v3'
 gem "pundit"
 gem "rolify"
 gem "js-routes"
+gem 'i18n-debug'
