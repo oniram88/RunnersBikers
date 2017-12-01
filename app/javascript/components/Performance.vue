@@ -13,7 +13,7 @@
       <b-form-group label="Distanza:"
                     :state="distance_state"
                     :feedback="distance_feedback">
-        <b-form-input type="number" v-model="form.distance" required
+        <b-form-input type="text" v-model="form.distance" required
                       :state="distance_state"
                       placeholder="Inserisci la distanza in Km"
         ></b-form-input>
@@ -31,7 +31,7 @@
 
       <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
                     :feedback="positive_gain_feedback">
-        <b-form-input type="number" v-model="form.positive_gain"
+        <b-form-input type="text" v-model="form.positive_gain"
                       required
                       :state="positive_gain_state"
                       placeholder="Dislivello in m"

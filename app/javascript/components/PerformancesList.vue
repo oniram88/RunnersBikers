@@ -93,6 +93,10 @@
     created: function () {
       this.load_performances();
     },
+    watch: {
+      // call again the method if the route changes
+      '$route': 'load_performances'
+    },
     computed: {
       total_distance() {
         _.sumBy(this.items, 'distance');
@@ -104,12 +108,13 @@
     methods: {
       load_performances() {
         axios.get(Routes.performances_path()).then(ris => {
-          console.log(ris);
           this.items = ris.data;
         })
       },
       destroy(id) {
-        console.log(id);
+        axios.delete(Routes.performance_path(id)).then(ris=>{
+          this.load_performances();
+        })
       }
     }
 
