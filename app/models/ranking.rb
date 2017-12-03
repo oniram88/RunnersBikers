@@ -21,6 +21,8 @@
 #  image                  :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  rank                   :float(24)
+#  total_points           :integer          default(0)
 #
 
 #

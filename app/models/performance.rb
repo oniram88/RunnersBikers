@@ -27,6 +27,8 @@ class Performance < ApplicationRecord
   validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//
   before_save :update_points
 
+  after_save :update_user_points_rank
+
 
   # PUNTEGGIO = 100 x ( D + d/100 ) / r
   # Con 	D = distanza in km
@@ -40,6 +42,11 @@ class Performance < ApplicationRecord
   private
   def update_points
     self.points = calculate_points
+  end
+
+  def update_user_points_rank
+    self.user.update_points
+    self.user.update_rank
   end
 
 end

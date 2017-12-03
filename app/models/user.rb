@@ -21,6 +21,8 @@
 #  image                  :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  rank                   :float(24)
+#  points                 :integer          default(0)
 #
 
 class User < ApplicationRecord
@@ -32,6 +34,7 @@ class User < ApplicationRecord
          :omniauthable #, omniauth_providers: [:strava, :facebook]
 
   validates :rank, :presence => true, numericality: { greater_than: 0 }
+  validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
 
   after_create :assign_default_role
   before_validation :set_rank
@@ -63,6 +66,18 @@ class User < ApplicationRecord
       # If you are using confirmable and the provider(s) you use validate emails,
       # uncomment the line below to skip the confirmation emails.
       #user.skip_confirmation!
+    end
+  end
+
+  def update_points
+    self.update_attributes(total_points: self.performances.sum(:points))
+  end
+
+  def update_rank
+    counter = 1
+    User.order(:total_points => :desc).each do |u|
+      u.update_attributes(rank: counter)
+      counter += 1
     end
   end
 
