@@ -31,10 +31,6 @@
 class Ranking < User
 
 
-  def total_points
-    performances.sum(:points)
-  end
-
   def total_distance
     performances.sum(:distance)
   end
