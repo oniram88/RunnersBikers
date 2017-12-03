@@ -9,13 +9,15 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand href="#">
+      <b-navbar-brand href="#/">
         <img :src="logo" class="d-inline-block align-top" alt="Runners Bikers">
       </b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
+          <b-nav-item :to="{name:'ranking'}" >Classifica
+          </b-nav-item>
           <b-nav-item :to="{name:'performance_list'}" >Lista Prestazioni
           </b-nav-item>
           <b-nav-item :to="{name:'new_performance'}" >Nuova Prestazione
@@ -62,6 +64,7 @@
   import VueRouter from 'vue-router'
   import Performance from 'components/Performance.vue'
   import PerformancesList from 'components/PerformancesList.vue'
+  import Ranking from 'components/Ranking.vue'
   import logo from './images/logo_mini.jpg'
 
   const router = new VueRouter({
@@ -82,6 +85,12 @@
             component: Performance
           }
         ]
+      },
+      {
+        path:'/ranking',
+        alias:'/',
+        name:'ranking',
+        component: Ranking
       }
     ] // short for `routes: routes`
   });
@@ -98,7 +107,8 @@
     },
     components: {
       Performance,
-      PerformancesList
+      PerformancesList,
+      Ranking
     }
   }
 </script>

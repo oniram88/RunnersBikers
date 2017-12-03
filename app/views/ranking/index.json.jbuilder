@@ -1,0 +1,1 @@
+json.array! @objs, partial: 'obj', as: :obj

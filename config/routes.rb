@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
 
-
   devise_for :users, :controllers => {
     :omniauth_callbacks => "users/omniauth_callbacks",
     registrations: "registrations",
@@ -15,6 +14,8 @@ Rails.application.routes.draw do
   resources :users, only: [:performances] do
     resources :performances
   end
+
+  resources :ranking, only: [:index]
 
 
   root to: 'dashboard#main'
