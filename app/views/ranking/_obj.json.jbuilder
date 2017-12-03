@@ -1,1 +1,1 @@
-json.(obj, :email, :total_points, :total_distance, :total_positive_gain)
+json.(obj, :email, :rank, :total_points, :total_distance, :total_positive_gain)

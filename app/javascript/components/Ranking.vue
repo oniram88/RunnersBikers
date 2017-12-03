@@ -64,11 +64,6 @@
       load_ranking() {
         axios.get(Routes.ranking_index_path()).then(ris => {
           this.items = ris.data;
-          let rank=1;
-          _.each(_.reverse(_.sortBy(this.items, el=>el.total_points)),el=>{
-            el.rank=rank;
-            rank+=1;
-          });
         })
       }
     }
