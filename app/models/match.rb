@@ -12,4 +12,34 @@
 #
 
 class Match < ApplicationRecord
+
+
+  belongs_to :challenged, :class_name => "User"
+  belongs_to :challenger, :class_name => "User"
+
+  validates :status, :challenged, :challenger, :points, :presence => true
+
+  before_validation :set_defaults
+
+  validate :correct_rank_position
+
+  enum status: {
+    wait: 0,
+    finish: 1,
+    timeout: 2
+  }
+
+
+  private
+  def set_defaults
+    self.status = :wait if self.status.nil?
+  end
+
+  def correct_rank_position
+
+    self.errors.add(:challenged, :to_low_in_rank) if self.challenger.rank - 3 > self.challenged.rank
+    self.errors.add(:challenged, :to_high_in_rank) if self.challenger.rank + 3 < self.challenged.rank
+
+  end
+
 end

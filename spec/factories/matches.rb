@@ -13,9 +13,8 @@
 
 FactoryBot.define do
   factory :match do
-    challenged_id 1
-    challenger_id 1
-    status 1
-    points 1
+    challenged { create(:user) }
+    challenger { create(:user) }
+    points 100
   end
 end
