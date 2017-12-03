@@ -66,7 +66,7 @@
           this.items = ris.data;
           let rank=1;
           _.each(_.reverse(_.sortBy(this.items, el=>el.total_points)),el=>{
-            el.rank=rank; 
+            el.rank=rank;
             rank+=1;
           });
         })

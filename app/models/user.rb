@@ -31,11 +31,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable #, omniauth_providers: [:strava, :facebook]
 
-  after_create :assign_default_role
+  validates :rank, :presence => true, numericality: { greater_than: 0 }
 
+  after_create :assign_default_role
+  before_validation :set_rank
 
   has_many :performances
-
 
 
   def self.from_omniauth(auth)
@@ -51,10 +52,10 @@ class User < ApplicationRecord
           user.api_token = auth.credentials.token
 
         when :facebook
-          user.first_name= auth.info.first_name
-          user.last_name=auth.info.last_name
-          user.image=auth.info.image
-          user.api_token=auth.credentials.token
+          user.first_name = auth.info.first_name
+          user.last_name = auth.info.last_name
+          user.image = auth.info.image
+          user.api_token = auth.credentials.token
         else
           raise auth.inspect
       end
@@ -68,6 +69,10 @@ class User < ApplicationRecord
   private
   def assign_default_role
     self.add_role(:newuser) if self.roles.blank?
+  end
+
+  def set_rank
+    self.rank = User.count + 1 if self.rank.blank?
   end
 
 end

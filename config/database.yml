@@ -15,11 +15,11 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: root
+  port: 33306
+  host: '0.0.0.0'
 
 development:
   <<: *default
-  port: 33306
-  host: '0.0.0.0'
   database: runners_bikers_development
 
 # Warning: The database defined as "test" will be erased and
