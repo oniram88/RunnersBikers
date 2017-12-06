@@ -18,5 +18,15 @@ Rails.application.routes.draw do
   resources :ranking, only: [:index]
 
 
+  namespace :api do
+    crud :rankings
+    # Mount OpenAPI specification for API
+    mount_openapi_specification name: :default
+  end
+
+  # Mount Swagger UI documentation for API
+  mount_openapi_documentation
+
+
   root to: 'dashboard#main'
 end
