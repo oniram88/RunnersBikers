@@ -39,4 +39,8 @@ class Ranking < User
     performances.sum(:positive_gain)
   end
 
+  def max_lose_points
+    (total_points*0.25).to_i
+  end
+
 end

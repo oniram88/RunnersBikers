@@ -70,15 +70,23 @@ class User < ApplicationRecord
   end
 
   def update_points
-    self.update_attributes(total_points: self.performances.sum(:points))
+    self.update_attributes(total_points: self.performances.reload.sum(:points))
   end
 
-  def update_rank
+  def self.update_rank
     counter = 1
     User.order(:total_points => :desc).each do |u|
       u.update_attributes(rank: counter)
       counter += 1
     end
+  end
+
+  def machable(user)
+    return false if user.id == self.id
+    if self.rank - 3 > user.rank or self.rank + 3 < user.rank
+      return false
+    end
+    return true
   end
 
   private

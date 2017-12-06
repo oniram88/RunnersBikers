@@ -46,7 +46,7 @@ class Performance < ApplicationRecord
 
   def update_user_points_rank
     self.user.update_points
-    self.user.update_rank
+    User.update_rank
   end
 
 end

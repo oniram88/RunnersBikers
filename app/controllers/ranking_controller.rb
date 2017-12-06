@@ -1,7 +1,7 @@
 class RankingController < RestrictedAreaController
 
   def index
-    @objs = policy_scope(Ranking)
+    @objs = policy_scope(Ranking).order(:rank)
   end
 
 end
