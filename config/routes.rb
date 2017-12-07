@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :ranking, only: [:index]
+  resources :matches, only: [:create]
 
 
   root to: 'dashboard#main'

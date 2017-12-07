@@ -12,6 +12,7 @@
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
     "vue": "^2.5.3",
+    "vue-bootstrap-slider": "^1.1.1",
     "vue-fontawesome": "^0.0.2",
     "vue-loader": "^13.5.0",
     "vue-router": "^3.0.1",

@@ -1,4 +1,4 @@
-class PerformancesController < RestrictedAreaController
+class PerformancesController < ApiController
 
   before_action :load_user
   before_action :load_obj, only: [:show,:update, :destroy]

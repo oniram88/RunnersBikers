@@ -11,15 +11,19 @@ import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import axios from 'axios'
+import bFormSlider from 'vue-bootstrap-slider';
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../styles/style.scss';
+import 'bootstrap-slider/dist/css/bootstrap-slider.css';
 
 import {icon} from 'vue-fontawesome';
 
 Vue.use(BootstrapVue);
 Vue.use(Vuex);
 Vue.use(VueRouter);
+Vue.use(bFormSlider);
+
 
 Vue.component('vf-icon', icon);
 

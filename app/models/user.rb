@@ -40,6 +40,7 @@ class User < ApplicationRecord
   before_validation :set_rank
 
   has_many :performances
+  has_many :matches_as_challenger, class_name: 'Match', foreign_key: :challenger_id
 
 
   def self.from_omniauth(auth)

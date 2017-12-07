@@ -903,6 +903,10 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bootstrap-slider@^9.8.0:
+  version "9.10.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-slider/-/bootstrap-slider-9.10.0.tgz#1103d6bc00cfbfa8cfc9a2599ab518c55643da3f"
+
 bootstrap-vue@^1.2.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-1.3.0.tgz#48545238035644aed1652b905f925ef1c82ec314"
@@ -5386,6 +5390,12 @@ vm-browserify@0.0.4:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
+
+vue-bootstrap-slider@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue-bootstrap-slider/-/vue-bootstrap-slider-1.1.1.tgz#b1b6616b471295591b4395bb77d687753953d723"
+  dependencies:
+    bootstrap-slider "^9.8.0"
 
 vue-fontawesome@^0.0.2:
   version "0.0.2"

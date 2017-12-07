@@ -1,8 +1,11 @@
 <style scoped lang="scss">
-  .create_match_btn{
+  .create_match_btn {
     cursor: pointer;
   }
 
+  .slider_width /deep/ .slider.slider-horizontal {
+    width: 400px;
+  }
 
 </style>
 
@@ -13,13 +16,15 @@
              :fields="fields"
     >
       <template slot="actions" slot-scope="data">
-        <b-button @click="show_modal(data.item)" v-if="data.item.machable" target="_blank" class="create_match_btn">
+        <b-button @click="show_modal(data.item)" v-if="data.item.machable"
+                  target="_blank" class="create_match_btn">
           <vf-icon icon="fort-awesome"/>
         </b-button>
       </template>
     </b-table>
 
-    <b-modal title="Nuovo match" ref="modal_match" @ok="invio_match">
+    <b-modal title="Nuovo match" ref="modal_match" @ok="invio_match"
+             @cancel="reset_match">
 
 
       <b-form>
@@ -27,12 +32,16 @@
         <b-form-group label="Punti:">
           <b-form-input
                   type="number"
-                  v-model="match.points"
-                  :max="match.max_lose_points"
-                  @change="check_min_value(match.max_lose_points,arguments[0])"
+                  readonly
+                  :value="match.points"
                   required
                   placeholder="Inserisci i punti da rubare">
           </b-form-input>
+          <b-form-slider class="slider_width" :min="1"
+                         tooltip="always"
+                         :max="match.max_lose_points"
+                         :step="100"
+                         v-model="match.points"/>
         </b-form-group>
 
       </b-form>
@@ -53,6 +62,7 @@
       return {
         match: {
           points: 0,
+          challenged_id: null,
           max_lose_points: 100
         },
         items: [],
@@ -106,13 +116,14 @@
         if (max < parseInt(value)) {
           this.match.points = max;
         }
-        if (parseInt(value)<0) {
+        if (parseInt(value) < 0) {
           this.match.points = 0;
         }
       },
       show_modal(dati) {
         console.log(dati);
         this.match.max_lose_points = dati.max_lose_points;
+        this.match.challenged_id = dati.id;
         this.$refs.modal_match.show();
       },
       load_ranking() {
@@ -120,8 +131,15 @@
           this.items = ris.data;
         })
       },
-      invio_match(){
+      invio_match() {
         console.log(this.match.points);
+        axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
+          console.log(ris);
+        });
+      },
+      reset_match() {
+        this.match.points = 0;
+        this.match.challenged_id = null;
       }
     }
 
