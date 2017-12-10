@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171203214412) do
+ActiveRecord::Schema.define(version: 20171210213755) do
 
   create_table "matches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "challenged_id"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20171203214412) do
     t.datetime "updated_at", null: false
     t.integer "rank"
     t.integer "total_points", default: 0
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

@@ -21,8 +21,9 @@
 #  image                  :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  rank                   :float(24)
-#  points                 :integer          default(0)
+#  rank                   :integer
+#  total_points           :integer          default(0)
+#  username               :string(255)
 #
 
 class User < ApplicationRecord
@@ -35,6 +36,7 @@ class User < ApplicationRecord
 
   validates :rank, :presence => true, numericality: { greater_than: 0 }
   validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
+  validates :username, :presence => { allow_blank: false }, uniqueness: true
 
   after_create :assign_default_role
   before_validation :set_rank
@@ -88,6 +90,14 @@ class User < ApplicationRecord
       return false
     end
     return true
+  end
+
+  def set_as_judge
+    self.add_role(:judge)
+  end
+
+  def to_s(format: "%{username}")
+    format % self.attributes.deep_symbolize_keys
   end
 
   private
