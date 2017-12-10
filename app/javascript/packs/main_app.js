@@ -8,7 +8,6 @@
 import Vue from 'vue'
 import App from '../app.vue'
 import BootstrapVue from 'bootstrap-vue'
-import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import bFormSlider from 'vue-bootstrap-slider';
@@ -20,7 +19,6 @@ import 'bootstrap-slider/dist/css/bootstrap-slider.css';
 import {icon} from 'vue-fontawesome';
 
 Vue.use(BootstrapVue);
-Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(bFormSlider);
 
@@ -29,17 +27,6 @@ Vue.component('vf-icon', icon);
 
 import moment from 'moment';
 moment.locale('it');
-
-new Vuex.Store({
-  state: {
-    // count: 0
-  },
-  mutations: {
-    // increment (state) {
-    //   state.count++
-    // }
-  }
-})
 
 
 let token = document.getElementsByName('csrf-token')[0].getAttribute('content');
@@ -52,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue(App).$mount('main_app')
 
   console.log(app)
-})
+});
 
 
 // The above code uses Vue without the compiler, which means you cannot

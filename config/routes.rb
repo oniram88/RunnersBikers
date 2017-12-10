@@ -19,5 +19,10 @@ Rails.application.routes.draw do
   resources :matches, only: [:create]
 
 
+  resource :base_infos, only: [:current_user] do
+    get :actual_user
+  end
+
+
   root to: 'dashboard#main'
 end

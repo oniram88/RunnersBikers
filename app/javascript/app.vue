@@ -16,11 +16,11 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <b-nav-item :to="{name:'ranking'}" >Classifica
+          <b-nav-item :to="{name:'ranking'}">Classifica
           </b-nav-item>
-          <b-nav-item :to="{name:'performance_list'}" >Lista Prestazioni
+          <b-nav-item :to="{name:'performance_list'}">Lista Prestazioni
           </b-nav-item>
-          <b-nav-item :to="{name:'new_performance'}" >Nuova Prestazione
+          <b-nav-item :to="{name:'new_performance'}">Nuova Prestazione
           </b-nav-item>
         </b-navbar-nav>
 
@@ -61,35 +61,65 @@
 
 <script>
 
+  import Vue from 'vue'
+  import axios from 'axios'
   import VueRouter from 'vue-router'
+  import Vuex from 'vuex'
   import Performance from 'components/Performance.vue'
   import PerformancesList from 'components/PerformancesList.vue'
   import Ranking from 'components/Ranking.vue'
   import logo from './images/logo_mini.jpg'
 
+  Vue.use(Vuex);
+
+  const store = new Vuex.Store({
+    state: {
+      user_id: null,
+      user_roles: []
+    },
+    mutations: {
+      set_current_user(state, user) {
+        console.log(state, user);
+        state.user_id = user.user_id;
+        state.user_roles = user.roles;
+        //   state.count++
+      }
+    }
+  });
+
+
+  axios.get(Routes.actual_user_base_infos_path({format: 'json'})).then(ris => {
+    store.commit('set_current_user', ris.data);
+  });
+
   const router = new VueRouter({
     routes: [
       {
         path: '/performances',
-        name:'performance_list',
+        name: 'performance_list',
         component: PerformancesList,
-        children:[
+        children: [
           {
             path: 'new',
-            name:'new_performance',
+            name: 'new_performance',
             component: Performance
           },
           {
             path: ':id/edit',
-            name:'performance_edit',
+            name: 'performance_edit',
             component: Performance
           }
         ]
       },
       {
-        path:'/ranking',
-        alias:'/',
-        name:'ranking',
+        path: 'users/:user_id/performances',
+        name: 'user_performance_list',
+        component: PerformancesList,
+      },
+      {
+        path: '/ranking',
+        alias: '/',
+        name: 'ranking',
         component: Ranking
       }
     ] // short for `routes: routes`
@@ -97,11 +127,12 @@
 
   export default {
     router,
+    store,
     data: function () {
       return {}
     },
-    computed:{
-      logo(){
+    computed: {
+      logo() {
         return logo;
       }
     },
