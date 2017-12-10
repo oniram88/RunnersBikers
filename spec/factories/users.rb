@@ -21,8 +21,9 @@
 #  image                  :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  rank                   :float(24)
+#  rank                   :integer
 #  total_points           :integer          default(0)
+#  username               :string(255)
 #
 
 FactoryBot.define do
