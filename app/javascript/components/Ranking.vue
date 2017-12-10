@@ -128,7 +128,10 @@
       },
       load_ranking() {
         axios.get(Routes.ranking_index_path()).then(ris => {
-          this.items = ris.data;
+          this.items = _.map(ris.data, ele => {
+            ele._rowVariant = (ele.challanged ? 'warning' : 'default');
+            return ele;
+          });
         })
       },
       invio_match() {

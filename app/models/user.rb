@@ -43,7 +43,7 @@ class User < ApplicationRecord
 
   has_many :performances
   has_many :matches_as_challenger, class_name: 'Match', foreign_key: :challenger_id
-
+  has_many :matches_as_challenged, class_name: 'Match', foreign_key: :challenged_id
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -84,11 +84,17 @@ class User < ApplicationRecord
     end
   end
 
+  def open_matches
+    matches_as_challenger.wait + matches_as_challenged.wait
+  end
+
   def machable(user)
+    return false if user.total_points == 0
     return false if user.id == self.id
     if self.rank - 3 > user.rank or self.rank + 3 < user.rank
       return false
     end
+    return false if self.open_matches.length > 0
     return true
   end
 
