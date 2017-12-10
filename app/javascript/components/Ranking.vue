@@ -73,9 +73,9 @@
             sortable: true
           },
           {
-            key: 'email',
+            key: 'username',
             sortable: true,
-            label: 'Email'
+            label: 'Utente'
           },
           {
             key: 'total_points',
