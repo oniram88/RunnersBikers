@@ -20,6 +20,13 @@
                   target="_blank" class="create_match_btn">
           <vf-icon icon="fort-awesome"/>
         </b-button>
+        <b-button
+                v-authorize:user.show_performances?="data.item.id"
+                :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
+                v-if="data.item.machable"
+                class="create_match_btn">
+          <vf-icon icon="list"/>
+        </b-button>
       </template>
     </b-table>
 

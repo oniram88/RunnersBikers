@@ -4,5 +4,9 @@ class UserPolicy < ApplicationPolicy
     user == record
   end
 
+  def show_performances?
+    user.is_judge?
+  end
+
 
 end
