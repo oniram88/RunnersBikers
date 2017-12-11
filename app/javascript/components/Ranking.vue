@@ -26,6 +26,7 @@
                   target="_blank" class="create_match_btn">
           <vf-icon icon="fort-awesome"/>
         </b-button>
+
       </template>
     </b-table>
 

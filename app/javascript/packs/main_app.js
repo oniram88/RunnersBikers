@@ -11,7 +11,7 @@ import BootstrapVue from 'bootstrap-vue'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import bFormSlider from 'vue-bootstrap-slider';
-import SimpleAuthorize from '../../../../VueSimpleAuthorize/VueSimpleAuthorize.js';
+import SimpleAuthorize from 'vue_simple_authorize';
 import auth from './authorizations.js';
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
