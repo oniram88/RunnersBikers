@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get :actual_user
   end
 
+  get '/authorizations/:object(/:id)/:auth_action' => 'authorizations#check', as: 'authorization_request'
+
 
   root to: 'dashboard#main'
 end

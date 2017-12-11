@@ -11,6 +11,8 @@ import BootstrapVue from 'bootstrap-vue'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import bFormSlider from 'vue-bootstrap-slider';
+import SimpleAuthorize from 'vue_simple_authorize';
+import auth from './authorizations.js';
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../styles/style.scss';
@@ -21,11 +23,13 @@ import {icon} from 'vue-fontawesome';
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(bFormSlider);
+Vue.use(new SimpleAuthorize, {authorizations: auth});
 
 
 Vue.component('vf-icon', icon);
 
 import moment from 'moment';
+
 moment.locale('it');
 
 
