@@ -27,11 +27,14 @@
 
       <template slot="actions" slot-scope="data">
         <b-button target="" variant="info"
+                  v-authorize:performance.update?="data.item.id"
                   :to="{name:'performance_edit',params:{id:data.item.id}}">
           <vf-icon icon="pencil"/>
         </b-button>
-        <b-button :disabled="!data.item.destroyable" target="" variant="danger"
-                  class="destroy_obj" @click="destroy(data.item.id)">
+        <b-button
+                v-authorize:performance.destroy?="data.item.id"
+                :disabled="!data.item.destroyable" target="" variant="danger"
+                class="destroy_obj" @click="destroy(data.item.id)">
           <vf-icon icon="trash"/>
         </b-button>
       </template>
@@ -112,12 +115,19 @@
     },
     methods: {
       load_performances() {
-        axios.get(Routes.performances_path()).then(ris => {
+
+        let path = Routes.performances_path();
+
+        if (this.$route.params.user_id) {
+          path = Routes.user_performances_path(this.$route.params.user_id);
+        }
+
+        axios.get(path).then(ris => {
           this.items = ris.data;
         })
       },
       destroy(id) {
-        axios.delete(Routes.performance_path(id)).then(ris=>{
+        axios.delete(Routes.performance_path(id)).then(ris => {
           this.load_performances();
         })
       }

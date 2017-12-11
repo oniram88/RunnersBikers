@@ -42,10 +42,10 @@
           <b-nav-item-dropdown right>
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <em>Utente</em>
+              <em>{{username}}</em>
             </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Signout</b-dropdown-item>
+            <!--<b-dropdown-item href="#">Profile</b-dropdown-item>-->
+            <b-dropdown-item :href="logout()">Signout</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
@@ -65,6 +65,7 @@
   import axios from 'axios'
   import VueRouter from 'vue-router'
   import Vuex from 'vuex'
+  import {mapState} from 'vuex'
   import Performance from 'components/Performance.vue'
   import PerformancesList from 'components/PerformancesList.vue'
   import Ranking from 'components/Ranking.vue'
@@ -75,13 +76,15 @@
   const store = new Vuex.Store({
     state: {
       user_id: null,
-      user_roles: []
+      user_roles: [],
+      username: null
     },
     mutations: {
       set_current_user(state, user) {
         console.log(state, user);
         state.user_id = user.user_id;
         state.user_roles = user.roles;
+        state.username = user.username;
         //   state.count++
       }
     }
@@ -112,7 +115,7 @@
         ]
       },
       {
-        path: 'users/:user_id/performances',
+        path: '/users/:user_id/performances',
         name: 'user_performance_list',
         component: PerformancesList,
       },
@@ -123,8 +126,8 @@
         component: Ranking
       },
       {
-        path:'*',
-        redirect:'/'
+        path: '*',
+        redirect: '/'
       }
     ] // short for `routes: routes`
   });
@@ -135,10 +138,18 @@
     data: function () {
       return {}
     },
+    methods: {
+      logout() {
+        return Routes.destroy_user_session_path();
+      }
+    },
     computed: {
       logo() {
         return logo;
-      }
+      },
+      ...mapState([
+        'username'
+      ])
     },
     components: {
       Performance,
