@@ -121,6 +121,10 @@
         alias: '/',
         name: 'ranking',
         component: Ranking
+      },
+      {
+        path:'*',
+        redirect:'/'
       }
     ] // short for `routes: routes`
   });
