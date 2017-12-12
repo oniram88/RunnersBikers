@@ -28,6 +28,7 @@ class Performance < ApplicationRecord
   before_save :update_points
 
   after_save :update_user_points_rank
+  after_save :check_match_data
 
 
   # PUNTEGGIO = 100 x ( D + d/100 ) / r
@@ -47,6 +48,17 @@ class Performance < ApplicationRecord
   def update_user_points_rank
     self.user.update_points
     User.update_rank
+  end
+
+  ##
+  # Si occupa di associare questa performance al match se attivo della persona
+  def check_match_data
+    if user.matches_as_challenger.wait.first
+      user.matches_as_challenger.wait.first.update_attributes(challenger_performance: self)
+    end
+    if user.matches_as_challenged.wait.first
+      user.matches_as_challenged.wait.first.update_attributes(challenged_performance: self)
+    end
   end
 
 end

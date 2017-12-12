@@ -73,6 +73,8 @@ RSpec.describe User, type: :model do
 
     end
 
+    it "user with active match"
+
 end
 
 

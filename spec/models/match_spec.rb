@@ -2,13 +2,16 @@
 #
 # Table name: matches
 #
-#  id            :integer          not null, primary key
-#  challenged_id :integer
-#  challenger_id :integer
-#  status        :integer
-#  points        :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id              :integer          not null, primary key
+#  challenged_id   :integer
+#  challenger_id   :integer
+#  status          :integer
+#  points          :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  challenger_p_id :integer
+#  challenged_p_id :integer
+#  judge_id        :integer
 #
 
 require 'rails_helper'
@@ -54,6 +57,27 @@ RSpec.describe Match, type: :model do
     expect(build(:match, challenger: challenger, challenged: userTOP)).not_to be_valid
     expect(build(:match, challenger: challenger, challenged: userBAD)).not_to be_valid
 
+
+  end
+
+  it "associazione automatica" do
+
+    m = create(:match)
+
+    expect(m.challenged_performance).to be_nil
+    expect(m.challenger_performance).to be_nil
+
+    expect {
+      expect {
+        create(:performance, user: m.challenger)
+        m.reload
+      }.to change(m, :challenger_performance)
+
+      expect {
+        create(:performance, user: m.challenged)
+        m.reload
+      }.to change(m, :challenged_performance)
+    }.to change(m, :status).from("wait").to("approval_waiting")
 
   end
 
