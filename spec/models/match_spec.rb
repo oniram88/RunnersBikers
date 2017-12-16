@@ -81,7 +81,7 @@ RSpec.describe Match, type: :model do
 
   end
 
-  it "approve"do
+  it "approve" do
     m = create(:completed_match)
 
     if m.challenged_performance.points > m.challenger_performance.points
@@ -103,7 +103,7 @@ RSpec.describe Match, type: :model do
 
   end
 
-  it "disapprove"do
+  it "disapprove" do
     m = create(:completed_match)
 
     expect {
@@ -132,6 +132,66 @@ RSpec.describe Match, type: :model do
 
     end
 
+    after(:each) do
+      Timecop.return
+    end
+
+    describe "out of time" do
+
+      it "nessuna performance" do
+
+        expect(@match.outdated?).to be_falsey
+
+        Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
+
+        expect {
+          expect {
+            expect(@match.outdated?).to be_truthy
+            Match.check_timeouts
+            @match.reload
+          }.to change(@match, :status).from('wait').to('timeout')
+        }.to change {
+          ActionMailer::Base.deliveries.count
+        }.by(3)
+
+      end
+
+      it "solo una performance dallo sfidante" do
+        Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
+
+        create(:performance, user: @sfidante)
+
+        expect {
+          expect {
+            expect {
+              Match.check_timeouts
+              @match.reload
+            }.to change(@match, :status).from('wait').to('timeout')
+          }.to change(@match, :winner).to(@sfidante)
+        }.to change {
+          ActionMailer::Base.deliveries.count
+        }.by(3)
+      end
+
+      it "solo una performance dallo sfidato" do
+        Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
+
+        create(:performance, user: @sfidato)
+
+        expect {
+          expect {
+            expect {
+              Match.check_timeouts
+              @match.reload
+            }.to change(@match, :status).from('wait').to('timeout')
+          }.to change(@match, :winner).to(@sfidato)
+        }.to change {
+          ActionMailer::Base.deliveries.count
+        }.by(3)
+      end
+
+    end
+
     it do
       expect(@match.expiration_date).to be == @inizio_sfida + RunnersBikers::MATCH_DURATION
     end
@@ -153,7 +213,7 @@ RSpec.describe Match, type: :model do
 
         em = ActionMailer::Base.deliveries.last
         expect(em.to).to include(@judge.email)
-        expect(em.body.encoded).to match('Performance conclusa')
+        expect(em.body.encoded).to match('Sfida conclusa')
       }.to change {
         ActionMailer::Base.deliveries.count
       }.by(1)

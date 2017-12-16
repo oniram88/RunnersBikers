@@ -34,7 +34,7 @@ class Match < ApplicationRecord
   validates :status, :challenged, :challenger, :points, :presence => true
   validates :judge, :presence => true, if: -> { approved? or disapproved? }
 
-  validates :looser, :winner, :presence => true, if: -> { approved? or timeout? }
+  validates :looser, :winner, :presence => true, if: -> { approved? or (timeout? and !(challenged_performance.nil? and challenger_performance.nil?)) }
 
   before_validation :set_defaults
 
@@ -63,15 +63,31 @@ class Match < ApplicationRecord
 
   def set_looser_winner
 
-    if challenged_performance.points > challenger_performance.points
-      self.winner = challenged
-      self.looser = challenger
-    else
-      self.winner = challenger
-      self.looser = challenged
+    if self.approved?
+      if challenged_performance.points > challenger_performance.points
+        self.winner = challenged
+        self.looser = challenger
+      else
+        self.winner = challenger
+        self.looser = challenged
+      end
+    end
+    if self.timeout?
+
+      if challenged_performance.nil? and !challenger_performance.nil?
+        self.winner = challenger
+        self.looser = challenged
+      end
+
+      if !challenged_performance.nil? and challenger_performance.nil?
+        self.winner = challenged
+        self.looser = challenger
+      end
+
     end
 
   end
+
   def set_looser_winner!
     set_looser_winner
     save!
@@ -92,11 +108,51 @@ class Match < ApplicationRecord
   ##
   # Disapprova il match
   def disapprove(judge)
+    #Per il momento sembra che non ci sia questa situazione
     return false unless judge.is_judge?
     self.judge = judge
     self.status = :disapproved
     save!
     email_notify_approve_disapprove
+  end
+
+  ##
+  # Controllo se il match è uscito dal tempo massimo
+  def outdated?
+    expiration_date < Time.now
+  end
+
+  ##
+  # Check per tutti i match in esecuzione se ci sono alcuni fuori tempo
+  def self.check_timeouts
+    self.wait.each do |m|
+      if m.outdated?
+        m.status = :timeout
+        m.set_looser_winner
+        m.save!
+        m.email_notify_outdated
+      end
+    end
+  end
+
+  def email_notify_creation
+    MatchNotifierMailer.notify_creation(self).deliver
+  end
+
+  def email_notify_approve_disapprove
+    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenger).deliver
+    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenged).deliver
+  end
+
+  def email_notify_outdated
+    MatchNotifierMailer.notify_outdated(self, to: :challenger).deliver
+    MatchNotifierMailer.notify_outdated(self, to: :challenged).deliver
+  end
+
+  def notify_judges
+    User.with_role(:judge).each do |j|
+      MatchNotifierMailer.notify_judge(self.reload, j).deliver
+    end
   end
 
   private
@@ -111,20 +167,7 @@ class Match < ApplicationRecord
 
   end
 
-  def email_notify_creation
-    MatchNotifierMailer.notify_creation(self).deliver
-  end
 
-  def email_notify_approve_disapprove
-    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenger).deliver
-    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenged).deliver
-  end
-
-  def notify_judges
-    User.with_role(:judge).each do |j|
-      MatchNotifierMailer.notify_judge(self.reload, j).deliver
-    end
-  end
 
   ##
   # Rispetto alla situazione del match cambia lo status

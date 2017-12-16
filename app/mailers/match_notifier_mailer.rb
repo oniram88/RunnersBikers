@@ -20,6 +20,16 @@ class MatchNotifierMailer < ApplicationMailer
 
   end
 
+  def notify_outdated(match,to: :challenged)
+
+    @match = match
+    mail(
+      to: @match.send(to).email,
+      subject: "Sfida Scaduta"
+    )
+
+  end
+
   def notify_judge(match,judge)
     @match = match
     mail(to: judge.email, subject: "Sfida #{@match.challenged} VS #{@match.challenger}")
