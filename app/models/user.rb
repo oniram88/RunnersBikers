@@ -106,6 +106,20 @@ class User < ApplicationRecord
     format % self.attributes.deep_symbolize_keys
   end
 
+  ##
+  # Valida il match
+  def approve(match)
+    return false unless self.is_judge?
+    match.approve(self)
+  end
+
+  ##
+  # Disapprova il match
+  def disapprove(match)
+    return false unless self.is_judge?
+    match.disapprove(self)
+  end
+
   private
   def assign_default_role
     self.add_role(:newuser) if self.roles.blank?

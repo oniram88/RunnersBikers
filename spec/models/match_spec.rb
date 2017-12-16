@@ -81,4 +81,117 @@ RSpec.describe Match, type: :model do
 
   end
 
+  it "approve"do
+    m = create(:completed_match)
+
+    if m.challenged_performance.points > m.challenger_performance.points
+      winner = m.challenged
+      looser = m.challenger
+    else
+      winner = m.challenger
+      looser = m.challenged
+    end
+
+    expect {
+      expect {
+        expect {
+          m.approve(create(:judge))
+          m.reload
+        }.to change(m, :winner).to(winner)
+      }.to change(m, :looser).to(looser)
+    }.to change(m, :status).from('approval_waiting').to('approved')
+
+  end
+
+  it "disapprove"do
+    m = create(:completed_match)
+
+    expect {
+      m.disapprove(create(:judge))
+      m.reload
+    }.to change(m, :status).from('approval_waiting').to('disapproved')
+
+  end
+
+  describe "generazione emails e cambi status del match" do
+
+
+    before(:each) do
+
+      @judge = create(:judge)
+
+      Timecop.freeze(Time.now)
+
+      @match = create(:match)
+
+      @inizio_sfida = @match.created_at
+
+      @sfidante = @match.challenger
+      @sfidato = @match.challenged
+
+
+    end
+
+    it do
+      expect(@match.expiration_date).to be == @inizio_sfida + RunnersBikers::MATCH_DURATION
+    end
+
+    it "emails di creazione" do
+
+      expect { create(:match) }
+        .to change {
+          ActionMailer::Base.deliveries.count
+        }.by(2)
+
+    end
+
+    it "performances create, invio email agli arbitri per validare" do
+
+      expect {
+        create(:performance, user: @sfidante)
+        create(:performance, user: @sfidato)
+
+        em = ActionMailer::Base.deliveries.last
+        expect(em.to).to include(@judge.email)
+        expect(em.body.encoded).to match('Performance conclusa')
+      }.to change {
+        ActionMailer::Base.deliveries.count
+      }.by(1)
+
+    end
+
+    it "performance validata" do
+
+      m = create(:completed_match)
+
+      expect(m).to be_approval_waiting
+
+      expect {
+        expect {
+          @judge.approve(m)
+        }.to change(m, :status).from('approval_waiting').to('approved')
+      }.to change {
+        ActionMailer::Base.deliveries.count
+      }.by(3) #una per giudice e le altre per i due challengers
+
+    end
+
+    it "performance non valida" do
+      m = create(:completed_match)
+
+      expect(m).to be_approval_waiting
+
+      expect {
+        expect {
+          @judge.disapprove(m)
+        }.to change(m, :status).from('approval_waiting').to('disapproved')
+      }.to change {
+        ActionMailer::Base.deliveries.count
+      }.by(3) #una per giudice e le altre per i due challengers
+
+    end
+
+
+  end
+
 end

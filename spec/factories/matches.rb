@@ -16,8 +16,19 @@
 
 FactoryBot.define do
   factory :match do
-    challenged { create(:user) }
-    challenger { create(:user) }
+    challenged { create(:user_with_points) }
+    challenger { create(:user_with_points) }
     points 100
+
+
+    factory :completed_match do
+
+      after(:create) do |m|
+        create(:performance, user: m.challenged)
+        create(:performance, user: m.challenger)
+        m.reload
+      end
+
+    end
   end
 end

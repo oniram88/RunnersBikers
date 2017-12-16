@@ -30,9 +30,21 @@ FactoryBot.define do
   factory :user do
 
     email { Faker::Internet.unique.email }
-    username {Faker::GameOfThrones.unique.character}
+    username { Faker::GameOfThrones.unique.character }
 
     after(:build) { |u| u.password_confirmation = u.password = Faker::Number.number(10) }
+
+    factory :judge do
+      after(:build) { |u| u.add_role(:judge) }
+    end
+
+    factory :user_with_points do
+      after(:create) do |u|
+        create_list(:performance, 3, user: u)
+      end
+
+    end
+
 
   end
 end

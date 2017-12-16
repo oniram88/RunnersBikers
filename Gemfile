@@ -45,6 +45,7 @@ group :development, :test do
   gem "factory_bot_rails", "~> 4.0"
   gem 'spring-commands-rspec'
   gem 'faker'
+  gem 'timecop'
 end
 
 group :development do

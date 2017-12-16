@@ -1,3 +1,1 @@
-<h2>Notifica Creazione nuova sfida</h2>
-
-<%= @match.challenger %> ha sfidato <%= @match.challenged %>
+<%= render partial: "judge_notify_#{@match.status}" %>

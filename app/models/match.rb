@@ -19,6 +19,10 @@ class Match < ApplicationRecord
 
   belongs_to :challenged, :class_name => "User"
   belongs_to :challenger, :class_name => "User"
+
+  belongs_to :looser, :class_name => "User", required: false
+  belongs_to :winner, :class_name => "User", required: false
+
   belongs_to :challenged_performance, :class_name => 'Performance',
              foreign_key: 'challenged_p_id', required: false
 
@@ -28,22 +32,26 @@ class Match < ApplicationRecord
   belongs_to :judge, class_name: 'User', required: false
 
   validates :status, :challenged, :challenger, :points, :presence => true
-  validates :judge, :presence => true, if: -> { finish? }
+  validates :judge, :presence => true, if: -> { approved? or disapproved? }
+
+  validates :looser, :winner, :presence => true, if: -> { approved? or timeout? }
 
   before_validation :set_defaults
 
   validate :correct_rank_position
 
-  after_create :email_notify
+  after_create :email_notify_creation
 
   after_save :change_status
+  after_save :check_status_change
 
 
   enum status: {
     wait: 0,
-    finish: 1,
+    approved: 1,
     timeout: 2,
-    approval_waiting: 3
+    approval_waiting: 3,
+    disapproved: 4
   }
 
 
@@ -52,6 +60,44 @@ class Match < ApplicationRecord
     self.created_at + RunnersBikers::MATCH_DURATION
   end
 
+
+  def set_looser_winner
+
+    if challenged_performance.points > challenger_performance.points
+      self.winner = challenged
+      self.looser = challenger
+    else
+      self.winner = challenger
+      self.looser = challenged
+    end
+
+  end
+  def set_looser_winner!
+    set_looser_winner
+    save!
+  end
+
+
+  ##
+  # Valida il match
+  def approve(judge)
+    return false unless judge.is_judge?
+    self.judge = judge
+    self.status = :approved
+    set_looser_winner
+    save!
+    email_notify_approve_disapprove
+  end
+
+  ##
+  # Disapprova il match
+  def disapprove(judge)
+    return false unless judge.is_judge?
+    self.judge = judge
+    self.status = :disapproved
+    save!
+    email_notify_approve_disapprove
+  end
 
   private
   def set_defaults
@@ -65,10 +111,18 @@ class Match < ApplicationRecord
 
   end
 
-  def email_notify
+  def email_notify_creation
     MatchNotifierMailer.notify_creation(self).deliver
+  end
+
+  def email_notify_approve_disapprove
+    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenger).deliver
+    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenged).deliver
+  end
+
+  def notify_judges
     User.with_role(:judge).each do |j|
-      MatchNotifierMailer.notify_judge(self, j).deliver
+      MatchNotifierMailer.notify_judge(self.reload, j).deliver
     end
   end
 
@@ -76,7 +130,14 @@ class Match < ApplicationRecord
   # Rispetto alla situazione del match cambia lo status
   def change_status
     if wait? and challenged_performance and challenger_performance
-      self.update_attributes(status: :approval_waiting)
+      self.approval_waiting!
+      notify_judges
+    end
+  end
+
+  def check_status_change
+    if saved_change_to_status?
+      notify_judges
     end
   end
 
