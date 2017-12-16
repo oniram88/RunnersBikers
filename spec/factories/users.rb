@@ -32,6 +32,9 @@ FactoryBot.define do
     email { Faker::Internet.unique.email }
     username { Faker::GameOfThrones.unique.character }
 
+    first_name { Faker::Name.unique.first_name }
+    last_name { Faker::Name.unique.last_name }
+
     after(:build) { |u| u.password_confirmation = u.password = Faker::Number.number(10) }
 
     factory :judge do

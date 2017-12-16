@@ -37,6 +37,7 @@ class User < ApplicationRecord
   validates :rank, :presence => true, numericality: { greater_than: 0 }
   validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
   validates :username, :presence => { allow_blank: false }, uniqueness: true
+  validates :first_name, :last_name, :presence => true
   validate :check_max_registration
 
   after_create :assign_default_role
@@ -132,7 +133,7 @@ class User < ApplicationRecord
 
   def check_max_registration
     if Time.now >= RunnersBikers::MAX_ISCRIZIONE
-      self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE,format: :short))
+      self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
     end
   end
 

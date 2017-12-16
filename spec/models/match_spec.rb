@@ -198,7 +198,12 @@ RSpec.describe Match, type: :model do
 
     it "emails di creazione" do
 
-      expect { create(:match) }
+      #creo fuori gli utenti altrimenti mi segna il conteggio dell'invio emails
+      # anche quelle di conferma degli utenti
+      u1 = create(:user)
+      u2 = create(:user)
+
+      expect { create(:match, challenger: u1, challenged: u2) }
         .to change {
           ActionMailer::Base.deliveries.count
         }.by(2)
