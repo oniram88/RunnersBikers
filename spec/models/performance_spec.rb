@@ -45,8 +45,11 @@ RSpec.describe Performance, type: :model do
   end
 
   it "oltre termine" do
-    Timecom.freeze(RunnersBikers::MAX_PERFORMANCE_INSERT) do
-      expect(build(:performance)).not_to be_valid
+    Timecop.freeze(RunnersBikers::MAX_ISCRIZIONE - 10.days) do
+      @user = create(:user)
+      Timecop.freeze(RunnersBikers::MAX_PERFORMANCE_INSERT) do
+        expect(build(:performance, :user => @user)).not_to be_valid
+      end
     end
   end
 

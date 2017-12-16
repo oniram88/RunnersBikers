@@ -65,7 +65,7 @@ class Performance < ApplicationRecord
   ##
   # Definizione del tempo massimo di inserimento della performance
   def max_insert_time
-    if created_at >= RunnersBikers::MAX_PERFORMANCE_INSERT
+    if Time.now >= RunnersBikers::MAX_PERFORMANCE_INSERT
       self.errors.add(:created_at, :challenger_expired, max_time: RunnersBikers::MAX_PERFORMANCE_INSERT)
     end
   end

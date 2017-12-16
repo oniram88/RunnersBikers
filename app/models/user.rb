@@ -30,13 +30,14 @@ class User < ApplicationRecord
   rolify
   # Include default devise modules. Others available are:
   #  :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,:confirmable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable #, omniauth_providers: [:strava, :facebook]
 
   validates :rank, :presence => true, numericality: { greater_than: 0 }
   validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
   validates :username, :presence => { allow_blank: false }, uniqueness: true
+  validate :check_max_registration
 
   after_create :assign_default_role
   before_validation :set_rank
@@ -127,6 +128,12 @@ class User < ApplicationRecord
 
   def set_rank
     self.rank = User.count + 1 if self.rank.blank?
+  end
+
+  def check_max_registration
+    if Time.now >= RunnersBikers::MAX_ISCRIZIONE
+      self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE,format: :short))
+    end
   end
 
 end
