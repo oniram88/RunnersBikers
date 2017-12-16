@@ -73,6 +73,7 @@ gem 'bootsnap', require: false
 #App di applicazione
 
 gem 'devise'
+gem 'devise-i18n'
 gem 'rails-i18n'
 gem 'devise-bootstrapped', github: 'king601/devise-bootstrapped', branch: 'bootstrap4'
 gem 'omniauth-strava'
