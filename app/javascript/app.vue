@@ -22,6 +22,8 @@
           </b-nav-item>
           <b-nav-item :to="{name:'new_performance'}">Nuova Prestazione
           </b-nav-item>
+          <b-nav-item :to="{name:'matches'}">Sfide
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -69,6 +71,7 @@
   import Performance from 'components/Performance.vue'
   import PerformancesList from 'components/PerformancesList.vue'
   import Ranking from 'components/Ranking.vue'
+  import MatchesList from 'components/MatchesList.vue'
   import logo from './images/logo_mini.jpg'
 
   Vue.use(Vuex);
@@ -113,6 +116,11 @@
             component: Performance
           }
         ]
+      },
+      {
+        path:'/matches',
+        name:'matches',
+        component: MatchesList
       },
       {
         path: '/users/:user_id/performances',

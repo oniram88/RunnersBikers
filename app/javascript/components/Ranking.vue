@@ -114,9 +114,6 @@
       '$route': 'load_ranking'
     },
     computed: {
-      rank_calculator() {
-
-      },
     },
     methods: {
       check_min_value(max, value) {

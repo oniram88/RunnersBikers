@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :ranking, only: [:index]
-  resources :matches, only: [:create]
+  resources :matches, only: [:create, :index]
 
 
   resource :base_infos, only: [:current_user] do
