@@ -18,6 +18,6 @@ class RegistrationsController < Devise::RegistrationsController
   def configure_permitted_parameters
     # Permit the `subscribe_newsletter` parameter along with the other
     # sign up parameters.
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username,:first_name,:last_name])
   end
 end

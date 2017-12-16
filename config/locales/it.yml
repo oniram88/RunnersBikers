@@ -6,3 +6,7 @@ it:
           attributes:
             base:
               max_iscrizione_superata: Hai superato la possibile data di iscrizione %{max_time}
+    attributes:
+      user:
+        first_name: Nome
+        last_name: Cognome
