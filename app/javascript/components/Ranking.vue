@@ -141,7 +141,8 @@
       invio_match() {
         console.log(this.match.points);
         axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
-          console.log(ris);
+          this.load_ranking();
+          this.reset_match();
         });
       },
       reset_match() {

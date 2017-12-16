@@ -1,5 +1,7 @@
 class MatchesController < ApiController
 
+  before_action :load_obj, only: [:update, :approve]
+
   def index
     @objs = policy_scope(Match).order(:created_at => :desc)
   end
@@ -12,5 +14,30 @@ class MatchesController < ApiController
       f.json
     end
   end
+
+  def update
+    @operation_result = @obj.update_attributes(clear_params)
+    respond_to do |f|
+      f.json
+    end
+  end
+
+  def approve
+    @operation_result = @obj.approve(current_user)
+    respond_to do |f|
+      f.json { render :update}
+    end
+  end
+
+  private
+  def load_obj
+    @obj = Match.find(params[:id])
+    authorize @obj
+  end
+
+  def clear_params
+    params.require(:match).permit(policy(Match.new).permitted_attributes)
+  end
+
 
 end

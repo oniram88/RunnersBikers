@@ -134,7 +134,7 @@
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
-            me.$router.push({name: 'performance_list'});
+            me.$router.go(-1)
           } else {
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';

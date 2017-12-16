@@ -118,9 +118,16 @@
         ]
       },
       {
-        path:'/matches',
-        name:'matches',
-        component: MatchesList
+        path: '/matches',
+        name: 'matches',
+        component: MatchesList,
+        children: [
+          {
+            path: ':id/edit_performance',
+            name: 'match_performance_edit',
+            component: Performance
+          }
+        ]
       },
       {
         path: '/users/:user_id/performances',

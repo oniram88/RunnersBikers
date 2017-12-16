@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171216145021) do
+ActiveRecord::Schema.define(version: 20171216175729) do
 
   create_table "matches", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "challenged_id"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20171216145021) do
     t.integer "judge_id"
     t.integer "winner_id"
     t.integer "looser_id"
+    t.text "note"
     t.index ["looser_id"], name: "index_matches_on_looser_id"
     t.index ["winner_id"], name: "index_matches_on_winner_id"
   end
