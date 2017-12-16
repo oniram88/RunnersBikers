@@ -44,5 +44,11 @@ RSpec.describe Performance, type: :model do
     expect(build(:performance, distance: 100, positive_gain: 100, pace: 60).calculate_points).to be == 10100
   end
 
+  it "oltre termine" do
+    Timecom.freeze(RunnersBikers::MAX_PERFORMANCE_INSERT) do
+      expect(build(:performance)).not_to be_valid
+    end
+  end
+
 
 end

@@ -25,6 +25,7 @@ class Performance < ApplicationRecord
   validates :pace, presence: true, format: PaceType.reg_exp
   validates :positive_gain, presence: true, numericality: { greater_than: 0, only_integer: true }
   validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//
+  validate :max_insert_time
   before_save :update_points
 
   after_save :update_user_points_rank
@@ -58,6 +59,14 @@ class Performance < ApplicationRecord
     end
     if user.matches_as_challenged.wait.first
       user.matches_as_challenged.wait.first.update_attributes(challenged_performance: self)
+    end
+  end
+
+  ##
+  # Definizione del tempo massimo di inserimento della performance
+  def max_insert_time
+    if created_at >= RunnersBikers::MAX_PERFORMANCE_INSERT
+      self.errors.add(:created_at, :challenger_expired, max_time: RunnersBikers::MAX_PERFORMANCE_INSERT)
     end
   end
 
