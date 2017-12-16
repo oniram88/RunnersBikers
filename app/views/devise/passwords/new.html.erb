@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-    <h2 class="text-center">Reset your password</h2>
+    <h2 class="text-center"><%= t('.forgot_your_password') %></h2>
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
       <%= devise_error_messages! %>
       <br>
@@ -10,7 +10,7 @@
       </div>
 
       <div class="form-group">
-        <%= invisible_recaptcha_tags text: "Send password reset email", class: "btn btn-primary btn-block btn-lg" %>
+        <%= invisible_recaptcha_tags text: t('.send_me_reset_password_instructions'), class: "btn btn-primary btn-block btn-lg" %>
       </div>
     <% end %>
     <div class="text-center">

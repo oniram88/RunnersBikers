@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-    <h1 class="text-center">Sign Up</h1>
+    <h1 class="text-center"><%= t('.sign_up') %></h1>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <%= devise_error_messages! %>
@@ -22,7 +22,7 @@
       </div>
 
       <div class="form-group">
-        <%= invisible_recaptcha_tags text: "Sign up", class: "btn btn-primary btn-block btn-lg" %>
+        <%= invisible_recaptcha_tags text: t('.sign_up'), class: "btn btn-primary btn-block btn-lg" %>
       </div>
     <% end %>
 
