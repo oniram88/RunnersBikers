@@ -35,12 +35,12 @@ RSpec.describe User, type: :model do
 
 
     it "same_user" do
-    user = create(:user)
+      user = create(:user)
 
-    expect(user.machable(user)).to be_falsey
+      expect(user.machable(user)).to be_falsey
     end
 
-    it "vs users"do
+    it "vs users" do
       userTOP = create(:user)
       create(:performance, distance: 10, user: userTOP)
       user1 = create(:user)
@@ -73,9 +73,52 @@ RSpec.describe User, type: :model do
 
     end
 
-    it "user with active match"
+    it "user with active match" do
 
-end
+      m = create(:match)
+
+      expect(create(:performance).user.machable(m.challenger)).to be_falsey
+      expect(create(:performance).user.machable(m.challenged)).to be_falsey
+
+    end
+
+    it "usesr with 3 challanged matches" do
+      user = create(:user)
+
+      RunnersBikers::MAX_AS_CHALLENGER.times do
+        create(:completed_approved_match, challenger: user)
+        user.reload
+      end
+
+      expect(create(:performance).user.machable(user)).to be_truthy
+      expect(user.machable(create(:performance).user)).to be_falsey
+
+    end
+
+    it "user with3 challangered matches" do
+
+      user = create(:user)
+
+      RunnersBikers::MAX_AS_CHALLENGED.times do
+        create(:completed_approved_match, challenged: user)
+        user.reload
+      end
+
+      expect(create(:user).machable(user)).to be_falsey
+      expect(user.machable(create(:performance).user)).to be_truthy
+
+    end
+
+    it "user with 0 points" do
+
+      expect(create(:user).machable(create(:user))).to be_falsey
+      expect(create(:performance).user.machable(create(:user))).to be_falsey
+      expect(create(:user).machable(create(:performance).user)).to be_falsey
+      expect(create(:performance).user.machable(create(:performance).user)).to be_truthy
+
+    end
+
+  end
 
 
 end
