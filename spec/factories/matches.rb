@@ -29,6 +29,14 @@ FactoryBot.define do
         m.reload
       end
 
+      factory :completed_approved_match do
+
+        after(:create) do |m|
+          m.approve(User.with_role(:judge).first || create(:judge))
+        end
+
+      end
+
     end
   end
 end

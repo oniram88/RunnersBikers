@@ -60,6 +60,31 @@ RSpec.describe Match, type: :model do
 
   end
 
+  it 'max as challanger' do
+    user = create(:user)
+
+    RunnersBikers::MAX_AS_CHALLENGER.times do
+      create(:completed_approved_match, challenger: user)
+      user.reload
+    end
+
+    expect(build(:match, challenger: user)).not_to be_valid
+
+  end
+
+  it 'max as challanged' do
+    user = create(:user)
+
+    RunnersBikers::MAX_AS_CHALLENGED.times do
+      create(:completed_approved_match, challenged: user)
+      user.reload
+    end
+
+    expect(build(:match, challenged: user)).not_to be_valid
+
+
+  end
+
   it "associazione automatica" do
 
     m = create(:match)

@@ -6,7 +6,18 @@ it:
           attributes:
             base:
               max_iscrizione_superata: Hai superato la possibile data di iscrizione %{max_time}
+        match:
+          attributes:
+            challenged:
+              to_low_in_rank: troppo basso nella classifica
+              to_high_in_rank: troppo alto nella classifica
+            challenged:
+              to_high_in_rank: troppo alto nella classifica
+              to_low_in_rank: troppo basso nella classifica
     attributes:
       user:
         first_name: Nome
         last_name: Cognome
+      match:
+        challenged: Sfidato
+        challenger: Sfidante

@@ -39,6 +39,7 @@ class Match < ApplicationRecord
   before_validation :set_defaults
 
   validate :correct_rank_position
+  validate :max_as_challenged_or_challenger, on: :create
 
   after_create :email_notify_creation
 
@@ -167,6 +168,18 @@ class Match < ApplicationRecord
 
   end
 
+  def max_as_challenged_or_challenger
+
+
+    if self.challenger.matches_as_challenger.count >= RunnersBikers::MAX_AS_CHALLENGER
+      self.errors.add(:challenger, :max_matches_as_challanger, max: RunnersBikers::MAX_AS_CHALLENGER)
+    end
+
+    if self.challenged.matches_as_challenged.count >= RunnersBikers::MAX_AS_CHALLENGED
+      self.errors.add(:challenged, :max_matches_as_challanged, max: RunnersBikers::MAX_AS_CHALLENGED)
+    end
+
+  end
 
 
   ##
