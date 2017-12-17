@@ -46,6 +46,7 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'faker'
   gem 'timecop'
+  gem 'database_cleaner'
 end
 
 group :development do
