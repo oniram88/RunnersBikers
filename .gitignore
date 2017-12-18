@@ -31,3 +31,5 @@ config/secrets.yml.key
 *.docx#
 
 spec/examples\.txt
+
+db/test\.sqlite3
