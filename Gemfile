@@ -47,6 +47,7 @@ group :development, :test do
   gem 'faker'
   gem 'timecop'
   gem 'database_cleaner'
+  gem 'sqlite3'
 end
 
 group :development do
