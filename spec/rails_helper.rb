@@ -67,5 +67,6 @@ RSpec.configure do |config|
     DatabaseCleaner.cleaning do
       example.run
     end
+    Faker::UniqueGenerator.clear
   end
 end
