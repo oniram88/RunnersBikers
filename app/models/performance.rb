@@ -18,6 +18,8 @@ require 'pace_type'
 class Performance < ApplicationRecord
 
   belongs_to :user
+  has_one :challenged_match,class_name:'Match',foreign_key: :challenged_p_id
+  has_one :challenger_match,class_name:'Match',foreign_key: :challenger_p_id
 
   attribute :pace, :pace, default: '00:00'
 

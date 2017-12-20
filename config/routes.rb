@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :performances
 
   resources :users, only: [:performances] do
-    resources :performances, module: :users, only: [:index]
+    resources :performances, module: :users, only: [:index, :show, :update]
   end
 
   resources :ranking, only: [:index]

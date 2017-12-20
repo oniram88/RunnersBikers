@@ -5,7 +5,7 @@
 
 <template>
 
-  <b-card title="Nuova Prestazione" class="mb-12">
+  <b-card :title="persisted ? 'Modifica Prestazione':'Nuova Prestazione' " class="mb-12">
 
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
 
@@ -47,7 +47,7 @@
       </b-form-group>
 
 
-      <b-button type="submit" variant="primary">Salva</b-button>
+      <b-button type="submit" variant="primary" :disabled="disabled_save">Salva</b-button>
       <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
       </b-button>
     </b-form>
@@ -73,6 +73,7 @@
 
 
       return {
+        disabled_save:false,
         form: {
           distance: null,
           pace: null,
@@ -94,6 +95,10 @@
 
       reset_disabled() {
         return this.$route.params.id;
+      },
+
+      persisted(){
+        return !!this.$route.params.id;
       }
 
     },
@@ -108,7 +113,15 @@
       load_data() {
         if (this.$route.params.id) {
           this.onReset();
-          axios.get(Routes.performance_path(this.$route.params.id)).then(ris => {
+
+          let path= Routes.performance_path(this.$route.params.id);
+
+          if(this.$route.params.user_id){
+            path=Routes.user_performance_path(this.$route.params.user_id,this.$route.params.id)
+          }
+
+
+          axios.get(path).then(ris => {
             console.log(ris);
             this.form = ris.data;
           });
@@ -120,13 +133,24 @@
       onSubmit(evt) {
         const me = this;
 
+        this.disabled_save=true;
         let make_action = null;
 
-        if (this.$route.params.id) {
-          make_action = axios.put(Routes.performance_path(this.$route.params.id), this.form);
+        if (this.persisted) {
+
+          let path= Routes.performance_path(this.$route.params.id);
+
+          if(this.$route.params.user_id){
+            path=Routes.user_performance_path(this.$route.params.user_id,this.$route.params.id)
+          }
+
+          make_action = axios.put(path, this.form);
+
         } else {
           make_action = axios.post(Routes.performances_path(), this.form);
         }
+
+
 
 
         make_action.then(ris => {
@@ -141,6 +165,7 @@
           }
           me.errors = ris.data.errors;
           me.show_errors = true;
+          me.disabled_save=false;
 
           me.callback_message.count_down = 3;
           console.log(ris);

@@ -12,11 +12,17 @@ class PerformancePolicy < ApplicationPolicy
   end
 
   def update?
-    user == record.user
+    return false if (!record.challenged_match.nil? and
+      !record.challenged_match.wait? and
+      !record.challenged_match.approval_waiting?) or
+      (!record.challenger_match.nil? and
+        !record.challenger_match.wait? and
+        !record.challenger_match.approval_waiting?)
+    user == record.user or user.is_judge?
   end
 
   def destroy?
-    user == record.user
+    user == record.user and (record.challenged_match.nil? and record.challenger_match.nil?)
   end
 
 

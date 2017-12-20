@@ -25,7 +25,7 @@ class MatchesController < ApiController
   def approve
     @operation_result = @obj.approve(current_user)
     respond_to do |f|
-      f.json { render :update}
+      f.json
     end
   end
 

@@ -28,6 +28,7 @@
       <template slot="actions" slot-scope="data">
         <b-button target="" variant="info"
                   v-authorize:performance.update?="data.item.id"
+                  :disabled="!data.item.editable"
                   :to="{name:'performance_edit',params:{id:data.item.id}}">
           <vf-icon icon="pencil"/>
         </b-button>

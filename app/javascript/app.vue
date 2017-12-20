@@ -123,7 +123,7 @@
         component: MatchesList,
         children: [
           {
-            path: ':id/edit_performance',
+            path: 'user/:user_id/performances/:id/edit_performance',
             name: 'match_performance_edit',
             component: Performance
           }
