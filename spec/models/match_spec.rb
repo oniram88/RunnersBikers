@@ -120,12 +120,14 @@ RSpec.describe Match, type: :model do
     expect {
       expect {
         expect {
-          m.approve(create(:judge))
-          m.reload
-        }.to change(m, :winner).to(winner)
-      }.to change(m, :looser).to(looser)
-    }.to change(m, :status).from('approval_waiting').to('approved')
-
+          expect {
+            m.approve(create(:judge))
+            m.reload
+          }.to change(m, :winner).to(winner)
+        }.to change(m, :looser).to(looser)
+      }.to change(m, :status).from('approval_waiting').to('approved')
+      winner.reload
+    }.to change(winner, :total_points).by(m.points)
   end
 
   it "disapprove" do

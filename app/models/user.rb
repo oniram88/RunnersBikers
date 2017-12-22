@@ -47,6 +47,10 @@ class User < ApplicationRecord
   has_many :matches_as_challenger, class_name: 'Match', foreign_key: :challenger_id
   has_many :matches_as_challenged, class_name: 'Match', foreign_key: :challenged_id
 
+  has_many :matches_as_winner, class_name: 'Match', foreign_key: :winner_id
+  has_many :matches_as_looser, class_name: 'Match', foreign_key: :looser_id
+
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
@@ -75,7 +79,10 @@ class User < ApplicationRecord
   end
 
   def update_points
-    self.update_attributes(total_points: self.performances.reload.sum(:points))
+    points = self.performances.reload.sum(:points)
+    points += self.matches_as_winner.reload.sum(:points)
+    points -= self.matches_as_looser.reload.sum(:points)
+    self.update_attributes(total_points: points)
   end
 
   def self.update_rank

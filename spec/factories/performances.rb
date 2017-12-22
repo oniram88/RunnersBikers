@@ -18,10 +18,21 @@ FactoryBot.define do
 
 
     user
-    distance { Faker::Number.decimal(2, 2)}
+    distance { Faker::Number.decimal(2, 2) }
     pace "4:10"
     positive_gain { Faker::Number.number(3) }
     url { Faker::Internet.unique.url }
+
+    factory :performance_with_points do
+      transient do
+        points_set 1000
+      end
+
+      after(:create) do |p, evaluator|
+        p.update_attribute(:points, evaluator.points_set)
+      end
+
+    end
 
   end
 end

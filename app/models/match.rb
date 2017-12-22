@@ -99,10 +99,13 @@ class Match < ApplicationRecord
   # Valida il match
   def approve(judge)
     return false unless judge.is_judge?
-    self.judge = judge
-    self.status = :approved
-    set_looser_winner
-    save!
+    Match.transaction do
+      self.judge = judge
+      self.status = :approved
+      set_looser_winner
+      save!
+      self.update_rank
+    end
     email_notify_approve_disapprove
   end
 
@@ -128,11 +131,22 @@ class Match < ApplicationRecord
   def self.check_timeouts
     self.wait.each do |m|
       if m.outdated?
-        m.status = :timeout
-        m.set_looser_winner
-        m.save!
+        Match.transaction do
+          m.status = :timeout
+          m.set_looser_winner
+          m.save!
+          m.update_rank
+        end
         m.email_notify_outdated
       end
+    end
+  end
+
+  def update_rank
+    if self.looser and self.winner
+      self.winner.update_points
+      self.looser.update_points
+      User.update_rank
     end
   end
 

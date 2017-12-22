@@ -90,7 +90,7 @@ RSpec.describe User, type: :model do
         user.reload
       end
 
-      expect(create(:performance).user.machable(user)).to be_truthy
+      expect(create(:performance_with_points, points_set: user.total_points).user.machable(user)).to be_truthy
       expect(user.machable(create(:performance).user)).to be_falsey
 
     end
@@ -105,7 +105,7 @@ RSpec.describe User, type: :model do
       end
 
       expect(create(:user).machable(user)).to be_falsey
-      expect(user.machable(create(:performance).user)).to be_truthy
+      expect(user.machable(create(:performance_with_points, points_set: user.total_points).user)).to be_truthy
 
     end
 
