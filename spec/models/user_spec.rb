@@ -95,7 +95,7 @@ RSpec.describe User, type: :model do
 
     end
 
-    it "user with3 challangered matches" do
+    it "user with3 challengered matches" do
 
       user = create(:user)
 

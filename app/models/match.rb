@@ -172,11 +172,11 @@ class Match < ApplicationRecord
 
 
     if self.challenger.matches_as_challenger.count >= RunnersBikers::MAX_AS_CHALLENGER
-      self.errors.add(:challenger, :max_matches_as_challanger, max: RunnersBikers::MAX_AS_CHALLENGER)
+      self.errors.add(:challenger, :max_matches_as_challenger, max: RunnersBikers::MAX_AS_CHALLENGER)
     end
 
     if self.challenged.matches_as_challenged.count >= RunnersBikers::MAX_AS_CHALLENGED
-      self.errors.add(:challenged, :max_matches_as_challanged, max: RunnersBikers::MAX_AS_CHALLENGED)
+      self.errors.add(:challenged, :max_matches_as_challenged, max: RunnersBikers::MAX_AS_CHALLENGED)
     end
 
   end

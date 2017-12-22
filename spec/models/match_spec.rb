@@ -60,7 +60,7 @@ RSpec.describe Match, type: :model do
 
   end
 
-  it 'max as challanger' do
+  it 'max as chellanger' do
     user = create(:user)
 
     RunnersBikers::MAX_AS_CHALLENGER.times do
@@ -72,7 +72,7 @@ RSpec.describe Match, type: :model do
 
   end
 
-  it 'max as challanged' do
+  it 'max as chellanged' do
     user = create(:user)
 
     RunnersBikers::MAX_AS_CHALLENGED.times do
