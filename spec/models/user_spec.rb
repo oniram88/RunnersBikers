@@ -118,6 +118,17 @@ RSpec.describe User, type: :model do
 
     end
 
+    it "user already matched"do
+
+      m = create(:completed_approved_match)
+
+
+      expect(m.challenger.machable(m.challenged)).to be_falsey
+      expect(m.challenged.machable(m.challenger)).to be_truthy
+
+
+    end
+
   end
 
 

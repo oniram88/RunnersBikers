@@ -99,25 +99,27 @@ class User < ApplicationRecord
 
   # questa istanza può sfidate l'utente passato come parametro?
   def machable(user)
-    logger.debug {"matches_1"}
+    logger.debug { "matches_1" }
     return false if user.id == self.id
-    logger.debug {"matches_2"}
+    logger.debug { "matches_1.2" }
+    return false if self.matches_as_challenger.where(:challenged => user).count > 0
+    logger.debug { "matches_2" }
     return false if self.open_matches.length > 0
-    logger.debug {"matches_3"}
+    logger.debug { "matches_3" }
     return false if self.matches_as_challenger.count >= RunnersBikers::MAX_AS_CHALLENGER
-    logger.debug {"matches_4"}
+    logger.debug { "matches_4" }
     return false if self.total_points == 0
-    logger.debug {"matches_5"}
+    logger.debug { "matches_5" }
     return false if user.total_points == 0
-    logger.debug {"matches_6"}
+    logger.debug { "matches_6" }
     if self.rank - 3 > user.rank or self.rank + 3 < user.rank
       return false
     end
-    logger.debug {"matches_7"}
+    logger.debug { "matches_7" }
     return false if user.open_matches.length > 0
-    logger.debug {"matches_8"}
+    logger.debug { "matches_8" }
     return false if user.matches_as_challenged.count >= RunnersBikers::MAX_AS_CHALLENGED
-    logger.debug {"matches_9"}
+    logger.debug { "matches_9" }
     return true
   end
 
