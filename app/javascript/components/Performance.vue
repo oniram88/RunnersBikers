@@ -5,7 +5,8 @@
 
 <template>
 
-  <b-card :title="persisted ? 'Modifica Prestazione':'Nuova Prestazione' " class="mb-12">
+  <b-card :title="persisted ? 'Modifica Prestazione':'Nuova Prestazione' "
+          class="mb-12">
 
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
 
@@ -13,29 +14,37 @@
       <b-form-group label="Distanza:"
                     :state="distance_state"
                     :feedback="distance_feedback">
-        <b-form-input type="text" v-model="form.distance" required
-                      :state="distance_state"
-                      placeholder="Inserisci la distanza in Km"
-        ></b-form-input>
+        <b-input-group right="km">
+          <b-form-input type="text" v-model="form.distance"
+                        required
+                        :state="distance_state"
+                        placeholder="Inserisci la distanza in Km"
+                        @change="set_correct_decimal"
+          ></b-form-input>
+        </b-input-group>
       </b-form-group>
 
       <b-form-group label="Ritmo Medio:"
                     :state="pace_state"
                     :feedback="pace_feedback">
-        <b-form-input type="text"
-                      :state="pace_state"
-                      v-model="form.pace" required
-                      placeholder="Inserisci il ritmo in m/km 00:00"
-        ></b-form-input>
+        <b-input-group right="m/km">
+          <b-form-input type="text"
+                        :state="pace_state"
+                        v-model="form.pace" required
+                        placeholder="Inserisci il ritmo in m/km 00:00"
+          ></b-form-input>
+        </b-input-group>
       </b-form-group>
 
       <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
                     :feedback="positive_gain_feedback">
-        <b-form-input type="text" v-model="form.positive_gain"
-                      required
-                      :state="positive_gain_state"
-                      placeholder="Dislivello in m"
-        ></b-form-input>
+        <b-input-group right="m">
+          <b-form-input type="number" v-model.number="form.positive_gain"
+                        required
+                        :state="positive_gain_state"
+                        placeholder="Dislivello in m"
+          ></b-form-input>
+        </b-input-group>
       </b-form-group>
 
       <b-form-group label="Url sito:" :state="url_state"
@@ -47,7 +56,9 @@
       </b-form-group>
 
 
-      <b-button type="submit" variant="primary" :disabled="disabled_save">Salva</b-button>
+      <b-button type="submit" variant="primary" :disabled="disabled_save">
+        Salva
+      </b-button>
       <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
       </b-button>
     </b-form>
@@ -73,7 +84,7 @@
 
 
       return {
-        disabled_save:false,
+        disabled_save: false,
         form: {
           distance: null,
           pace: null,
@@ -97,7 +108,7 @@
         return this.$route.params.id;
       },
 
-      persisted(){
+      persisted() {
         return !!this.$route.params.id;
       }
 
@@ -110,14 +121,17 @@
       this.load_data();
     },
     methods: {
+      set_correct_decimal(){
+        this.form.distance = this.form.distance.replace(',','.')
+      },
       load_data() {
         if (this.$route.params.id) {
           this.onReset();
 
-          let path= Routes.performance_path(this.$route.params.id);
+          let path = Routes.performance_path(this.$route.params.id);
 
-          if(this.$route.params.user_id){
-            path=Routes.user_performance_path(this.$route.params.user_id,this.$route.params.id)
+          if (this.$route.params.user_id) {
+            path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
           }
 
 
@@ -133,15 +147,15 @@
       onSubmit(evt) {
         const me = this;
 
-        this.disabled_save=true;
+        this.disabled_save = true;
         let make_action = null;
 
         if (this.persisted) {
 
-          let path= Routes.performance_path(this.$route.params.id);
+          let path = Routes.performance_path(this.$route.params.id);
 
-          if(this.$route.params.user_id){
-            path=Routes.user_performance_path(this.$route.params.user_id,this.$route.params.id)
+          if (this.$route.params.user_id) {
+            path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
           }
 
           make_action = axios.put(path, this.form);
@@ -149,8 +163,6 @@
         } else {
           make_action = axios.post(Routes.performances_path(), this.form);
         }
-
-
 
 
         make_action.then(ris => {
@@ -165,7 +177,7 @@
           }
           me.errors = ris.data.errors;
           me.show_errors = true;
-          me.disabled_save=false;
+          me.disabled_save = false;
 
           me.callback_message.count_down = 3;
           console.log(ris);
