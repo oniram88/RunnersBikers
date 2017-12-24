@@ -7,7 +7,7 @@ server "runnersbikers.production.cloud", user: "marinobonetti", roles: %w{app db
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-
+set :disallow_pushing, true
 
 # role-based syntax
 # ==================
