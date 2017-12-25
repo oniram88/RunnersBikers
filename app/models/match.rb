@@ -34,7 +34,7 @@ class Match < ApplicationRecord
   validates :status, :challenged, :challenger, :points, :presence => true
   validates :judge, :presence => true, if: -> { approved? or disapproved? }
 
-  validates :looser, :winner, :presence => true, if: -> { approved? or (timeout? and !(challenged_performance.nil? and challenger_performance.nil?)) }
+  validates :looser, :winner, :presence => true, if: -> { approved? or (timeouted and !(challenged_performance.nil? and challenger_performance.nil?)) }
 
   before_validation :set_defaults
 
@@ -50,7 +50,7 @@ class Match < ApplicationRecord
   enum status: {
     wait: 0,
     approved: 1,
-    timeout: 2,
+    timeouted: 2,
     approval_waiting: 3,
     disapproved: 4
   }
@@ -73,7 +73,7 @@ class Match < ApplicationRecord
         self.looser = challenged
       end
     end
-    if self.timeout?
+    if self.timeouted?
 
       if challenged_performance.nil? and !challenger_performance.nil?
         self.winner = challenger
@@ -132,7 +132,7 @@ class Match < ApplicationRecord
     self.wait.each do |m|
       if m.outdated?
         Match.transaction do
-          m.status = :timeout
+          m.status = :timeouted
           m.set_looser_winner
           m.save!
           m.update_rank

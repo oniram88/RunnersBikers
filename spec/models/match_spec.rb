@@ -176,7 +176,7 @@ RSpec.describe Match, type: :model do
             expect(@match.outdated?).to be_truthy
             Match.check_timeouts
             @match.reload
-          }.to change(@match, :status).from('wait').to('timeout')
+          }.to change(@match, :status).from('wait').to('timeouted')
         }.to change {
           ActionMailer::Base.deliveries.count
         }.by(3)
@@ -193,7 +193,7 @@ RSpec.describe Match, type: :model do
             expect {
               Match.check_timeouts
               @match.reload
-            }.to change(@match, :status).from('wait').to('timeout')
+            }.to change(@match, :status).from('wait').to('timeouted')
           }.to change(@match, :winner).to(@sfidante)
         }.to change {
           ActionMailer::Base.deliveries.count
@@ -210,7 +210,7 @@ RSpec.describe Match, type: :model do
             expect {
               Match.check_timeouts
               @match.reload
-            }.to change(@match, :status).from('wait').to('timeout')
+            }.to change(@match, :status).from('wait').to('timeouted')
           }.to change(@match, :winner).to(@sfidato)
         }.to change {
           ActionMailer::Base.deliveries.count
