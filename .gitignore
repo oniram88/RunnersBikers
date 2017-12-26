@@ -34,3 +34,5 @@ config/secrets.yml.key
 spec/examples\.txt
 
 db/test\.sqlite3
+
+*.sqlite3-journal
