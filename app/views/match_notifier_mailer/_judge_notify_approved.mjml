@@ -1,0 +1,10 @@
+<h2>Sfida Approvata</h2>
+
+<mj-section>
+	<mj-column>
+		<mj-text>
+Sfida fra <%= @match.challenger %> e  approvata da <%= @match.judge %>
+		</mj-text>
+	</mj-column>
+</mj-section>
+

@@ -21,6 +21,7 @@ class PaceType < ActiveRecord::Type::Value
     to_seconds(value)
   end
 
+
   def self.serialize(value)
     to_seconds(value)
   end

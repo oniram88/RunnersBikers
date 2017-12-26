@@ -87,3 +87,4 @@ gem "rolify"
 gem "js-routes"
 gem 'i18n-debug'
 gem "recaptcha", require: "recaptcha/rails"
+gem 'mjml-rails'
