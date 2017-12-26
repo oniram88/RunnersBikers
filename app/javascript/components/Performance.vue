@@ -15,12 +15,16 @@
                     :state="distance_state"
                     :feedback="distance_feedback">
         <b-input-group right="km">
-          <b-form-input type="text" v-model="form.distance"
-                        required
-                        :state="distance_state"
-                        placeholder="Inserisci la distanza in Km"
-                        @change="set_correct_decimal"
-          ></b-form-input>
+
+          <vue-numeric
+                  class="form-control"
+                  :separator="' '"
+                  v-model="form.distance"
+                  :precision="2"
+                  placeholder="Inserisci la distanza in Km"
+          ></vue-numeric>
+
+
         </b-input-group>
       </b-form-group>
 
@@ -86,7 +90,7 @@
       return {
         disabled_save: false,
         form: {
-          distance: null,
+          distance: 0,
           pace: null,
           positive_gain: null,
           url: null
@@ -186,7 +190,7 @@
       },
       onReset() {
         // Reset our form values
-        this.form.distance = null;
+        this.form.distance = 0;
         this.form.pace = null;
         this.form.positive_gain = null;
         this.form.url = null;

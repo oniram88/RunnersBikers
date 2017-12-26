@@ -13,6 +13,8 @@ import axios from 'axios'
 import bFormSlider from 'vue-bootstrap-slider';
 import SimpleAuthorize from 'vue_simple_authorize';
 import auth from './authorizations.js';
+import VueNumeric from 'vue-numeric'
+
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../styles/style.scss';
@@ -24,6 +26,7 @@ Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(bFormSlider);
 Vue.use(new SimpleAuthorize, {authorizations: auth});
+Vue.use(VueNumeric);
 
 
 Vue.component('vf-icon', icon);

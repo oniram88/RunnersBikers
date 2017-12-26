@@ -17,6 +17,7 @@
     "vue-bootstrap-slider": "^1.1.1",
     "vue-fontawesome": "^0.0.2",
     "vue-loader": "^13.6.0",
+    "vue-numeric": "^2.2.8",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.13",
     "vue_simple_authorize": "^1.1",
