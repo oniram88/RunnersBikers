@@ -24,6 +24,10 @@
         </b-button>
       </template>
 
+      <template slot="distance" slot-scope="data">
+       {{data.item.distance | distance_format}}
+      </template>
+
 
       <template slot="actions" slot-scope="data">
         <b-button target="" variant="info"

@@ -3525,6 +3525,10 @@ num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
 
+number-format.js@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/number-format.js/-/number-format.js-1.1.11.tgz#deef6c41b8780be4fad915fefab545da78a18b12"
+
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"

@@ -11,6 +11,7 @@
     "lodash": "latest",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
+    "number-format.js": "^1.1.11",
     "postcss-smart-import": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.4",
     "vue": "^2.5.13",

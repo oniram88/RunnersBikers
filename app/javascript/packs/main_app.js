@@ -14,6 +14,8 @@ import bFormSlider from 'vue-bootstrap-slider';
 import SimpleAuthorize from 'vue_simple_authorize';
 import auth from './authorizations.js';
 import VueNumeric from 'vue-numeric'
+import format from 'number-format.js'
+
 
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -34,6 +36,11 @@ Vue.component('vf-icon', icon);
 import moment from 'moment';
 
 moment.locale('it');
+
+Vue.filter('distance_format', function (value) {
+  if (!value) return '';
+  return format( "#,00", parseFloat(value));
+});
 
 
 let token = document.getElementsByName('csrf-token')[0].getAttribute('content');

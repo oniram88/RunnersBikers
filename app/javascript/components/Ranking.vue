@@ -28,6 +28,10 @@
         </b-button>
 
       </template>
+
+      <template slot="total_distance" slot-scope="data">
+        {{data.item.total_distance | distance_format}}
+      </template>
     </b-table>
 
     <b-modal title="Nuovo match" ref="modal_match" @ok="invio_match"
@@ -113,8 +117,7 @@
       // call again the method if the route changes
       '$route': 'load_ranking'
     },
-    computed: {
-    },
+    computed: {},
     methods: {
       check_min_value(max, value) {
         if (max < parseInt(value)) {
