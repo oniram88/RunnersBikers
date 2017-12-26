@@ -39,7 +39,7 @@ class Performance < ApplicationRecord
   # d = dislivello positivo in m
   # r = ritmo medio in min/km
   def calculate_points
-    100 * (distance + positive_gain / 100) / (pace.to_f / 60)
+    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / ( PaceType.to_seconds(pace).to_f / 60.0)).to_i
   end
 
 

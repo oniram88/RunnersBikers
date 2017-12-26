@@ -34,7 +34,7 @@ class Match < ApplicationRecord
   validates :status, :challenged, :challenger, :points, :presence => true
   validates :judge, :presence => true, if: -> { approved? or disapproved? }
 
-  validates :looser, :winner, :presence => true, if: -> { approved? or (timeouted and !(challenged_performance.nil? and challenger_performance.nil?)) }
+  validates :looser, :winner, :presence => true, if: -> { approved? or (timeouted? and !(challenged_performance.nil? and challenger_performance.nil?)) }
 
   before_validation :set_defaults
 
