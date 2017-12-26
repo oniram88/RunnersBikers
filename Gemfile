@@ -63,7 +63,7 @@ group :development do
   gem 'capistrano-passenger'
   gem 'capistrano-bundler', '~> 1.3'
   gem 'capistrano-rails', '~> 1.3'
-  gem 'capistrano-rails-console'
+  gem 'capistrano-rails-console', require: false
   gem 'capistrano-db-tasks', require: false
   gem 'capistrano-rails-tail-log'
 end
