@@ -34,6 +34,9 @@
           <!--<b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>-->
           <!--</b-nav-form>-->
 
+          <b-nav-item>
+            Versione: {{program_version}}
+          </b-nav-item>
           <!--<b-nav-item-dropdown text="Lang" right>-->
           <!--<b-dropdown-item href="#">EN</b-dropdown-item>-->
           <!--<b-dropdown-item href="#">ES</b-dropdown-item>-->
@@ -80,7 +83,8 @@
     state: {
       user_id: null,
       user_roles: [],
-      username: null
+      username: null,
+      program_version:null
     },
     mutations: {
       set_current_user(state, user) {
@@ -88,6 +92,8 @@
         state.user_id = user.user_id;
         state.user_roles = user.roles;
         state.username = user.username;
+        //TODO spostare in chiamata più adatta
+        state.program_version = user.program_version;
         //   state.count++
       }
     }
@@ -163,7 +169,8 @@
         return logo;
       },
       ...mapState([
-        'username'
+        'username',
+        'program_version'
       ])
     },
     components: {
