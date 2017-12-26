@@ -1,6 +1,6 @@
 module RunnersBikers
 
-  VERSION='1.0.0'
+  VERSION='1.0.1'
 
   # Durata Sfida
   MATCH_DURATION = 5.days
