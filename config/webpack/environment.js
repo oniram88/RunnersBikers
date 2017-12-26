@@ -1,11 +1,19 @@
 const {environment} = require('@rails/webpacker');
 const vue = require('./loaders/vue');
 const webpack = require('webpack');
+const path = require('path');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 environment.plugins.set('UglifyJs',
-  new UglifyJsPlugin()
+  new UglifyJsPlugin({
+    parallel: true,
+    uglifyOptions: {
+      ecma: 6,
+      compress: false // hangs without this
+    },
+    cache: path.join(__dirname, '../../tmp/webpack-cache/uglify-cache'),
+  })
 );
 
 environment.plugins.set(
