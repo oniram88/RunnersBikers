@@ -174,7 +174,7 @@
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
-            me.$router.go(-1)
+            setTimeout(()=>{me.$router.go(-1)},1500);
           } else {
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';
