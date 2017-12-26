@@ -18,9 +18,9 @@
         <b-navbar-nav>
           <b-nav-item :to="{name:'ranking'}">Classifica
           </b-nav-item>
-          <b-nav-item :to="{name:'performance_list'}">Lista Prestazioni
+          <b-nav-item :to="{name:'performance_list'}">Lista Sessioni
           </b-nav-item>
-          <b-nav-item :to="{name:'new_performance'}">Nuova Prestazione
+          <b-nav-item :to="{name:'new_performance'}">Nuova Sessione
           </b-nav-item>
           <b-nav-item :to="{name:'matches'}">Sfide
           </b-nav-item>

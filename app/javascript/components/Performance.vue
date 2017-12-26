@@ -5,7 +5,7 @@
 
 <template>
 
-  <b-card :title="persisted ? 'Modifica Prestazione':'Nuova Prestazione' "
+  <b-card :title="persisted ? 'Modifica Sessione':'Nuova Sessione' "
           class="mb-12">
 
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
@@ -55,7 +55,7 @@
                     :feedback="url_feedback">
         <b-form-input type="text" v-model="form.url" required
                       :state="url_state"
-                      placeholder="Url della prestazione http://....."
+                      placeholder="Url della sessione http://....."
         ></b-form-input>
       </b-form-group>
 

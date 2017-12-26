@@ -93,7 +93,7 @@
           {
             key: 'url',
             sortable: false,
-            label: 'Link Prestazione'
+            label: 'Link Sessione'
           },
           {
             key: 'actions',
