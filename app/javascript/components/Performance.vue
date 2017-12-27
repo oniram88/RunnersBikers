@@ -31,7 +31,7 @@
       <b-form-group label="Ritmo Medio:"
                     :state="pace_state"
                     :feedback="pace_feedback">
-        <b-input-group right="m/km">
+        <b-input-group right="m/km" left="00:00">
           <b-form-input type="text"
                         :state="pace_state"
                         v-model="form.pace" required

@@ -14,6 +14,10 @@ it:
             challenged:
               to_high_in_rank: troppo alto nella classifica
               to_low_in_rank: troppo basso nella classifica
+        performance:
+          attributes:
+            pace:
+              invalid: "non è valido, il formato corretto è 00:00, se hai fatto 3 minuti e 45 secondi al km inserisci 3:45"
     attributes:
       user:
         first_name: Nome
