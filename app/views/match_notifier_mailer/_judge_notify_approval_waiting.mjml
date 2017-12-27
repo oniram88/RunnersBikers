@@ -3,14 +3,13 @@
 
     <mj-text font-size="20px" font-family="helvetica">
       <p>Caro Arbitro <%= @judge.full_name %>,</p>
-      <p>ti comunichiamo che è stata lanciata una nuova sfida.</p>
+      <p>ti comunichiamo che si è appena conclusa una sfida con ENTRAMBE LE SESSIONI REGISTRATE.</p>
 
-      <p>Il concorrente <%= @match.challenger.full_name %> ha sfidato il concorrente <%= @match.challenged.full_name %>.</p>
+      <p>Il concorrente <%= @match.challenger.full_name %> ed il concorrente <%= @match.challenged.full_name %> si sono sfidati.</p>
 
-      <p>I concorrenti avranno tempo sino al <%= terminate_date( @match) %> per EFFETTUARE E REGISTRARE sul sito ausiliario di gara le loro sessioni.</p>
+      <p>Dovresti collegarti al <%= link_to 'sito ausiliasio di gara',root_url %> per validare la sfida e decretare il vincitore.</p>
 
     </mj-text>
-
 
   </mj-column>
 </mj-section>

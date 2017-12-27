@@ -155,6 +155,11 @@ class Match < ApplicationRecord
     MatchNotifierMailer.notify_creation(self, to: :challenged).deliver
   end
 
+  def email_notify_approval_waiting
+    MatchNotifierMailer.notify_approval_waiting(self, to: :challenger).deliver
+    MatchNotifierMailer.notify_approval_waiting(self, to: :challenged).deliver
+  end
+
   def email_notify_approve_disapprove
     MatchNotifierMailer.notify_approve_disapprove(self, to: :challenger).deliver
     MatchNotifierMailer.notify_approve_disapprove(self, to: :challenged).deliver

@@ -23,6 +23,18 @@ class MatchNotifierMailer < ApplicationMailer
     )
   end
 
+  def notify_approval_waiting(match, to: :challenged)
+    @match = match
+    @destinatario = to
+
+    object = base_subject + " – CONCLUSIONE SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name} CON DUE SESSIONI REGISTRATE"
+
+    mail(
+      to: @match.send(to).email,
+      subject: object, &:mjml
+    )
+  end
+
   def notify_approve_disapprove(match, to: :challenged)
     @match = match
     mail(
@@ -40,15 +52,17 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_judge(match, judge)
+    @match = match
+    @judge = judge
 
     object = base_subject
     case match.status
       when 'wait'
         object += ' – COMUNICAZIONE NUOVA SFIDA'
+      when 'approval_waiting'
+        object += " – CONCLUSIONE SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name} CON DUE SESSIONI REGISTRATE"
     end
 
-    @match = match
-    @judge = judge
     mail(to: judge.email, subject: object, &:mjml)
   end
 end
