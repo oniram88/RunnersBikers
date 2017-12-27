@@ -16,10 +16,9 @@
 require 'pace_type'
 
 class Performance < ApplicationRecord
-
   belongs_to :user
-  has_one :challenged_match,class_name:'Match',foreign_key: :challenged_p_id
-  has_one :challenger_match,class_name:'Match',foreign_key: :challenger_p_id
+  has_one :challenged_match, class_name: 'Match', foreign_key: :challenged_p_id
+  has_one :challenger_match, class_name: 'Match', foreign_key: :challenger_p_id
 
   attribute :pace, :pace, default: '00:00'
 
@@ -33,17 +32,16 @@ class Performance < ApplicationRecord
   after_save :update_user_points_rank
   after_save :check_match_data
 
-
-  # PUNTEGGIO = 100 x ( D + d/100 ) / r
+  # PUNTEGGIO = 100 x ( D + d/100 ) / r^2
   # Con 	D = distanza in km
   # d = dislivello positivo in m
-  # r = ritmo medio in min/km
+  # r = ritmo medio in min/km (5:30=> 5+30/60 => 5,5)
   def calculate_points
-    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / ( PaceType.to_seconds(pace).to_f / 60.0)).to_i
+    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0)**2).to_i
   end
 
-
   private
+
   def update_points
     self.points = calculate_points
   end
@@ -71,5 +69,4 @@ class Performance < ApplicationRecord
       self.errors.add(:created_at, :challenger_expired, max_time: RunnersBikers::MAX_PERFORMANCE_INSERT)
     end
   end
-
 end
