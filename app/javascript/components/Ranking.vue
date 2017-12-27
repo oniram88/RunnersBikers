@@ -23,8 +23,8 @@
           <vf-icon icon="list"/>
         </b-button>
         <b-button @click="show_modal(data.item)" v-if="data.item.machable"
-                  target="_blank" class="create_match_btn">
-          <vf-icon icon="fort-awesome"/>
+                  target="_blank" class="create_match_btn" title="Crea Sfida">
+          <vf-icon icon="crosshairs"/>
         </b-button>
 
       </template>
