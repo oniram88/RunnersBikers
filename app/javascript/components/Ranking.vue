@@ -51,7 +51,7 @@
           <b-form-slider class="slider_width" :min="1"
                          tooltip="always"
                          :max="match.max_lose_points"
-                         :step="100"
+                         :step="1"
                          v-model="match.points"/>
         </b-form-group>
 
@@ -131,6 +131,7 @@
         console.log(dati);
         this.match.max_lose_points = dati.max_lose_points;
         this.match.challenged_id = dati.id;
+        this.match.points = 0;
         this.$refs.modal_match.show();
       },
       load_ranking() {
