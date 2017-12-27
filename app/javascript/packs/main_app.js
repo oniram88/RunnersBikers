@@ -39,7 +39,7 @@ moment.locale('it');
 
 Vue.filter('distance_format', function (value) {
   if (!value) return '';
-  return format( "#,00", parseFloat(value));
+  return format( "0,00", parseFloat(value));
 });
 
 
