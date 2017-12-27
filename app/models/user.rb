@@ -131,6 +131,10 @@ class User < ApplicationRecord
     format % self.attributes.deep_symbolize_keys
   end
 
+  def full_name
+    to_s(format:"%{first_name} %{last_name}")
+  end
+
   ##
   # Valida il match
   def approve(match)

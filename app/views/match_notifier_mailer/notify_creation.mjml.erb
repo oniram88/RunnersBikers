@@ -1,18 +1,1 @@
-<mj-section>
-  <mj-column>
-
-    <mj-text font-size="20px" font-family="helvetica">
-      Caro <%= @match.challenged.to_s(format:"%{first_name} %{last_name}") %>,<br></br>
-      <p>Brutte notizie per te: sei stato sfidato dal concorrente <%= @match.challenger.to_s(format:"%{first_name} %{last_name}") %></p>
-
-      <p>Avrai tempo sino al <%= l @match.expiration_date, format: :long %> per EFFETTUARE E REGISTRARE sul sito ausiliario di gara la tua sessione.</p>
-
-      <p>Oltre tale limite, senza aver registrato alcuna sessione, perderai la sfida.</p>
-
-      <p>Non potrai sfidare nessun altro concorrente sino a quando la sfida corrente non sarà conclusa.</p>
-
-    </mj-text>
-
-
-  </mj-column>
-</mj-section>
+<%= render partial: "notify_creation_#{@destinatario}", formats: [:html] %>

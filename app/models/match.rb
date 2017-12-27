@@ -151,7 +151,8 @@ class Match < ApplicationRecord
   end
 
   def email_notify_creation
-    MatchNotifierMailer.notify_creation(self).deliver
+    MatchNotifierMailer.notify_creation(self, to: :challenger).deliver
+    MatchNotifierMailer.notify_creation(self, to: :challenged).deliver
   end
 
   def email_notify_approve_disapprove

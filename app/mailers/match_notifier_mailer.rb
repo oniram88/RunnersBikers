@@ -1,9 +1,25 @@
 class MatchNotifierMailer < ApplicationMailer
-  def notify_creation(match)
+  add_template_helper(EmailsHelpers)
+
+  def base_subject
+    "TORNEO NEXT CHALLENGE PER RUNNER"
+  end
+
+  def notify_creation(match, to: :challenged)
     @match = match
+    @destinatario = to
+
+    object = base_subject
+    case to
+      when :challenged
+        object += ' – SEI STATO SFIDATO'
+      when :challenger
+        object += ' – CONFERMA LANCIO SFIDA'
+    end
+
     mail(
-      to: @match.challenged.email,
-      subject: 'TORNEO NEXT CHALLENGE PER RUNNER – SEI STATO SFIDATO', &:mjml
+      to: @match.send(to).email,
+      subject: object , &:mjml
     )
   end
 
@@ -24,7 +40,15 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_judge(match, judge)
+
+    object = base_subject
+    case match.status
+      when 'wait'
+        object += ' – COMUNICAZIONE NUOVA SFIDA'
+    end
+
     @match = match
-    mail(to: judge.email, subject: "Sfida #{@match.challenged} VS #{@match.challenger}", &:mjml)
+    @judge = judge
+    mail(to: judge.email, subject: object, &:mjml)
   end
 end
