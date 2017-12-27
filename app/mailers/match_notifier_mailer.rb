@@ -37,9 +37,13 @@ class MatchNotifierMailer < ApplicationMailer
 
   def notify_approve_disapprove(match, to: :challenged)
     @match = match
+    @destinatario = to
+
+    object = base_subject + " –  ESITO SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name}"
+
     mail(
       to: @match.send(to).email,
-      subject: 'Esito Match', &:mjml
+      subject: object, &:mjml
     )
   end
 

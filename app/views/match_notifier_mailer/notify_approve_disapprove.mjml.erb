@@ -1,0 +1,23 @@
+<mj-section>
+  <mj-column>
+
+    <mj-text font-size="20px" font-family="helvetica">
+      Caro <%= @match.send(@destinatario).full_name %>,<br></br>
+      <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
+
+      <p>le sessioni di sfida sono state:</p>
+
+      <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
+
+      <p><%= @match.looser.full_name %>  < link sessione internet perdente > < punti sessione perdente ></p>
+
+      <p>Da ora potete nuovamente sfidare un nuovo concorrente, secondo le regole del torneo.</p>
+
+      <p>Grazie per l’entusiasmo che dimostri partecipando al torneo,</p>
+
+    </mj-text>
+
+
+  </mj-column>
+</mj-section>
+
