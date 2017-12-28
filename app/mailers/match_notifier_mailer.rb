@@ -19,7 +19,7 @@ class MatchNotifierMailer < ApplicationMailer
 
     mail(
       to: @match.send(to).email,
-      subject: object , &:mjml
+      subject: object, &:mjml
     )
   end
 
@@ -49,9 +49,19 @@ class MatchNotifierMailer < ApplicationMailer
 
   def notify_outdated(match, to: :challenged)
     @match = match
+    @destinatario = to
+
+    object = base_subject + " –  ESITO SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name}"
+
+    if @match.winner
+      object += " CON UNA SOLA SESSIONE REGISTRATA"
+    else
+      object += "  CON NESSUNA SESSIONE REGISTRATA"
+    end
+
     mail(
       to: @match.send(to).email,
-      subject: 'Sfida Scaduta', &:mjml
+      subject: object, &:mjml
     )
   end
 
@@ -65,6 +75,15 @@ class MatchNotifierMailer < ApplicationMailer
         object += ' – COMUNICAZIONE NUOVA SFIDA'
       when 'approval_waiting'
         object += " – CONCLUSIONE SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name} CON DUE SESSIONI REGISTRATE"
+      when 'timeouted'
+        object += " – CONCLUSIONE SFIDA #{@match.challenger.full_name} VS #{@match.challenged.full_name}"
+
+        if @match.winner
+          object += " CON UNA SOLA SESSIONE REGISTRATA"
+        else
+          object += " CON NESSUNA SESSIONE REGISTRATA"
+        end
+
     end
 
     mail(to: judge.email, subject: object, &:mjml)
