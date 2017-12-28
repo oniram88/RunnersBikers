@@ -14,6 +14,9 @@ it:
             challenged:
               to_high_in_rank: troppo alto nella classifica
               to_low_in_rank: troppo basso nella classifica
+            created_at:
+              to_early_for_creation: troppo presto per poter creare una sfida
+              timout_for_creation: troppo tardi per poter creare una sfida
         performance:
           attributes:
             pace:
@@ -25,3 +28,4 @@ it:
       match:
         challenged: Sfidato
         challenger: Sfidante
+        created_at: Data di creazione

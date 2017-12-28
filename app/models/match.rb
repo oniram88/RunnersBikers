@@ -191,7 +191,7 @@ class Match < ApplicationRecord
 
   def check_time_limits
     self.errors.add(:created_at, :to_early_for_creation, min_time: RunnersBikers::TIME_TO_START_CHALLENGES) if Time.now < RunnersBikers::TIME_TO_START_CHALLENGES
-    self.errors.add(:created_at, :cant_be_created, max_time: RunnersBikers::MAX_TIME_FOR_START_CHALLENGES) if Time.now > RunnersBikers::MAX_TIME_FOR_START_CHALLENGES
+    self.errors.add(:created_at, :timout_for_creation, max_time: RunnersBikers::MAX_TIME_FOR_START_CHALLENGES) if Time.now > RunnersBikers::MAX_TIME_FOR_START_CHALLENGES
   end
 
   def max_as_challenged_or_challenger

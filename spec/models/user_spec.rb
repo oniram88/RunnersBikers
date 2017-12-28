@@ -129,6 +129,29 @@ RSpec.describe User, type: :model do
 
     end
 
+    it " too early for match "do
+
+      Timecop.travel(RunnersBikers::TIME_TO_START_CHALLENGES-1.minute) do
+        expect(create(:performance_with_points).user.machable(create(:performance_with_points).user)).to be_falsey
+      end
+      Timecop.travel(RunnersBikers::TIME_TO_START_CHALLENGES+1.second) do
+        expect(create(:performance_with_points).user.machable(create(:performance_with_points).user)).to be_truthy
+      end
+
+    end
+
+
+    it " too late for match "do
+
+      Timecop.travel(RunnersBikers::MAX_TIME_FOR_START_CHALLENGES-1.minute) do
+        expect(create(:performance_with_points).user.machable(create(:performance_with_points).user)).to be_truthy
+      end
+      Timecop.travel(RunnersBikers::MAX_TIME_FOR_START_CHALLENGES+1.second) do
+        expect(create(:performance_with_points).user.machable(create(:performance_with_points).user)).to be_falsey
+      end
+
+    end
+
   end
 
 

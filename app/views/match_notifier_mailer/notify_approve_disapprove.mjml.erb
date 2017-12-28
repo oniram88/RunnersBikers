@@ -3,13 +3,18 @@
 
     <mj-text font-size="20px" font-family="helvetica">
       Caro <%= @match.send(@destinatario).full_name %>,<br></br>
-      <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
+      <% if @match.approved? %>
+        <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
 
-      <p>le sessioni di sfida sono state:</p>
+        <p>le sessioni di sfida sono state:</p>
 
-      <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
+        <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
 
-      <p><%= @match.looser.full_name %>  < link sessione internet perdente > < punti sessione perdente ></p>
+        <p><%= @match.looser.full_name %>  < link sessione internet perdente > < punti sessione perdente ></p>
+
+      <%else%>
+        <p>ti comunichiamo che la sfida tra <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> non è stata approvata.</p>
+      <%end%>
 
       <p>Da ora potete nuovamente sfidare un nuovo concorrente, secondo le regole del torneo.</p>
 

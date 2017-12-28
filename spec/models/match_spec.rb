@@ -18,6 +18,8 @@ require 'rails_helper'
 
 RSpec.describe Match, type: :model do
 
+  include ActiveJob::TestHelper
+
 
   it "match only possible within range +-3 of rank" do
 
@@ -172,11 +174,13 @@ RSpec.describe Match, type: :model do
         Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
 
         expect {
-          expect {
-            expect(@match.outdated?).to be_truthy
-            Match.check_timeouts
-            @match.reload
-          }.to change(@match, :status).from('wait').to('timeouted')
+          perform_enqueued_jobs do
+            expect {
+              expect(@match.outdated?).to be_truthy
+              Match.check_timeouts
+              @match.reload
+            }.to change(@match, :status).from('wait').to('timeouted')
+          end
         }.to change {
           ActionMailer::Base.deliveries.count
         }.by(3)
@@ -189,12 +193,14 @@ RSpec.describe Match, type: :model do
         create(:performance, user: @sfidante)
 
         expect {
-          expect {
+          perform_enqueued_jobs do
             expect {
-              Match.check_timeouts
-              @match.reload
-            }.to change(@match, :status).from('wait').to('timeouted')
-          }.to change(@match, :winner).to(@sfidante)
+              expect {
+                Match.check_timeouts
+                @match.reload
+              }.to change(@match, :status).from('wait').to('timeouted')
+            }.to change(@match, :winner).to(@sfidante)
+          end
         }.to change {
           ActionMailer::Base.deliveries.count
         }.by(3)
@@ -206,12 +212,14 @@ RSpec.describe Match, type: :model do
         create(:performance, user: @sfidato)
 
         expect {
-          expect {
+          perform_enqueued_jobs do
             expect {
-              Match.check_timeouts
-              @match.reload
-            }.to change(@match, :status).from('wait').to('timeouted')
-          }.to change(@match, :winner).to(@sfidato)
+              expect {
+                Match.check_timeouts
+                @match.reload
+              }.to change(@match, :status).from('wait').to('timeouted')
+            }.to change(@match, :winner).to(@sfidato)
+          end
         }.to change {
           ActionMailer::Base.deliveries.count
         }.by(3)
@@ -230,22 +238,27 @@ RSpec.describe Match, type: :model do
       u1 = create(:user)
       u2 = create(:user)
 
-      expect { create(:match, challenger: u1, challenged: u2) }
-        .to change {
-          ActionMailer::Base.deliveries.count
-        }.by(2)
+      expect {
+        perform_enqueued_jobs do
+          create(:match, challenger: u1, challenged: u2)
+        end
+      }.to change {
+        ActionMailer::Base.deliveries.count
+      }.by(3) #2 utenti e arbitro
 
     end
 
     it "performances create, invio email agli arbitri per validare" do
 
       expect {
-        create(:performance, user: @sfidante)
-        create(:performance, user: @sfidato)
+        perform_enqueued_jobs do
+          create(:performance, user: @sfidante)
+          create(:performance, user: @sfidato)
 
-        em = ActionMailer::Base.deliveries.last
-        expect(em.to).to include(@judge.email)
-        expect(em.body.encoded).to match('Sfida conclusa')
+          em = ActionMailer::Base.deliveries.last
+          expect(em.to).to include(@judge.email)
+          expect(em.body.encoded).to match('appena conclusa una sfida')
+        end
       }.to change {
         ActionMailer::Base.deliveries.count
       }.by(1)
@@ -259,9 +272,11 @@ RSpec.describe Match, type: :model do
       expect(m).to be_approval_waiting
 
       expect {
-        expect {
-          @judge.approve(m)
-        }.to change(m, :status).from('approval_waiting').to('approved')
+        perform_enqueued_jobs do
+          expect {
+            @judge.approve(m)
+          }.to change(m, :status).from('approval_waiting').to('approved')
+        end
       }.to change {
         ActionMailer::Base.deliveries.count
       }.by(3) #una per giudice e le altre per i due challengers
@@ -274,9 +289,11 @@ RSpec.describe Match, type: :model do
       expect(m).to be_approval_waiting
 
       expect {
-        expect {
-          @judge.disapprove(m)
-        }.to change(m, :status).from('approval_waiting').to('disapproved')
+        perform_enqueued_jobs do
+          expect {
+            @judge.disapprove(m)
+          }.to change(m, :status).from('approval_waiting').to('disapproved')
+        end
       }.to change {
         ActionMailer::Base.deliveries.count
       }.by(3) #una per giudice e le altre per i due challengers

@@ -2,6 +2,8 @@ module RunnersBikers
 
   VERSION = '1.0.2'
 
+  PROGRAMM_STATUS = Rails.env.test? ? 'test' : Rails.application.secrets.challange_status
+
   # Durata Sfida
   MATCH_DURATION = 5.days
 
@@ -9,13 +11,13 @@ module RunnersBikers
   MAX_PERFORMANCE_INSERT = Time.zone.parse('2018-02-12 00:00:00')
 
   # Tempo massimo iscrizioni
-  MAX_ISCRIZIONE = Time.zone.parse('2018-01-13 00:00:00')
-
-  # Tempo massimo Inizio sfide
-  MAX_TIME_FOR_START_CHALLENGES = MAX_PERFORMANCE_INSERT - MATCH_DURATION - 2.hours
+  MAX_ISCRIZIONE = PROGRAMM_STATUS == 'test' ? Time.now + 1.year : Time.zone.parse('2018-01-13 00:00:00')
 
   # Time to start challengers
-  TIME_TO_START_CHALLENGES = Rails.application.secrets.challange_status == 'test' ? Time.now - 1.day : Time.zone.parse('2018-01-26 00:00:00')
+  TIME_TO_START_CHALLENGES = PROGRAMM_STATUS == 'test' ? Time.now - 1.day : Time.zone.parse('2018-01-26 00:00:00')
+
+  # Tempo massimo Inizio sfide
+  MAX_TIME_FOR_START_CHALLENGES = PROGRAMM_STATUS == 'test' ? Time.now + 1.month : MAX_PERFORMANCE_INSERT - MATCH_DURATION - 2.hours
 
   # Numero massimo di sfide come sfidante
   MAX_AS_CHALLENGER = 3
