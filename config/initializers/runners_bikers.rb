@@ -1,6 +1,6 @@
 module RunnersBikers
 
-  VERSION = '1.0.2'
+  VERSION = '1.0.3'
 
   PROGRAMM_STATUS = Rails.env.test? ? 'test' : Rails.application.secrets.challange_status
 
