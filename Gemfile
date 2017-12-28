@@ -88,3 +88,4 @@ gem "js-routes"
 gem 'i18n-debug'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'mjml-rails'
+gem 'sucker_punch'

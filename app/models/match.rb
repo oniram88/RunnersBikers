@@ -151,28 +151,28 @@ class Match < ApplicationRecord
   end
 
   def email_notify_creation
-    MatchNotifierMailer.notify_creation(self, to: :challenger).deliver
-    MatchNotifierMailer.notify_creation(self, to: :challenged).deliver
+    MatchNotifierMailer.notify_creation(self, to: 'challenger').deliver_later(wait: 1.seconds)
+    MatchNotifierMailer.notify_creation(self, to: 'challenged').deliver_later(wait: 1.seconds)
   end
 
   def email_notify_approval_waiting
-    MatchNotifierMailer.notify_approval_waiting(self, to: :challenger).deliver
-    MatchNotifierMailer.notify_approval_waiting(self, to: :challenged).deliver
+    MatchNotifierMailer.notify_approval_waiting(self, to: 'challenger').deliver_later(wait: 1.seconds)
+    MatchNotifierMailer.notify_approval_waiting(self, to: 'challenged').deliver_later(wait: 1.seconds)
   end
 
   def email_notify_approve_disapprove
-    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenger).deliver
-    MatchNotifierMailer.notify_approve_disapprove(self, to: :challenged).deliver
+    MatchNotifierMailer.notify_approve_disapprove(self, to: 'challenger').deliver_later(wait: 1.seconds)
+    MatchNotifierMailer.notify_approve_disapprove(self, to: 'challenged').deliver_later(wait: 1.seconds)
   end
 
   def email_notify_outdated
-    MatchNotifierMailer.notify_outdated(self, to: :challenger).deliver
-    MatchNotifierMailer.notify_outdated(self, to: :challenged).deliver
+    MatchNotifierMailer.notify_outdated(self, to: 'challenger').deliver_later(wait: 1.seconds)
+    MatchNotifierMailer.notify_outdated(self, to: 'challenged').deliver_later(wait: 1.seconds)
   end
 
   def notify_judges
     User.with_role(:judge).each do |j|
-      MatchNotifierMailer.notify_judge(self.reload, j).deliver
+      MatchNotifierMailer.notify_judge(self.reload, j).deliver_later(wait: 1.seconds)
     end
   end
 

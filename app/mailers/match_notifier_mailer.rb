@@ -6,6 +6,7 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_creation(match, to: :challenged)
+    to = to.to_sym
     @match = match
     @destinatario = to
 
@@ -24,6 +25,7 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_approval_waiting(match, to: :challenged)
+    to = to.to_sym
     @match = match
     @destinatario = to
 
@@ -36,6 +38,7 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_approve_disapprove(match, to: :challenged)
+    to = to.to_sym
     @match = match
     @destinatario = to
 
@@ -48,6 +51,7 @@ class MatchNotifierMailer < ApplicationMailer
   end
 
   def notify_outdated(match, to: :challenged)
+    to = to.to_sym
     @match = match
     @destinatario = to
 
