@@ -1,0 +1,21 @@
+<mj-section>
+  <mj-column>
+    <mj-text font-size="20px" font-family="helvetica">
+      <p>Caro Arbitro
+        <%= @judge.full_name %>,
+      </p>
+
+      <p>ti comunichiamo che si è appena concluso il tempo necessario a realizzare la sfida tra <%= @match.challenger.full_name %> ed il
+        concorrente <%= @match.challenged.full_name %>.</p>
+
+      <% if @match.winner %>
+      <p>Uno dei due concorrenti non ha realizzato la propria sessione e pertanto la sfida è stata assegnata dal software.</p>
+      <%else%>
+      <p>Nessuno dei due concorrenti ha realizzato la propria sessione e pertanto la sfida è stata annullata.</p>
+      <%end%>
+
+      <p>Nessuna azione è più richiesta per tale sfida.</p>
+    </mj-text>
+  </mj-column>
+</mj-section>
+

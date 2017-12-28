@@ -1,0 +1,14 @@
+<mj-section>
+  <mj-column>
+    <mj-text font-size="20px" font-family="helvetica">
+      <p>Caro Arbitro
+        <%= @judge.full_name %>,
+      </p>
+      <p>ti comunichiamo le sessioni di sfida tra i concorrenti <%= @match.challenger.full_name %> ed il
+        concorrente <%= @match.challenged.full_name %> è stata appena effettuata.</p>
+
+      <p>Nessuna azione è più richiesta per tale sfida.</p>
+    </mj-text>
+  </mj-column>
+</mj-section>
+

@@ -67,8 +67,9 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.default_url_options = { host: 'challenge.runnersbikers.it', port: 80 }
+  config.action_mailer.asset_host = 'https://challenge.runnersbikers.it'
 
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
+    # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
@@ -90,5 +91,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.active_job.queue_adapter = :sucker_punch
+
 
 end

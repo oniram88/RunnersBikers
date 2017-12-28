@@ -1,0 +1,24 @@
+<mjml>
+  <mj-body>
+    <mj-container>
+      <mj-section>
+        <mj-column>
+          <mj-image width="100" src="<%= image_path('logo.jpg') %>"
+                    align="left"></mj-image>
+
+          <mj-divider border-color="#052d6A"></mj-divider>
+        </mj-column>
+      </mj-section>
+
+      <%= yield %>
+
+      <mj-section>
+        <mj-column>
+          <mj-text font-size="20px" font-family="helvetica" align="right">
+            Il team
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

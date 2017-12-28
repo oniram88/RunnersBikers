@@ -1,0 +1,15 @@
+<mj-section>
+  <mj-column>
+
+    <mj-text font-size="20px" font-family="helvetica">
+      <p>Caro Arbitro <%= @judge.full_name %>,</p>
+      <p>ti comunichiamo che si è appena conclusa una sfida con ENTRAMBE LE SESSIONI REGISTRATE.</p>
+
+      <p>Il concorrente <%= @match.challenger.full_name %> ed il concorrente <%= @match.challenged.full_name %> si sono sfidati.</p>
+
+      <p>Dovresti collegarti al <%= link_to 'sito ausiliasio di gara',root_url %> per validare la sfida e decretare il vincitore.</p>
+
+    </mj-text>
+
+  </mj-column>
+</mj-section>

@@ -1,0 +1,36 @@
+<mj-section>
+  <mj-column>
+
+    <mj-text font-size="20px" font-family="helvetica">
+      Caro <%= @match.send(@destinatario).full_name %>,<br></br>
+
+      <% if @match.winner %>
+
+      <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
+
+      <p>In tale sfida solo uno dei due concorrenti ha realizzato la propria sessione entro il tempo messo a disposizione per la sfida.</p>
+
+      <p>Pertanto l’unica sessione sportiva associata alla sfida è stata:</p>
+
+      <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
+
+      <%else %>
+
+      <p>ti comunichiamo che si è appena concluso il tempo necessario a realizzare la sfida tra <%= @match.challenger.full_name %> ed il concorrente <%= @match.challenged.full_name %>.</p>
+
+      <p>Nessuno dei due concorrenti ha realizzato la propria sessione e pertanto la sfida è stata annullata.</p>
+
+
+      <%end%>
+
+
+      <p>Da ora potete nuovamente sfidare un nuovo concorrente, secondo le regole del torneo.</p>
+
+      <p>Grazie per l’entusiasmo che dimostri partecipando al torneo,</p>
+
+
+    </mj-text>
+
+
+  </mj-column>
+</mj-section>
