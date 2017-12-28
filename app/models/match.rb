@@ -40,7 +40,7 @@ class Match < ApplicationRecord
 
   validate :correct_rank_position
   validate :max_as_challenged_or_challenger, on: :create
-  validate :check_time_limits
+  validate :check_time_limits, on: :create
 
   after_create :email_notify_creation
 
