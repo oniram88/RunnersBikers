@@ -99,6 +99,9 @@ class User < ApplicationRecord
 
   # questa istanza può sfidate l'utente passato come parametro?
   def machable(user)
+    logger.debug { "matches_0.5" }
+    return false if Time.now > RunnersBikers::MAX_TIME_FOR_START_CHALLENGES
+    return false if Time.now < RunnersBikers::TIME_TO_START_CHALLENGES
     logger.debug { "matches_1" }
     return false if user.id == self.id
     logger.debug { "matches_1.2" }
@@ -132,7 +135,7 @@ class User < ApplicationRecord
   end
 
   def full_name
-    to_s(format:"%{first_name} %{last_name}")
+    to_s(format: "%{first_name} %{last_name}")
   end
 
   ##
@@ -159,9 +162,9 @@ class User < ApplicationRecord
   end
 
   def check_max_registration
-    if Time.now >= RunnersBikers::MAX_ISCRIZIONE
-      self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
-    end
+    # if Time.now >= RunnersBikers::MAX_ISCRIZIONE
+    self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
+    # end
   end
 
 end

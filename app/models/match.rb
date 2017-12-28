@@ -40,6 +40,7 @@ class Match < ApplicationRecord
 
   validate :correct_rank_position
   validate :max_as_challenged_or_challenger, on: :create
+  validate :check_time_limits
 
   after_create :email_notify_creation
 
@@ -186,6 +187,11 @@ class Match < ApplicationRecord
     self.errors.add(:challenged, :to_low_in_rank) if self.challenger.rank - 3 > self.challenged.rank
     self.errors.add(:challenged, :to_high_in_rank) if self.challenger.rank + 3 < self.challenged.rank
 
+  end
+
+  def check_time_limits
+    self.errors.add(:created_at, :to_early_for_creation, min_time: RunnersBikers::TIME_TO_START_CHALLENGES) if Time.now < RunnersBikers::TIME_TO_START_CHALLENGES
+    self.errors.add(:created_at, :cant_be_created, max_time: RunnersBikers::MAX_TIME_FOR_START_CHALLENGES) if Time.now > RunnersBikers::MAX_TIME_FOR_START_CHALLENGES
   end
 
   def max_as_challenged_or_challenger
