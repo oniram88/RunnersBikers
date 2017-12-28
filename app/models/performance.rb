@@ -26,7 +26,7 @@ class Performance < ApplicationRecord
   validates :pace, presence: true, format: PaceType.reg_exp
   validates :positive_gain, presence: true, numericality: { greater_than: 0, only_integer: true }
   validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//
-  validate :max_insert_time
+  validate :time_checks, on: :create
   before_save :update_points
 
   after_save :update_user_points_rank
@@ -37,7 +37,7 @@ class Performance < ApplicationRecord
   # d = dislivello positivo in m
   # r = ritmo medio in min/km (5:30=> 5+30/60 => 5,5)
   def calculate_points
-    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0)**2).to_i
+    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0) ** 2).to_i
   end
 
   private
@@ -64,9 +64,12 @@ class Performance < ApplicationRecord
 
   ##
   # Definizione del tempo massimo di inserimento della performance
-  def max_insert_time
+  def time_checks
     if Time.now >= RunnersBikers::MAX_PERFORMANCE_INSERT
       self.errors.add(:created_at, :challenger_expired, max_time: RunnersBikers::MAX_PERFORMANCE_INSERT)
+    end
+    if Time.now < RunnersBikers::MIN_PERFORMANCE_INSERT
+      self.errors.add(:created_at, :not_starter, min_time: RunnersBikers::MIN_PERFORMANCE_INSERT)
     end
   end
 end

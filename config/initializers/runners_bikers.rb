@@ -10,6 +10,9 @@ module RunnersBikers
   # Tempo massimo inserimento Performance prima della fine della gara
   MAX_PERFORMANCE_INSERT = Time.zone.parse('2018-02-12 00:00:00')
 
+  # Tempo inizio inserimento Performance
+  MIN_PERFORMANCE_INSERT = PROGRAMM_STATUS == 'test' ? Time.now - 1.month : Time.zone.parse('2018-01-14 00:00:00')
+
   # Tempo massimo iscrizioni
   MAX_ISCRIZIONE = PROGRAMM_STATUS == 'test' ? Time.now + 1.year : Time.zone.parse('2018-01-13 00:00:00')
 
