@@ -14,11 +14,7 @@ class MatchPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.is_judge? or user.is_admin?
-        scope
-      else
-        scope.none
-      end
+      scope
     end
   end
 end

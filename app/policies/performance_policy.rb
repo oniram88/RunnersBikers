@@ -11,6 +11,12 @@ class PerformancePolicy < ApplicationPolicy
 
   end
 
+
+  def show?
+    # è una propria oppure è di un match
+    super || Match.where(:challenger_p_id => record.id).exists? || Match.where(:challenged_p_id => record.id).exists?
+  end
+
   def update?
     return false if (!record.challenged_match.nil? and
       !record.challenged_match.wait? and
