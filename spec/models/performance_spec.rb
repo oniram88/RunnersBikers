@@ -53,5 +53,22 @@ RSpec.describe Performance, type: :model do
     end
   end
 
+  it "on update change user points" do
+    p = create(:performance)
+
+    expect {
+      p.update_attributes(:distance => p.distance + 1)
+    }.to change(p.user, :total_points)
+
+  end
+
+  it "on destroy change user points" do
+    p = create(:performance)
+
+    expect {
+      p.destroy
+    }.to change(p.user, :total_points).by(p.points * -1)
+  end
+
 
 end
