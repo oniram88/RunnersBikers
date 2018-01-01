@@ -30,7 +30,7 @@
       </template>
 
       <template slot="challenger" slot-scope="data">
-        <vf-icon title="Vincitore" v-if="data.item.challenged_id==data.item.winner_id" icon="diamond"/>
+        <vf-icon title="Vincitore" v-if="data.item.challenger_id==data.item.winner_id" icon="diamond"/>
         {{data.value.username}}
         <template v-if="data.item.challenger_performance">
           <b-button target="" variant="info"
