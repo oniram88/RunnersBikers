@@ -40,8 +40,12 @@ class Ranking < User
     performances.sum(:positive_gain)
   end
 
-  def max_lose_points
-    (total_points*0.25).to_i
+  def max_lose_points(user)
+    self.class.max_loose_points(user, self)
+  end
+
+  def self.max_loose_points(u1, u2)
+    ([u1.total_points, u2.total_points].min * 0.25).to_i
   end
 
 end
