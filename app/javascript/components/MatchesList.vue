@@ -132,7 +132,7 @@
       approve(item) {
         item.approvable = false;
         axios.post(Routes.approve_match_path(item.id)).then(ris => {
-          if (ris.success) {
+          if (ris.data.success) {
             this.load_matches();
           }
         });

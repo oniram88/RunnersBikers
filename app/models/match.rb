@@ -38,7 +38,7 @@ class Match < ApplicationRecord
 
   before_validation :set_defaults
 
-  validate :correct_rank_position
+  validate :correct_rank_position, on: :create
   validate :max_as_challenged_or_challenger, on: :create
   validate :check_time_limits, on: :create
 
@@ -126,6 +126,7 @@ class Match < ApplicationRecord
       self.update_rank
     end
     email_notify_approve_disapprove
+    true
   end
 
   ##
@@ -137,6 +138,7 @@ class Match < ApplicationRecord
     self.status = :disapproved
     save!
     email_notify_approve_disapprove
+    true
   end
 
   ##
