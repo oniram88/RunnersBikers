@@ -56,6 +56,8 @@ class Match < ApplicationRecord
     disapproved: 4
   }
 
+  scope :open_matches, -> { where(status: [Match.statuses[:wait], Match.statuses[:approval_waiting]]) }
+
 
   #Data in cui non la sfida scade
   def expiration_date

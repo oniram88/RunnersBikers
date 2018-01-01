@@ -80,8 +80,11 @@ class User < ApplicationRecord
 
   def update_points
     points = self.performances.reload.sum(:points)
+    Rails.logger.debug {"Punti per performances #{points}"}
     points += self.matches_as_winner.reload.sum(:points)
+    Rails.logger.debug {"Punti con sfide vinte #{points}"}
     points -= self.matches_as_looser.reload.sum(:points)
+    Rails.logger.debug {"Punti con sfide perse #{points}"}
     self.update_attributes(total_points: points)
   end
 
@@ -94,7 +97,7 @@ class User < ApplicationRecord
   end
 
   def open_matches
-    matches_as_challenger.wait + matches_as_challenged.wait
+    matches_as_challenger.open_matches + matches_as_challenged.open_matches
   end
 
   # questa istanza può sfidate l'utente passato come parametro?

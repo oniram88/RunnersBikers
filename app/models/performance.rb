@@ -30,6 +30,7 @@ class Performance < ApplicationRecord
   before_save :update_points
 
   after_save :update_user_points_rank
+  after_destroy :update_user_points_rank
   after_save :check_match_data
 
   # PUNTEGGIO = 100 x ( D + d/100 ) / r^2

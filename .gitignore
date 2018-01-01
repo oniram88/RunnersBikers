@@ -36,3 +36,5 @@ spec/examples\.txt
 db/test\.sqlite3
 
 *.sqlite3-journal
+
+*.sql
