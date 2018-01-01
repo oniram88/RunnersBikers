@@ -5,4 +5,8 @@ module EmailsHelpers
   end
 
 
+  def performance_url(p)
+    "#{root_url}/#/matches/user/#{p.user_id}/performances/#{p.id}/edit_performance"
+  end
+
 end

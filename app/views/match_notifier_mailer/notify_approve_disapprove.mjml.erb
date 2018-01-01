@@ -8,9 +8,9 @@
 
         <p>le sessioni di sfida sono state:</p>
 
-        <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
+        <p><%= @match.winner.full_name %>  <%= link_to "Sessione",performance_url(@match.winner_performance) %> <%= @match.winner_performance.points %></p>
 
-        <p><%= @match.looser.full_name %>  < link sessione internet perdente > < punti sessione perdente ></p>
+        <p><%= @match.looser.full_name %>  <%= link_to "Sessione",performance_url(@match.looser_performance) %> <%= @match.looser_performance.points %></p>
 
       <%else%>
         <p>ti comunichiamo che la sfida tra <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> non è stata approvata.</p>

@@ -12,7 +12,7 @@
 
       <p>Pertanto l’unica sessione sportiva associata alla sfida è stata:</p>
 
-      <p><%= @match.winner.full_name %>  < link sessione internet vincitore> < punti sessione vincitore></p>
+      <p><%= @match.winner.full_name %>  <%= link_to "Sessione",performance_url(@match.winner_performance) %> <%= @match.winner_performance.points %></p>
 
       <%else %>
 

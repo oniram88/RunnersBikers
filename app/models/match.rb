@@ -92,6 +92,22 @@ class Match < ApplicationRecord
 
   end
 
+  def winner_performance
+    if winner_id == challenger_id
+      challenger_performance
+    else
+      challenged_performance
+    end
+  end
+
+  def looser_performance
+    if looser_id == challenger_id
+      challenger_performance
+    else
+      challenged_performance
+    end
+  end
+
   def set_looser_winner!
     set_looser_winner
     save!
