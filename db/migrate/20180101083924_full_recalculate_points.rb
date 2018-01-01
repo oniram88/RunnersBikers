@@ -33,11 +33,13 @@ class FullRecalculatePoints < ActiveRecord::Migration[5.1]
         u.update_points
       end
 
-      counts = 0
-      while ::SuckerPunch::Queue.stats["ActiveJob::QueueAdapters::SuckerPunchAdapter::JobWrapper"]["workers"]["busy"] > 0
-        puts "attendo #{counts}"
-        counts += 1
-        sleep(1)
+      unless Rails.env.test?
+        counts = 0
+        while ::SuckerPunch::Queue.stats["ActiveJob::QueueAdapters::SuckerPunchAdapter::JobWrapper"]["workers"]["busy"] > 0
+          puts "attendo #{counts}"
+          counts += 1
+          sleep(1)
+        end
       end
 
     end
