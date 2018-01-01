@@ -5,10 +5,11 @@
 
 <template>
 
-  <b-card :title="persisted ? 'Modifica Sessione':'Nuova Sessione' "
+  <b-card :title="persisted ? ( readonly ? 'Visualizza Sessione' : 'Modifica Sessione'):'Nuova Sessione' "
           class="mb-12">
 
-    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
+    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset"
+            v-if="show && !readonly">
 
 
       <b-form-group label="Distanza:"
@@ -67,6 +68,26 @@
       </b-button>
     </b-form>
 
+    <b-row v-else="">
+      <b-col>
+        <dl>
+          <dt>Distanza</dt>
+          <dd>{{form.distance}}</dd>
+
+          <dt>Ritmo Medio:</dt>
+          <dd>{{form.pace}}</dd>
+
+          <dt>Dislivello Positivo:</dt>
+          <dd>{{form.positive_gain}}</dd>
+
+          <dt>Url sito:</dt>
+          <dd>
+            <b-link :href="form.url">{{form.url}}</b-link>
+          </dd>
+        </dl>
+      </b-col>
+    </b-row>
+
     <b-alert :show="callback_message.count_down"
              dismissible
              :variant="callback_message.type"
@@ -88,6 +109,7 @@
 
 
       return {
+        readonly: false,
         disabled_save: false,
         form: {
           distance: 0,
@@ -125,11 +147,17 @@
       this.load_data();
     },
     methods: {
-      set_correct_decimal(){
-        this.form.distance = this.form.distance.replace(',','.')
+      set_correct_decimal() {
+        this.form.distance = this.form.distance.replace(',', '.')
       },
       load_data() {
         if (this.$route.params.id) {
+
+          this.readonly = true;
+          this.$authorize('performance', 'update?', this.$route.params.id).then((ris) => {
+            this.readonly = !ris;
+          });
+
           this.onReset();
 
           let path = Routes.performance_path(this.$route.params.id);
@@ -174,7 +202,9 @@
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
-            setTimeout(()=>{me.$router.go(-1)},1500);
+            setTimeout(() => {
+              me.$router.go(-1)
+            }, 1500);
           } else {
             me.callback_message.type = 'danger'
             me.callback_message.message = 'Performance non valida';

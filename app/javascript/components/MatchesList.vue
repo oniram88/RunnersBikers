@@ -21,7 +21,6 @@
         <vf-icon title="Vincitore" v-if="data.item.challenged_id==data.item.winner_id" icon="diamond"/>
         <template v-if="data.item.challenged_performance">
           <b-button target="" variant="info"
-                    v-authorize:performance.update?="data.item.challenged_performance.id"
                     :to="{name:'match_performance_edit',params:data.item.challenged_performance}">
             <vf-icon icon="road"/>
           </b-button>
@@ -34,7 +33,6 @@
         {{data.value.username}}
         <template v-if="data.item.challenger_performance">
           <b-button target="" variant="info"
-                    v-authorize:performance.update?="data.item.challenger_performance.id"
                     :to="{name:'match_performance_edit',params:data.item.challenger_performance}">
             <vf-icon icon="road"/>
           </b-button>
