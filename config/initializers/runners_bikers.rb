@@ -5,7 +5,7 @@ module RunnersBikers
   PROGRAMM_STATUS = Rails.env.test? ? 'test' : Rails.application.secrets.challange_status
 
   # Durata Sfida
-  MATCH_DURATION = 5.days
+  MATCH_DURATION = PROGRAMM_STATUS == 'test' ? 10.minutes : 5.days
 
   # Tempo massimo inserimento Performance prima della fine della gara
   MAX_PERFORMANCE_INSERT = Time.zone.parse('2018-02-12 00:00:00')
