@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180101112202) do
+ActiveRecord::Schema.define(version: 20180106185236) do
 
   create_table "matches", force: :cascade do |t|
     t.integer "challenged_id"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20180101112202) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "points"
+    t.decimal "points", precision: 15, scale: 3
   end
 
   create_table "roles", force: :cascade do |t|
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20180101112202) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "rank"
-    t.integer "total_points", default: 0
+    t.decimal "total_points", precision: 15, scale: 3, default: "0.0"
     t.string "username"
     t.string "confirmation_token"
     t.datetime "confirmed_at"

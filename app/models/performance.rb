@@ -10,7 +10,7 @@
 #  url           :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  points        :integer
+#  points        :decimal(15, 3)
 #
 
 require 'pace_type'
@@ -38,7 +38,7 @@ class Performance < ApplicationRecord
   # d = dislivello positivo in m
   # r = ritmo medio in min/km (5:30=> 5+30/60 => 5,5)
   def calculate_points
-    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0) ** 2).to_i
+    (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0) ** 2).round(3)
   end
 
   private

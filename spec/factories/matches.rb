@@ -12,6 +12,9 @@
 #  challenger_p_id :integer
 #  challenged_p_id :integer
 #  judge_id        :integer
+#  winner_id       :integer
+#  looser_id       :integer
+#  note            :text(65535)
 #
 
 FactoryBot.define do

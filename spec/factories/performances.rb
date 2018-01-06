@@ -10,7 +10,7 @@
 #  url           :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  points        :integer
+#  points        :decimal(15, 3)
 #
 
 FactoryBot.define do

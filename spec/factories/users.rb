@@ -22,8 +22,12 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  rank                   :integer
-#  total_points           :integer          default(0)
+#  total_points           :decimal(15, 3)   default(0.0)
 #  username               :string(255)
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  unconfirmed_email      :string(255)
 #
 
 FactoryBot.define do
