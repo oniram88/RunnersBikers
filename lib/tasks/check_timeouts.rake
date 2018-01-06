@@ -5,6 +5,9 @@ namespace :runners_bikers do
 
     Match.check_timeouts
 
+    #aspettiamo 30 secondi per lasciar spedire tutta la posta
+    sleep 2.minutes
+
   end
 
 
