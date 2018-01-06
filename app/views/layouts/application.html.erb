@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <title>RunnersBikers</title>
-  <%= csrf_meta_tags %>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <%= javascript_include_tag 'application' %>
-  <%= javascript_pack_tag 'application' %>
-  <%= stylesheet_pack_tag 'application' %>
-</head>
-
-<body>
-<div class="container">
-  <%= flash_messages %>
+<%= render layout: "layouts/base_layout" do %>
   <%= yield %>
-</div>
-</body>
-</html>
+<% end %>

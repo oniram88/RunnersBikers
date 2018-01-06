@@ -1,0 +1,12 @@
+<%= render layout: "layouts/base_layout" do%>
+
+  <div class="row">
+    <div class="col-md-12 container_logo">
+      <%= image_tag 'logo.jpg' %>
+    </div>
+  </div>
+  <%= flash_messages %>
+
+  <%= yield %>
+
+<%end%>
