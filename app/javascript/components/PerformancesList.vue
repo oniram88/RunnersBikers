@@ -28,6 +28,10 @@
        {{data.item.distance | distance_format}}
       </template>
 
+      <template slot="created_at" slot-scope="data">
+        {{data.item.created_at | timezone | time_format}}
+      </template>
+
 
       <template slot="actions" slot-scope="data">
         <b-button target="" variant="info"
@@ -55,7 +59,6 @@
 <script>
 
   import axios from 'axios'
-  import moment from 'moment'
   import _ from 'lodash'
 
   export default {
@@ -65,10 +68,7 @@
           {
             key: 'created_at',
             sortable: true,
-            label: 'Data Inserimento',
-            formatter: value => {
-              return moment(value).format('l');
-            }
+            label: 'Data Inserimento'
           },
           {
             key: 'distance',

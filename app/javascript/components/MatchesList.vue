@@ -49,6 +49,10 @@
         </b-btn>
       </template>
 
+      <template slot="expiration_date" slot-scope="data">
+        {{data.item.expiration_date | timezone | calendar}}
+      </template>
+
 
     </b-table>
 
@@ -88,6 +92,11 @@
           {
             key: 'status',
             label: 'Stato'
+          },
+          {
+            key: 'expiration_date',
+            sortable: true,
+            label: 'Scadenza'
           },
           {
             key: 'points',

@@ -15,7 +15,8 @@ import SimpleAuthorize from 'vue_simple_authorize';
 import auth from './authorizations.js';
 import VueNumeric from 'vue-numeric'
 import format from 'number-format.js'
-
+import moment from 'moment-timezone';
+moment.locale('it');
 
 
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -33,14 +34,27 @@ Vue.use(VueNumeric);
 
 Vue.component('vf-icon', icon);
 
-import moment from 'moment';
-
-moment.locale('it');
-
 Vue.filter('distance_format', function (value) {
   if (!value) return '';
   return format( "0,00", parseFloat(value));
 });
+
+Vue.filter('timezone', function (value,) {
+  if (!value) return '';
+  return moment(value).tz('Europe/Rome')
+});
+
+Vue.filter('time_format', function (value,format='l') {
+  if (!value) return '';
+  return value.format(format);
+});
+
+Vue.filter('calendar', function (value,) {
+  if (!value) return '';
+  return value.calendar()
+});
+
+
 
 
 let token = document.getElementsByName('csrf-token')[0].getAttribute('content');

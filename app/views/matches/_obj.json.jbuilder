@@ -7,3 +7,5 @@ json.challenged_performance obj.challenged_performance
 json.challenger_performance obj.challenger_performance
 
 json.approvable policy(obj).approve?
+
+json.(obj, :expiration_date)
