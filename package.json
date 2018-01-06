@@ -22,6 +22,7 @@
     "vue-loader": "^13.6.0",
     "vue-numeric": "^2.2.8",
     "vue-router": "^3.0.1",
+    "vue-spinner": "^1.0.3",
     "vue-template-compiler": "^2.5.13",
     "vue_simple_authorize": "^1.1",
     "vuex": "^3.0.1"
