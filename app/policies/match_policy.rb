@@ -8,6 +8,14 @@ class MatchPolicy < ApplicationPolicy
     user.is_judge? and record.approval_waiting?
   end
 
+  def update_note?
+    update?
+  end
+
+  def update?
+    user.is_judge?
+  end
+
   def permitted_attributes
     [:id, :note]
   end

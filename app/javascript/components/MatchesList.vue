@@ -40,9 +40,11 @@
       </template>
 
       <template slot="action" slot-scope="data">
-        <b-btn @click="insert_note(data.item)" class="action">
+
+        <b-btn v-authorize:match.update_note?="data.item.id" @click="insert_note(data.item)" class="action">
           <vf-icon icon="pencil"/>
         </b-btn>
+
         <b-btn @click="approve(data.item)" v-if="data.item.approvable"
                class="action">
           <vf-icon icon="thumbs-o-up"/>
