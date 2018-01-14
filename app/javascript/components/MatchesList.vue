@@ -45,7 +45,8 @@
           <vf-icon icon="pencil"/>
         </b-btn>
 
-        <b-btn @click="approve(data.item)" v-if="data.item.approvable"
+        <b-btn  v-authorize:match.update?="data.item.id"
+                @click="approve(data.item)" v-if="data.item.approvable"
                class="action">
           <vf-icon icon="thumbs-o-up"/>
         </b-btn>

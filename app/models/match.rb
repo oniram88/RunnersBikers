@@ -37,7 +37,7 @@ class Match < ApplicationRecord
   validates :status, :challenged, :challenger, :points, :presence => true
   validates :judge, :presence => true, if: -> { approved? or disapproved? }
 
-  validates :looser, :winner, :presence => true, if: -> { approved? or (timeouted? and !(challenged_performance.nil? and challenger_performance.nil?)) }
+  validates :looser, :winner, :presence => true, if: -> { (approved? and !is_drawn?) or (timeouted? and !(challenged_performance.nil? and challenger_performance.nil?)) }
 
   before_validation :set_defaults
 
@@ -67,16 +67,26 @@ class Match < ApplicationRecord
     self.created_at + RunnersBikers::MATCH_DURATION
   end
 
+  ##
+  # Ritorna true quando il match è patta
+  def is_drawn?
+    if challenged_performance and challenger_performance
+      return challenged_performance.points == challenger_performance.points
+    end
+    false
+  end
 
   def set_looser_winner
 
     if self.approved?
-      if challenged_performance.points > challenger_performance.points
-        self.winner = challenged
-        self.looser = challenger
-      else
-        self.winner = challenger
-        self.looser = challenged
+      if challenged_performance.points != challenger_performance.points
+        if challenged_performance.points > challenger_performance.points
+          self.winner = challenged
+          self.looser = challenger
+        else
+          self.winner = challenger
+          self.looser = challenged
+        end
       end
     end
     if self.timeouted?

@@ -303,6 +303,25 @@ RSpec.describe Match, type: :model do
 
     end
 
+    it "Performance non valida in quanto patta" do
+      m = create(:match)
+
+      expect {
+        perform_enqueued_jobs do
+          expect {
+
+            create(:performance, user: m.challenged, distance: 10, pace: '4:00', positive_gain: 1)
+            create(:performance, user: m.challenger, distance: 10, pace: '4:00', positive_gain: 1)
+            m.reload
+            @judge.approve(m)
+
+          }.to change(m, :status).from('wait').to('approved')
+        end
+      }.to change {
+        ActionMailer::Base.deliveries.count
+      }.by(3) #una per giudice e le altre per i due challengers
+    end
+
 
   end
 

@@ -4,13 +4,25 @@
     <mj-text font-size="20px" font-family="helvetica">
       Caro <%= @match.send(@destinatario).full_name %>,<br></br>
       <% if @match.approved? %>
-        <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
 
-        <p>le sessioni di sfida sono state:</p>
+        <% if @match.is_drawn? %>
+          <p> Ti comunichiamo che la sfida non ha avuto nessun vincitore in quanto il risultato è stato uguale</p>
 
-        <p><%= @match.winner.full_name %>  <%= link_to "Sessione",performance_url(@match.winner_performance) %> <%= @match.winner_performance.points %></p>
+          <p>le sessioni di sfida sono state:</p>
 
-        <p><%= @match.looser.full_name %>  <%= link_to "Sessione",performance_url(@match.looser_performance) %> <%= @match.looser_performance.points %></p>
+          <p><%= @match.challenger.full_name %>  <%= link_to "Sessione",performance_url(@match.challenger_performance) %> <%= @match.challenger_performance.points %></p>
+
+          <p><%= @match.challenged.full_name %>  <%= link_to "Sessione",performance_url(@match.challenged_performance) %> <%= @match.challenged_performance.points %></p>
+
+        <%else%>
+                <p>ti comunichiamo che il vincitore della sfida <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> è  <%= @match.winner.full_name %> che così si aggiudica i seguenti punti <%= @match.points %>. </p>
+
+                <p>le sessioni di sfida sono state:</p>
+
+                <p><%= @match.winner.full_name %>  <%= link_to "Sessione",performance_url(@match.winner_performance) %> <%= @match.winner_performance.points %></p>
+
+                <p><%= @match.looser.full_name %>  <%= link_to "Sessione",performance_url(@match.looser_performance) %> <%= @match.looser_performance.points %></p>
+        <%end%>
 
       <%else%>
         <p>ti comunichiamo che la sfida tra <%= @match.challenger.full_name %> vs <%= @match.challenged.full_name %> non è stata approvata.</p>
