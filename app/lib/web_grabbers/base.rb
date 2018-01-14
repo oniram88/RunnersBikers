@@ -12,6 +12,7 @@ module WebGrabbers
 
     def initialize(performance)
       self.performance = performance
+      self.grab_data
     end
 
 
@@ -24,6 +25,28 @@ module WebGrabbers
 
     def web_page
       @web_page ||= Nokogiri::HTML(open(self.performance.url))
+    end
+
+    def same_data?
+
+      tc = Performance.new(pace: web_pace, distance: web_distance, positive_gain: web_positive_gain)
+
+      unless PaceType.to_seconds(tc.pace).to_f == PaceType.to_seconds(performance.pace)
+        Rails.logger.info { "#{tc.pace} == #{performance.pace}" }
+        return false
+      end
+
+      unless tc.distance == performance.distance
+        Rails.logger.info { "#{tc.distance} == #{performance.distance}" }
+        return false
+      end
+
+      unless tc.positive_gain == performance.positive_gain
+        Rails.logger.info { "#{tc.positive_gain} == #{performance.positive_gain}" }
+        return false
+      end
+
+      true
     end
 
 
