@@ -154,15 +154,21 @@ class Match < ApplicationRecord
   # Check per tutti i match in esecuzione se ci sono alcuni fuori tempo
   def self.check_timeouts
     self.wait.each do |m|
-      if m.outdated?
-        Match.transaction do
-          m.status = :timeouted
-          m.set_looser_winner
-          m.save!
-          m.update_rank
-        end
-        m.email_notify_outdated
+      m.check_timeouts
+    end
+  end
+
+  ##
+  # Metodo chiamato singolarmente sul match
+  def check_timeouts
+    if self.outdated?
+      Match.transaction do
+        self.status = :timeouted
+        self.set_looser_winner
+        self.save!
+        self.update_rank
       end
+      self.email_notify_outdated
     end
   end
 
