@@ -39,6 +39,11 @@ Vue.filter('distance_format', function (value) {
   return format( "0,00", parseFloat(value));
 });
 
+Vue.filter('points_format', function (value) {
+  if (!value) return '';
+  return format( "0,000", parseFloat(value));
+});
+
 Vue.filter('timezone', function (value,) {
   if (!value) return '';
   return moment(value).tz('Europe/Rome')

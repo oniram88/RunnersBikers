@@ -30,7 +30,11 @@
       </template>
 
       <template slot="total_distance" slot-scope="data">
-        {{data.item.total_distance | distance_format}}
+        {{data.value | distance_format}}
+      </template>
+
+      <template slot="total_points" slot-scope="data">
+        {{data.value | points_format}}
       </template>
     </b-table>
 
