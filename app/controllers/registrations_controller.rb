@@ -20,4 +20,8 @@ class RegistrationsController < Devise::RegistrationsController
     # sign up parameters.
     devise_parameter_sanitizer.permit(:sign_up, keys: [:username,:first_name,:last_name])
   end
+
+  def after_inactive_sign_up_path_for(resource)
+    new_user_session_path
+  end
 end
