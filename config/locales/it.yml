@@ -21,6 +21,9 @@ it:
           attributes:
             pace:
               invalid: "non è valido, il formato corretto è 00:00, se hai fatto 3 minuti e 45 secondi al km inserisci 3:45"
+            base:
+              not_starter: "non puoi ancora inserire la sessione, attendi fino al %{min_time}"
+              challenger_expired: "è terminata la sfida, non puoi più inserire sessioni"
     attributes:
       user:
         first_name: Nome

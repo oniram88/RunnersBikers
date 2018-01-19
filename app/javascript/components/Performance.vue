@@ -201,20 +201,23 @@
           if (ris.data.success) {
             me.callback_message.type = 'success';
             me.callback_message.message = 'Performance inserita correttamente';
+            me.callback_message.count_down = 3;
             me.onReset();
             setTimeout(() => {
               me.$router.push({name: 'performance_list'})
             }, 1500);
           } else {
-            me.callback_message.type = 'danger'
-            me.callback_message.message = 'Performance non valida';
+            me.callback_message.type = 'danger';
+            let msg = 'Performance non valida';
+            if(ris.data.errors.base){
+              msg += ' - '+ris.data.errors.base[0];
+            }
+            me.callback_message.message = msg;
+            me.callback_message.count_down = 6;
           }
           me.errors = ris.data.errors;
           me.show_errors = true;
           me.disabled_save = false;
-
-          me.callback_message.count_down = 3;
-          console.log(ris);
 
         })
       },
