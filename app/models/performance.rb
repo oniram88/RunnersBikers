@@ -55,6 +55,9 @@ class Performance < ApplicationRecord
   ##
   # Si occupa di associare questa performance al match se attivo della persona
   def check_match_data
+
+    Match.check_timeouts
+
     if user.matches_as_challenger.wait.first
       user.matches_as_challenger.wait.first.update_attributes(challenger_performance: self)
     end
@@ -67,10 +70,10 @@ class Performance < ApplicationRecord
   # Definizione del tempo massimo di inserimento della performance
   def time_checks
     if Time.now >= RunnersBikers::MAX_PERFORMANCE_INSERT
-      self.errors.add(:created_at, :challenger_expired, max_time: RunnersBikers::MAX_PERFORMANCE_INSERT)
+      self.errors.add(:base, :challenger_expired, max_time: I18n.l(RunnersBikers::MAX_PERFORMANCE_INSERT,format: :short))
     end
     if Time.now < RunnersBikers::MIN_PERFORMANCE_INSERT
-      self.errors.add(:created_at, :not_starter, min_time: RunnersBikers::MIN_PERFORMANCE_INSERT)
+      self.errors.add(:base, :not_starter, min_time: I18n.l(RunnersBikers::MIN_PERFORMANCE_INSERT,format: :short))
     end
   end
 end
