@@ -34,7 +34,7 @@
       </template>
     </b-table>
 
-    <b-modal title="Nuovo match" ref="modal_match" @ok="invio_match"
+    <b-modal title="Punteggio Sfida" ref="modal_match" @ok="invio_match"
              @cancel="reset_match">
 
 
