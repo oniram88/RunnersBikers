@@ -303,6 +303,19 @@ RSpec.describe Match, type: :model do
 
     end
 
+    it "Performance non valida in quanto patta" do
+      m = create(:match)
+
+      create(:performance, user: m.challenged, distance: 10, pace: '4:00', positive_gain: 1)
+      create(:performance, user: m.challenger, distance: 10, pace: '4:00', positive_gain: 1)
+      m.reload
+      expect {
+
+        @judge.approve(m)
+
+      }.to change(m, :status).from('approval_waiting').to('approved')
+    end
+
 
   end
 

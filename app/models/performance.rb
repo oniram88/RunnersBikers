@@ -24,8 +24,8 @@ class Performance < ApplicationRecord
 
   validates :distance, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 9999.9999 }
   validates :pace, presence: true, format: PaceType.reg_exp
-  validates :positive_gain, presence: true, numericality: { greater_than: 0, only_integer: true }
-  validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//
+  validates :positive_gain, presence: true, numericality: { greater_or_equal: 0, only_integer: true }
+  validates :url, :presence => true, uniqueness: true, format: /\Ahttps?:\/\//i
   validate :time_checks, on: :create
   before_save :update_points
 

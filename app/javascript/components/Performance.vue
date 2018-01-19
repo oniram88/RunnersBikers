@@ -203,7 +203,7 @@
             me.callback_message.message = 'Performance inserita correttamente';
             me.onReset();
             setTimeout(() => {
-              me.$router.go(-1)
+              me.$router.push({name: 'performance_list'})
             }, 1500);
           } else {
             me.callback_message.type = 'danger'

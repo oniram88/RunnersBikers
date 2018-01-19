@@ -25,11 +25,15 @@
       </template>
 
       <template slot="distance" slot-scope="data">
-       {{data.item.distance | distance_format}}
+       {{data.value | distance_format}}
       </template>
 
       <template slot="created_at" slot-scope="data">
-        {{data.item.created_at | timezone | time_format}}
+        {{data.value | timezone | time_format}}
+      </template>
+
+      <template slot="points" slot-scope="data">
+        {{data.value | points_format}}
       </template>
 
 
