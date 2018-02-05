@@ -169,7 +169,7 @@ class User < ApplicationRecord
   end
 
   def check_max_registration
-    if Time.now >= RunnersBikers::MAX_ISCRIZIONE
+    if Time.now >= RunnersBikers::MAX_ISCRIZIONE and !self.persisted?
     self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
     end
   end
