@@ -6,7 +6,7 @@ namespace :runners_bikers do
 
       User.all.each do |u|
 
-        puts "#{u.email} - #{u.username}"
+        puts "#{u.email} - #{u.username} - #{u.first_name} - #{u.last_name}"
         u.password='ciaociao'
         u.confirmed_at=Time.now
         u.save!
