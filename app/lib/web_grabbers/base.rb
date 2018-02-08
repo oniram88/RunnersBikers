@@ -8,7 +8,10 @@ module WebGrabbers
     attr_accessor :web_pace
     attr_accessor :web_distance
     attr_accessor :web_positive_gain
+    attr_accessor :web_moving_time
 
+
+    GrabError = Class.new(StandardError)
 
     def initialize(performance)
       self.performance = performance
@@ -21,6 +24,7 @@ module WebGrabbers
       @web_distance = nil
       @web_positive_gain = nil
       @web_duration = nil
+      @web_moving_time = nil
     end
 
     def web_page
