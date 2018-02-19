@@ -20,7 +20,7 @@ module RunnersBikers
   TIME_TO_START_CHALLENGES = PROGRAMM_STATUS == 'test' ? Time.now - 1.day : Time.zone.parse('2018-02-18 00:00:00')
 
   # Tempo massimo Inizio sfide
-  MAX_TIME_FOR_START_CHALLENGES = PROGRAMM_STATUS == 'test' ? Time.now + 1.month : MAX_PERFORMANCE_INSERT - MATCH_DURATION - 2.hours
+  MAX_TIME_FOR_START_CHALLENGES =  MAX_PERFORMANCE_INSERT - MATCH_DURATION - 2.hours
 
   # Numero massimo di sfide come sfidante
   MAX_AS_CHALLENGER = 3
