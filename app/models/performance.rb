@@ -57,12 +57,14 @@ class Performance < ApplicationRecord
   def check_match_data
 
     Match.check_timeouts
-
-    if user.matches_as_challenger.wait.first
-      user.matches_as_challenger.wait.first.update_attributes(challenger_performance: self)
+    challenger_match = user.matches_as_challenger.wait.first
+    if challenger_match
+      challenger_match.update_attributes(challenger_performance: self) if challenger_match.challenger_performance.nil?
     end
-    if user.matches_as_challenged.wait.first
-      user.matches_as_challenged.wait.first.update_attributes(challenged_performance: self)
+
+    challenged_match = user.matches_as_challenged.wait.first
+    if challenged_match
+      challenged_match.update_attributes(challenged_performance: self) if challenged_match.challenged_performance.nil?
     end
   end
 

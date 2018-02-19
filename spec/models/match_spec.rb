@@ -111,6 +111,46 @@ RSpec.describe Match, type: :model do
 
   end
 
+  it "quando viene eseguita più di una performance prima che il challenged completi il match" do
+
+    m = create(:match)
+
+    expect(m.challenged_performance).to be_nil
+    expect(m.challenger_performance).to be_nil
+
+    expect {
+      create(:performance, user: m.challenger)
+      m.reload
+    }.to change(m, :challenger_performance)
+
+    expect {
+      create(:performance, user: m.challenger)
+      m.reload
+    }.not_to change(m, :challenger_performance)
+
+
+  end
+
+  it "quando viene eseguita più di una performance prima che il challenger completi il match" do
+
+    m = create(:match)
+
+    expect(m.challenged_performance).to be_nil
+    expect(m.challenger_performance).to be_nil
+
+    expect {
+      create(:performance, user: m.challenged)
+      m.reload
+    }.to change(m, :challenged_performance)
+
+    expect {
+      create(:performance, user: m.challenged)
+      m.reload
+    }.not_to change(m, :challenged_performance)
+
+
+  end
+
   it "approve" do
     m = create(:completed_match)
 
