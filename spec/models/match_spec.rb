@@ -191,9 +191,10 @@ RSpec.describe Match, type: :model do
       end
 
       it "solo una performance dallo sfidante" do
+        create(:performance, user: @sfidante)
+
         Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
 
-        create(:performance, user: @sfidante)
 
         expect {
           perform_enqueued_jobs do
@@ -210,9 +211,9 @@ RSpec.describe Match, type: :model do
       end
 
       it "solo una performance dallo sfidato" do
-        Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
-
         create(:performance, user: @sfidato)
+
+        Timecop.freeze(Time.now + RunnersBikers::MATCH_DURATION + 1.second)
 
         expect {
           perform_enqueued_jobs do
