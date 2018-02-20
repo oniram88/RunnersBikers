@@ -15,5 +15,29 @@ namespace :runners_bikers do
 
     end
 
+
+    desc "Correct first match"
+    task :correct_first_match => :environment do
+
+
+      Performance.transaction do
+
+        m = Match.first
+
+        vecchia_performance = m.challenger_performance
+
+        correct_performance = Performance.find(272)
+
+        m.update_attributes(challenger_performance: correct_performance)
+
+        vecchia_performance.update_attributes(:distance=>8.11)
+
+        User.all.each{|u| u.update_points}
+        User.update_rank
+      end
+
+
+    end
+
   end
 end
