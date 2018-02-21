@@ -5,97 +5,97 @@
 
 <template>
 
-  <b-card :title="persisted ? ( readonly ? 'Visualizza Sessione' : 'Modifica Sessione'):'Nuova Sessione' "
-          class="mb-12">
+    <b-card :title="persisted ? ( readonly ? 'Visualizza Sessione' : 'Modifica Sessione'):'Nuova Sessione' "
+            class="mb-12">
 
-    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset"
-            v-if="show && !readonly">
-
-
-      <b-form-group label="Distanza:"
-                    :state="distance_state"
-                    :feedback="distance_feedback">
-        <b-input-group right="km">
-
-          <vue-numeric
-                  class="form-control"
-                  :separator="' '"
-                  v-model="form.distance"
-                  :precision="2"
-                  placeholder="Inserisci la distanza in Km"
-          ></vue-numeric>
+        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset"
+                v-if="show && !readonly">
 
 
-        </b-input-group>
-      </b-form-group>
+            <b-form-group label="Distanza:"
+                          :state="distance_state"
+                          :feedback="distance_feedback">
+                <b-input-group right="km">
 
-      <b-form-group label="Ritmo Medio:"
-                    :state="pace_state"
-                    :feedback="pace_feedback">
-        <b-input-group right="m/km" left="00:00">
-          <b-form-input type="text"
-                        :state="pace_state"
-                        v-model="form.pace" required
-                        placeholder="Inserisci il ritmo in m/km 00:00"
-          ></b-form-input>
-        </b-input-group>
-      </b-form-group>
-
-      <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
-                    :feedback="positive_gain_feedback">
-        <b-input-group right="m">
-          <b-form-input type="number" v-model.number="form.positive_gain"
-                        required
-                        :state="positive_gain_state"
-                        placeholder="Dislivello in m"
-          ></b-form-input>
-        </b-input-group>
-      </b-form-group>
-
-      <b-form-group label="Url sito:" :state="url_state"
-                    :feedback="url_feedback">
-        <b-form-input type="text" v-model="form.url" required
-                      :state="url_state"
-                      placeholder="Url della sessione http://....."
-        ></b-form-input>
-      </b-form-group>
+                    <vue-numeric
+                            class="form-control"
+                            :separator="' '"
+                            v-model="form.distance"
+                            :precision="2"
+                            placeholder="Inserisci la distanza in Km"
+                    ></vue-numeric>
 
 
-      <b-button type="submit" variant="primary" :disabled="disabled_save">
-        Salva
-      </b-button>
-      <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
-      </b-button>
-    </b-form>
+                </b-input-group>
+            </b-form-group>
 
-    <b-row v-else="">
-      <b-col>
-        <dl>
-          <dt>Distanza</dt>
-          <dd>{{form.distance}}</dd>
+            <b-form-group label="Ritmo Medio:"
+                          :state="pace_state"
+                          :feedback="pace_feedback">
+                <b-input-group right="m/km" left="00:00">
+                    <b-form-input type="text"
+                                  :state="pace_state"
+                                  v-model="form.pace" required
+                                  placeholder="Inserisci il ritmo in m/km 00:00"
+                    ></b-form-input>
+                </b-input-group>
+            </b-form-group>
 
-          <dt>Ritmo Medio:</dt>
-          <dd>{{form.pace}}</dd>
+            <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
+                          :feedback="positive_gain_feedback">
+                <b-input-group right="m">
+                    <b-form-input type="number" v-model.number="form.positive_gain"
+                                  required
+                                  :state="positive_gain_state"
+                                  placeholder="Dislivello in m"
+                    ></b-form-input>
+                </b-input-group>
+            </b-form-group>
 
-          <dt>Dislivello Positivo:</dt>
-          <dd>{{form.positive_gain}}</dd>
+            <b-form-group label="Url sito:" :state="url_state"
+                          :feedback="url_feedback">
+                <b-form-input type="text" v-model="form.url" required
+                              :state="url_state"
+                              placeholder="Url della sessione http://....."
+                ></b-form-input>
+            </b-form-group>
 
-          <dt>Url sito:</dt>
-          <dd>
-            <b-link :href="form.url">{{form.url}}</b-link>
-          </dd>
-        </dl>
-      </b-col>
-    </b-row>
 
-    <b-alert :show="callback_message.count_down"
-             dismissible
-             :variant="callback_message.type"
-             @dismissed="callback_message.count_down=0"
-             @dismiss-count-down="dismiss_success_CountDown">
-      {{callback_message.message}}
-    </b-alert>
-  </b-card>
+            <b-button type="submit" variant="primary" :disabled="disabled_save">
+                Salva
+            </b-button>
+            <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
+            </b-button>
+        </b-form>
+
+        <b-row v-else="">
+            <b-col>
+                <dl>
+                    <dt>Distanza</dt>
+                    <dd>{{form.distance}}</dd>
+
+                    <dt>Ritmo Medio:</dt>
+                    <dd>{{form.pace}}</dd>
+
+                    <dt>Dislivello Positivo:</dt>
+                    <dd>{{form.positive_gain}}</dd>
+
+                    <dt>Url sito:</dt>
+                    <dd>
+                        <b-link :href="form.url">{{form.url}}</b-link>
+                    </dd>
+                </dl>
+            </b-col>
+        </b-row>
+
+        <b-alert :show="callback_message.count_down"
+                 dismissible
+                 :variant="callback_message.type"
+                 @dismissed="callback_message.count_down=0"
+                 @dismiss-count-down="dismiss_success_CountDown">
+            {{callback_message.message}}
+        </b-alert>
+    </b-card>
 
 </template>
 
@@ -204,13 +204,18 @@
             me.callback_message.count_down = 3;
             me.onReset();
             setTimeout(() => {
-              me.$router.push({name: 'performance_list'})
+              if (this.$route.params.user_id) {
+                me.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
+              } else {
+                me.$router.push({name: 'performance_list'})
+              }
+
             }, 1500);
           } else {
             me.callback_message.type = 'danger';
             let msg = 'Performance non valida';
-            if(ris.data.errors.base){
-              msg += ' - '+ris.data.errors.base[0];
+            if (ris.data.errors.base) {
+              msg += ' - ' + ris.data.errors.base[0];
             }
             me.callback_message.message = msg;
             me.callback_message.count_down = 6;

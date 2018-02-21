@@ -1,68 +1,69 @@
 <style scoped lang="scss">
 
-  .destroy_obj {
-    cursor: pointer;
-  }
+    .destroy_obj {
+        cursor: pointer;
+    }
 
 </style>
 
 <template>
 
-  <div>
+    <div>
 
-    <router-view></router-view>
-
-
-    <b-table striped hover
-             :items="items"
-             :fields="fields"
-    >
-
-      <template slot="url" slot-scope="data">
-        <b-button :href="data.value" target="_blank">
-          <vf-icon icon="globe"/>
-        </b-button>
-      </template>
-
-      <template slot="distance" slot-scope="data">
-       {{data.value | distance_format}}
-      </template>
-
-      <template slot="created_at" slot-scope="data">
-        {{data.value | timezone | time_format}}
-      </template>
-
-      <template slot="points" slot-scope="data">
-        {{data.value | points_format}}
-      </template>
+        <router-view></router-view>
 
 
-      <template slot="actions" slot-scope="data">
-        <b-button target="" variant="info"
-                  v-authorize:performance.update?="data.item.id"
-                  :disabled="!data.item.editable"
-                  :to="{name:'performance_edit',params:{id:data.item.id}}">
-          <vf-icon icon="pencil"/>
-        </b-button>
-        <b-button
-                v-authorize:performance.destroy?="data.item.id"
-                :disabled="!data.item.destroyable" target="" variant="danger"
-                class="destroy_obj" @click="destroy(data.item.id)">
-          <vf-icon icon="trash"/>
-        </b-button>
-      </template>
+        <b-table striped hover
+                 :items="items"
+                 :fields="fields"
+        >
+
+            <template slot="url" slot-scope="data">
+                <b-button :href="data.value" target="_blank">
+                    <vf-icon icon="globe"/>
+                </b-button>
+            </template>
+
+            <template slot="distance" slot-scope="data">
+                {{data.value | distance_format}}
+            </template>
+
+            <template slot="created_at" slot-scope="data">
+                {{data.value | timezone | time_format}}
+            </template>
+
+            <template slot="points" slot-scope="data">
+                {{data.value | points_format}}
+            </template>
 
 
-    </b-table>
+            <template slot="actions" slot-scope="data">
+                <b-button target="" variant="info"
+                          v-authorize:performance.update?="data.item.id"
+                          :disabled="!data.item.editable"
+                          :to="perfomance_edit_cfg(data.item)">
+                    <vf-icon icon="pencil"/>
+                </b-button>
+                <b-button
+                        v-authorize:performance.destroy?="data.item.id"
+                        :disabled="!data.item.destroyable" target="" variant="danger"
+                        class="destroy_obj" @click="destroy(data.item.id)">
+                    <vf-icon icon="trash"/>
+                </b-button>
+            </template>
 
 
-  </div>
+        </b-table>
+
+
+    </div>
 
 </template>
 
 <script>
 
   import axios from 'axios'
+  import {mapState} from 'vuex'
   import _ from 'lodash'
 
   export default {
@@ -120,9 +121,21 @@
       },
       total_positive_gain() {
         _.sumBy(this.items, 'positive_gain');
-      }
+      },
+      ...mapState([
+        'user_roles'
+      ])
     },
     methods: {
+      perfomance_edit_cfg(item) {
+
+        if (_.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge')) {
+          return {name: 'user_performance_edit', params: {id: item.id, user_id: item.user_id}};
+        } else {
+          return {name: 'performance_edit', params: {id: item.id}};
+        }
+
+      },
       load_performances() {
 
         let path = Routes.performances_path();

@@ -190,6 +190,13 @@
         path: '/users/:user_id/performances',
         name: 'user_performance_list',
         component: PerformancesList,
+        children: [
+          {
+            path: ':id/edit',
+            name: 'user_performance_edit',
+            component: Performance
+          }
+        ]
       },
       {
         path: '/ranking',
