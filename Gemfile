@@ -88,3 +88,7 @@ gem "recaptcha", require: "recaptcha/rails"
 gem 'mjml-rails'
 gem 'sucker_punch'
 gem 'whenever', :require => false
+
+
+gem 'graphql'
+gem 'graphiql-rails', group: :development

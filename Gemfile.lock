@@ -120,6 +120,10 @@ GEM
     ffi (1.9.18)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    graphiql-rails (1.4.10)
+      railties
+      sprockets-rails
+    graphql (1.7.13)
     hashie (3.5.6)
     httmultiparty (0.3.16)
       httparty (>= 0.7.3)
@@ -335,6 +339,8 @@ DEPENDENCIES
   devise-i18n
   factory_bot_rails (~> 4.0)
   faker
+  graphiql-rails
+  graphql
   i18n-debug
   jbuilder (~> 2.5)
   js-routes
