@@ -9,4 +9,8 @@ class UserPolicy < ApplicationPolicy
   end
 
 
+  def execute_graph?
+    true
+  end
+
 end
