@@ -103,19 +103,33 @@
   import logo from './images/logo_mini.jpg'
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
-  import { ApolloClient } from 'apollo-client'
-  import { HttpLink } from 'apollo-link-http'
-  import { InMemoryCache } from 'apollo-cache-inmemory'
+  import {ApolloClient} from 'apollo-client'
+  import {ApolloLink, concat} from 'apollo-link';
+  import {HttpLink} from 'apollo-link-http'
+  import {InMemoryCache} from 'apollo-cache-inmemory'
   import VueApollo from 'vue-apollo'
 
   const httpLink = new HttpLink({
     // You should use an absolute URL here
     uri: 'http://0.0.0.0:3010/graphql',
+    credentials: 'same-origin'
   });
+
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    // add the authorization to the headers
+    operation.setContext({
+      headers: {
+        'X-CSRF-Token': document.getElementsByName('csrf-token')[0].content
+      }
+    });
+
+    return forward(operation);
+  });
+
 
   // Create the apollo client
   const apolloClient = new ApolloClient({
-    link: httpLink,
+    link: concat(authMiddleware, httpLink),
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
