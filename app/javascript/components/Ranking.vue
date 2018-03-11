@@ -12,7 +12,7 @@
 <template>
   <div>
     <b-table striped hover
-             :items="items"
+             :items="rankings"
              :fields="fields"
     >
       <template slot="actions" slot-scope="data">
@@ -71,8 +71,22 @@
 
   import axios from 'axios';
   import _ from 'lodash';
+  import gql from 'graphql-tag'
 
   export default {
+    apollo:{
+      rankings:gql`{
+                  rankings{
+                    total_distance
+                    id
+                    username
+                    total_points
+                    total_positive_gain
+                    rank
+                  }
+                }`,
+      hello:gql`{hello}`,
+    },
     data: function () {
       return {
         match: {
@@ -80,7 +94,8 @@
           challenged_id: null,
           max_lose_points: 100
         },
-        items: [],
+        hello:'',
+        rankings: [],
         fields: [
           {
             label: 'Rank',
@@ -115,7 +130,7 @@
       }
     },
     created: function () {
-      this.load_ranking();
+      // this.load_ranking();
     },
     watch: {
       // call again the method if the route changes
@@ -138,18 +153,18 @@
         this.match.points = 0;
         this.$refs.modal_match.show();
       },
-      load_ranking() {
-        axios.get(Routes.ranking_index_path()).then(ris => {
-          this.items = _.map(ris.data, ele => {
-            ele._rowVariant = (ele.challanged ? 'warning' : 'default');
-            return ele;
-          });
-        })
-      },
+      // load_ranking() {
+      //   axios.get(Routes.ranking_index_path()).then(ris => {
+      //     this.items = _.map(ris.data, ele => {
+      //       ele._rowVariant = (ele.challanged ? 'warning' : 'default');
+      //       return ele;
+      //     });
+      //   })
+      // },
       invio_match() {
         console.log(this.match.points);
         axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
-          this.load_ranking();
+          // this.load_ranking();
           this.reset_match();
         });
       },

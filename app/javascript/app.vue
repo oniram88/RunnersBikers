@@ -103,6 +103,31 @@
   import logo from './images/logo_mini.jpg'
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
+  import { ApolloClient } from 'apollo-client'
+  import { HttpLink } from 'apollo-link-http'
+  import { InMemoryCache } from 'apollo-cache-inmemory'
+  import VueApollo from 'vue-apollo'
+
+  const httpLink = new HttpLink({
+    // You should use an absolute URL here
+    uri: 'http://0.0.0.0:3010/graphql',
+  });
+
+  // Create the apollo client
+  const apolloClient = new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache(),
+    connectToDevTools: true
+  });
+
+  const apolloProvider = new VueApollo({
+    defaultClient: apolloClient
+  });
+
+  // Install the vue plugin
+  Vue.use(VueApollo);
+
+
   Vue.use(Vuex);
 
   const store = new Vuex.Store({
@@ -214,6 +239,7 @@
   export default {
     router,
     store,
+    provide: apolloProvider.provide(),
     data: function () {
       return {}
     },
