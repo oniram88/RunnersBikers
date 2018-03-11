@@ -15,19 +15,23 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: root
-  port: 33306
-  host: '0.0.0.0'
+  username: <%= ENV.fetch("MYSQL_ROOT_PASSWORD"){ %x(  docker-compose exec db env | grep MYSQL_ROOT_PASSWORD | cut -d'=' -f2)} %>
+  password: <%= ENV.fetch("MYSQL_ROOT_PASSWORD"){%x(  docker-compose exec db env | grep MYSQL_ROOT_PASSWORD | cut -d'=' -f2) } %>
 
 development:
   <<: *default
-  database: runners_bikers_development
+  database: <%= ENV.fetch("MYSQL_DATABASE"){%x( docker-compose exec db env | grep MYSQL_DATABASE | cut -d'=' -f2)} %>
+  host: <%= ENV.fetch("RAILS_DB_MYSQL_HOST") { %x( docker-compose port db 3306).match("(.*):")[1] } %>
+  port: <%= ENV.fetch("RAILS_DB_MYSQL_PORT") { %x( docker-compose port db 3306).match(":([0-9]+)")[1] } %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: runners_bikers_test
+  database: <%= ENV.fetch("MYSQL_DATABASE"){%x( docker-compose exec test_db env | grep MYSQL_DATABASE | cut -d'=' -f2)} %>
+  host: <%= ENV.fetch("RAILS_DB_MYSQL_HOST") { %x( docker-compose port test_db 3306).match("(.*):")[1] } %>
+  port: <%= ENV.fetch("RAILS_DB_MYSQL_PORT") { %x( docker-compose port test_db 3306).match(":([0-9]+)")[1] } %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

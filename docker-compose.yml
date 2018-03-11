@@ -5,9 +5,16 @@ services:
     image: mysql
     env_file: .env_docker_compose
     ports:
-      - '33306:3306'
+      - '3306'
     volumes:
       - './docker_volumes/db:/var/lib/mysql'
+  test_db:
+    image: mysql
+    env_file: .env_docker_compose
+    ports:
+      - '3306'
+    volumes:
+      - './docker_volumes/test_db:/var/lib/mysql'
 #  redis:
 #    container_name: spchains_redis
 #    image: 'redis:3.2-alpine'
