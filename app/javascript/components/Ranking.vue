@@ -17,9 +17,9 @@
     >
       <template slot="actions" slot-scope="data">
         <b-button
-                v-authorize:user.show_performances?="data.item.id"
-                :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
-                class="create_match_btn">
+            v-authorize:user.show_performances?="data.item.id"
+            :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
+            class="create_match_btn">
           <vf-icon icon="list"/>
         </b-button>
         <b-button @click="show_modal(data.item)" v-if="data.item.machable"
@@ -46,11 +46,11 @@
 
         <b-form-group label="Punti:">
           <b-form-input
-                  type="number"
-                  readonly
-                  :value="match.points"
-                  required
-                  placeholder="Inserisci i punti da rubare">
+              type="number"
+              readonly
+              :value="match.points"
+              required
+              placeholder="Inserisci i punti da rubare">
           </b-form-input>
           <b-form-slider class="slider_width" :min="1"
                          tooltip="always"
@@ -74,18 +74,8 @@
   import gql from 'graphql-tag'
 
   export default {
-    apollo:{
-      rankings:gql`{
-                  rankings{
-                    total_distance
-                    id
-                    username
-                    total_points
-                    total_positive_gain
-                    rank
-                  }
-                }`,
-      hello:gql`{hello}`,
+    apollo: {
+      rankings: gql`{rankings{total_distance,id,username,total_points,total_positive_gain,rank,challenged,machable,max_lose_points}}`,
     },
     data: function () {
       return {
@@ -94,7 +84,6 @@
           challenged_id: null,
           max_lose_points: 100
         },
-        hello:'',
         rankings: [],
         fields: [
           {
