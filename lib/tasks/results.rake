@@ -117,9 +117,9 @@ namespace :runners_bikers do
 
       contatore = 1
       User.all.collect do |u|
-        [u.full_name, u.matches_as_winner.count, u.matches_as_challenger.count + u.matches_as_challenged.count, u.matches_as_winner.sum(:points),u.matches_as_looser.sum(:points)]
+        [u.full_name, u.matches_as_winner.count, u.matches_as_challenger.count + u.matches_as_challenged.count, u.matches_as_winner.sum(:points), u.matches_as_looser.sum(:points)]
       end.sort_by {|a, b| b}.reverse.each do |l|
-        puts [contatore, l[0], "#{l[1]}/#{l[2]}", "Punti conquistati:#{l[3]}","Punti persi:#{l[4]}"].flatten.join(' , ')
+        puts [contatore, l[0], "#{l[1]}/#{l[2]}", "Punti conquistati:#{l[3]}", "Punti persi:#{l[4]}"].flatten.join(' , ')
         contatore += 1
       end
     end
@@ -136,6 +136,19 @@ namespace :runners_bikers do
       end.sort_by {|a, b| b}.each do |l|
         puts [contatore, l].flatten.join(' , ')
         contatore += 1
+      end
+    end
+
+    desc "Estrae CSV con tutti i dati delle sessioni"
+    task :extract_session_data => :environment do |t, args|
+      CSV.open(Rails.application.root.join('tmp',"sessioni_#{Time.now}.csv"), "wb") do |csv|
+        csv << ['distanza m','dislivello m', 'passo','passo in s']
+        Performance.all.order(:id).each do |p|
+          data = [(p.distance*1000).to_i, p.positive_gain, p.pace, PaceType.to_seconds(p.pace)]
+          puts data.inspect
+          csv << data
+        end
+
       end
     end
 
