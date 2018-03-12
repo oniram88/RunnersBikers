@@ -75,7 +75,19 @@
 
   export default {
     apollo: {
-      rankings: gql`{rankings{total_distance,id,username,total_points,total_positive_gain,rank,challenged,machable,max_lose_points}}`,
+      rankings: gql`{
+        rankings {
+          total_distance
+          id
+          username
+          total_points
+          total_positive_gain
+          rank
+          challenged
+          machable
+          max_lose_points
+        }
+      }`
     },
     data: function () {
       return {
