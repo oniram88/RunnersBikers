@@ -111,7 +111,7 @@
 
   const httpLink = new HttpLink({
     // You should use an absolute URL here
-    uri: 'http://0.0.0.0:3010/graphql',
+    uri: Routes.graphql_path(),
     credentials: 'same-origin'
   });
 
