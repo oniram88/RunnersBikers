@@ -30,8 +30,8 @@ development:
 test:
   <<: *default
   database: <%= ENV.fetch("MYSQL_DATABASE"){%x( docker-compose exec test_db env | grep MYSQL_DATABASE | cut -d'=' -f2)} %>
-  host: <%= ENV.fetch("RAILS_DB_MYSQL_HOST") { %x( docker-compose port test_db 3306).match("(.*):")[1] } %>
-  port: <%= ENV.fetch("RAILS_DB_MYSQL_PORT") { %x( docker-compose port test_db 3306).match(":([0-9]+)")[1] } %>
+  host: <%= ENV.fetch("RAILS_DB_MYSQL_HOST") { %x( docker-compose port test_db 3306).match("(.*):")[1] } rescue "0.0.0.0" %>
+  port: <%= ENV.fetch("RAILS_DB_MYSQL_PORT") { %x( docker-compose port test_db 3306).match(":([0-9]+)")[1] rescue 33306 } %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
