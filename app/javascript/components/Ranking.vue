@@ -12,7 +12,7 @@
 <template>
   <div>
     <b-table striped hover
-             :items="rankings"
+             :items="items"
              :fields="fields"
     >
       <template slot="actions" slot-scope="data">
@@ -137,7 +137,13 @@
       // call again the method if the route changes
       '$route': 'load_ranking'
     },
-    computed: {},
+    computed: {
+      items: function () {
+        return _.map(this.rankings, ele => {
+          return _.extend({_rowVariant: (ele.challanged ? 'warning' : 'default')}, ele);
+        });
+      }
+    },
     methods: {
       check_min_value(max, value) {
         if (max < parseInt(value)) {
