@@ -5,7 +5,7 @@ Types::ErrorType = GraphQL::ObjectType.define do
       obj[0]
     }
   end
-  field :message, types.String do
+  field :message, types.String.to_list_type do
     resolve -> (obj, args, ctx) {
       obj[1]
     }

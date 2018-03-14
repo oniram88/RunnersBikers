@@ -7,10 +7,10 @@ Mutations::CreateMatch = GraphQL::Relay::Mutation.define do
 
   resolve ->(obj, args, ctx) {
 
-    @obj = ctx[:current_user].matches_as_challenger.build(args.require(:match).permit(:challenged_id, :points))
-    authorize @obj
+    @obj = ctx[:current_user].matches_as_challenger.build(args.to_h)
+    # authorize @obj
     @obj.save
 
-    @obj
+    {result: @obj}
   }
 end

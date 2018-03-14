@@ -8,7 +8,7 @@ Types::OperationResultType = GraphQL::ObjectType.define do
   # end
   field :errors, types[Types::ErrorType] do
     resolve -> (obj, args, ctx) {
-      obj.errors
+      obj.errors.as_json
     }
 
   end

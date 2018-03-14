@@ -17,6 +17,8 @@ it:
             created_at:
               to_early_for_creation: troppo presto per poter creare una sfida
               timout_for_creation: troppo tardi per poter creare una sfida
+            challenger:
+              max_matches_as_challenger: Numero massimo di sfide come sfidante
         performance:
           attributes:
             pace:
