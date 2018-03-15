@@ -19,6 +19,8 @@ it:
               timout_for_creation: troppo tardi per poter creare una sfida
             challenger:
               max_matches_as_challenger: Numero massimo di sfide come sfidante
+          has_already_a_match: "ha già un match non concluso"
+          cant_be_the_same_person: "non può autosfidarsi"
         performance:
           attributes:
             pace:
