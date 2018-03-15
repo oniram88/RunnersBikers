@@ -5,6 +5,14 @@ GIT
   specs:
     devise-bootstrapped (0.2.0)
 
+GIT
+  remote: https://github.com/ontohub/graphql-pundit.git
+  revision: b2887cf0b52ade4692340aec163109230980d76d
+  specs:
+    graphql-pundit (0.6.0)
+      graphql (>= 1.6.4, < 1.8.0)
+      pundit (~> 1.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -341,6 +349,7 @@ DEPENDENCIES
   faker
   graphiql-rails
   graphql
+  graphql-pundit!
   i18n-debug
   jbuilder (~> 2.5)
   js-routes

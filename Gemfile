@@ -92,3 +92,5 @@ gem 'whenever', :require => false
 
 gem 'graphql'
 gem 'graphiql-rails', group: :development
+#https://github.com/ontohub/graphql-pundit
+gem 'graphql-pundit',github:'ontohub/graphql-pundit'

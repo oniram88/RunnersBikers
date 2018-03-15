@@ -15,6 +15,7 @@ Types::QueryType = GraphQL::ObjectType.define do
     type Types::UserType.to_list_type
     argument :limit, types.Int
     description "List of all users"
+    after_scope
     resolve ->(obj, args, ctx) do
 
       q = User.all
@@ -34,6 +35,7 @@ Types::QueryType = GraphQL::ObjectType.define do
     type Types::RankingType.to_list_type
     argument :limit, types.Int, default_value: 100, prepare: ->(limit, ctx) {[limit, 100].min}
     description "List of all users"
+    after_scope
     resolve ->(obj, args, ctx) do
 
       Ranking.all.order(:rank).limit(args[:limit])
