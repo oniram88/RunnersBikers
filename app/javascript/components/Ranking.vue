@@ -169,11 +169,63 @@
       //   })
       // },
       invio_match() {
-        console.log(this.match.points);
-        axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
-          // this.load_ranking();
-          this.reset_match();
-        });
+
+
+        // Call to the graphql mutation
+        this.$apollo.mutate({
+          // Query
+          mutation: gql`mutation createMatch($challenged_id:ID!,$points:Int){
+                          createMatch(input:{challenged_id:$challenged_id,points:$points}){
+                            result{
+                              result
+                            }
+                          }
+                        }
+                        `,
+          // Parameters
+          variables: this.match,
+          // Update the cache with the result
+          // The query will be updated with the optimistic response
+          // and then with the real result of the mutation
+          update: (store, {data: {newTag}}) => {
+
+
+            console.log('quando appare questo?',arguments);
+
+            // // Read the data from our cache for this query.
+            // const data = store.readQuery({query: TAGS_QUERY})
+            // // Add our tag from the mutation to the end
+            // data.tags.push(newTag)
+            // // Write our data back to the cache.
+            // store.writeQuery({query: TAGS_QUERY, data})
+          },
+          // Optimistic UI
+          // Will be treated as a 'fake' result as soon as the request is made
+          // so that the UI can react quickly and the user be happy
+          // optimisticResponse: {
+          //   __typename: 'Mutation',
+          //   addTag: {
+          //     __typename: 'Tag',
+          //     id: -1,
+          //     label: newTag,
+          //   },
+          // },
+        }).then((data) => {
+          // Result
+          console.log(data)
+        }).catch((error) => {
+          // Error
+          console.error(error)
+          // We restore the initial user input
+          // this.newTag = newTag
+        })
+        //
+        //
+        // console.log(this.match.points);
+        // axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
+        //   // this.load_ranking();
+        //   this.reset_match();
+        // });
       },
       reset_match() {
         this.match.points = 0;
