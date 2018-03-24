@@ -141,13 +141,33 @@ namespace :runners_bikers do
 
     desc "Estrae CSV con tutti i dati delle sessioni"
     task :extract_session_data => :environment do |t, args|
-      CSV.open(Rails.application.root.join('tmp',"sessioni_#{Time.now}.csv"), "wb") do |csv|
-        csv << ['distanza m','dislivello m', 'passo','passo in s']
-        Performance.all.order(:id).each do |p|
-          data = [(p.distance*1000).to_i, p.positive_gain, p.pace, PaceType.to_seconds(p.pace)]
+      CSV.open(Rails.application.root.join('tmp', "sessioni_#{Time.now}.csv"), "wb") do |csv|
+        csv << ['nome', 'cognome', 'data', 'distanza m', 'passo', 'passo in s', 'dislivello m', 'url']
+        Performance.all.includes(:user).order(:id).each do |p|
+          data = [p.user.first_name, p.user.last_name, p.created_at, (p.distance * 1000).to_i, p.pace, PaceType.to_seconds(p.pace), p.positive_gain, p.url]
           puts data.inspect
           csv << data
         end
+
+      end
+    end
+
+    desc "Estrae CSV con tutti i dati raggruppati per utenti"
+    task :extract_user_data => :environment do |t, args|
+      CSV.open(Rails.application.root.join('tmp', "user_#{Time.now}.csv"), "wb") do |csv|
+        csv << ['nome', 'cognome', 'distanza km', 'dislivello m', 'passo', 'passo in s']
+
+        User.all.joins(:performances).uniq.each {|u|
+
+          begin
+            value = u.performances.select('sum(pace) as passo').first[:passo] / u.performances.count
+
+            csv << [u.first_name, u.last_name, u.performances.sum(:distance), u.performances.sum(:positive_gain), PaceType.new.deserialize(value), value]
+          rescue
+            puts "errore per #{u.full_name}"
+          end
+
+        }
 
       end
     end
