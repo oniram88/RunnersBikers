@@ -140,7 +140,7 @@
     computed: {
       items: function () {
         return _.map(this.rankings, ele => {
-          return _.extend({_rowVariant: (ele.challanged ? 'warning' : 'default')}, ele);
+          return _.extend({_rowVariant: (ele.challenged ? 'warning' : 'default')}, ele);
         });
       }
     },
@@ -160,14 +160,6 @@
         this.match.points = 0;
         this.$refs.modal_match.show();
       },
-      // load_ranking() {
-      //   axios.get(Routes.ranking_index_path()).then(ris => {
-      //     this.items = _.map(ris.data, ele => {
-      //       ele._rowVariant = (ele.challanged ? 'warning' : 'default');
-      //       return ele;
-      //     });
-      //   })
-      // },
       invio_match() {
 
 
@@ -187,13 +179,26 @@
           // Update the cache with the result
           // The query will be updated with the optimistic response
           // and then with the real result of the mutation
-          update: (store, {data: {newTag}}) => {
+          update: (store, ris) => {
 
 
             console.log('quando appare questo?',arguments);
 
             // // Read the data from our cache for this query.
-            // const data = store.readQuery({query: TAGS_QUERY})
+            const data = store.readQuery({query: gql`query Rankings($id: ID!) {
+                                                      rankings(id: $id) {
+                                                        total_distance
+                                                        id
+                                                        username
+                                                        total_points
+                                                        total_positive_gain
+                                                        rank
+                                                        challenged
+                                                        machable
+                                                        max_lose_points
+                                                      }
+                                                    }`,variables:1})
+            console.log(data);
             // // Add our tag from the mutation to the end
             // data.tags.push(newTag)
             // // Write our data back to the cache.
@@ -210,9 +215,13 @@
           //     label: newTag,
           //   },
           // },
+          // refetchQueries: [{
+          //   query:  this.$apollo.queries.rankings,
+          // }]
         }).then((data) => {
           // Result
           console.log(data)
+          // this.reload_rank();
         }).catch((error) => {
           // Error
           console.error(error)
@@ -226,6 +235,25 @@
         //   // this.load_ranking();
         //   this.reset_match();
         // });
+      },
+      reload_rank(){
+        this.$apollo.queries.rankings.fetchMore({
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            const newTags = fetchMoreResult.tagsPage.tags
+            const hasMore = fetchMoreResult.tagsPage.hasMore
+
+            this.showMoreEnabled = hasMore
+
+            return {
+              tagsPage: {
+                __typename: previousResult.tagsPage.__typename,
+                // Merging the tag list
+                tags: [...previousResult.tagsPage.tags, ...newTags],
+                hasMore,
+              },
+            }
+          }
+        });
       },
       reset_match() {
         this.match.points = 0;

@@ -30,15 +30,18 @@ Types::QueryType = GraphQL::ObjectType.define do
   end
 
 
-
   field :rankings do
     type Types::RankingType.to_list_type
+    argument :id, types.ID, 'Ranking per un determinato id'
     argument :limit, types.Int, default_value: 100, prepare: ->(limit, ctx) {[limit, 100].min}
     description "List of all users"
-    after_scope
+    # after_scope
     resolve ->(obj, args, ctx) do
-
-      Ranking.all.order(:rank).limit(args[:limit])
+      if args[:id]
+        Ranking.where(id: args[:id])
+      else
+        Ranking.order(:rank => :asc).limit(args[:limit])
+      end
 
     end
   end

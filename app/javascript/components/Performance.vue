@@ -45,7 +45,6 @@
                           :feedback="positive_gain_feedback">
                 <b-input-group right="m">
                     <b-form-input type="number" v-model.number="form.positive_gain"
-                                  required
                                   :state="positive_gain_state"
                                   placeholder="Dislivello in m"
                     ></b-form-input>
@@ -103,6 +102,7 @@
 
   import axios from 'axios'
   import {mapStateFeedbackListCmp} from '../packs/helpers'
+  import gql from 'graphql-tag'
 
   export default {
     data: function () {
@@ -179,52 +179,118 @@
       onSubmit(evt) {
         const me = this;
 
-        this.disabled_save = true;
+        // this.disabled_save = true;
         let make_action = null;
 
-        if (this.persisted) {
+        // if (this.persisted) {
+        //
+        //   let path = Routes.performance_path(this.$route.params.id);
+        //
+        //   if (this.$route.params.user_id) {
+        //     path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
+        //   }
+        //
+        //   make_action = axios.put(path, this.form);
+        //
+        // } else {
+        //   make_action = axios.post(Routes.performances_path(), this.form);
+        // }
+        //
+        //
+        // make_action.then(ris => {
+        //   if (ris.data.success) {
+        //     me.callback_message.type = 'success';
+        //     me.callback_message.message = 'Performance inserita correttamente';
+        //     me.callback_message.count_down = 3;
+        //     me.onReset();
+        //     setTimeout(() => {
+        //       if (this.$route.params.user_id) {
+        //         me.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
+        //       } else {
+        //         me.$router.push({name: 'performance_list'})
+        //       }
+        //
+        //     }, 1500);
+        //   } else {
+        //     me.callback_message.type = 'danger';
+        //     let msg = 'Performance non valida';
+        //     if (ris.data.errors.base) {
+        //       msg += ' - ' + ris.data.errors.base[0];
+        //     }
+        //     me.callback_message.message = msg;
+        //     me.callback_message.count_down = 6;
+        //   }
+        //   me.errors = ris.data.errors;
+        //   me.show_errors = true;
+        //   me.disabled_save = false;
+        //
+        // })
 
-          let path = Routes.performance_path(this.$route.params.id);
+        this.$apollo.mutate({
+          // Query
+          mutation: gql`mutation editPerformance($id: ID!, $distance: Float, $pace: String, $positive_gain: Int, $url: String) {
+                          editPerformance(input: {id: $id, distance: $distance, pace: $pace, positive_gain: $positive_gain, url: $url}) {
+                            result {
+                              result
+                            }
+                          }
+                        }
+                        `,
+          // Parameters
+          variables: this.form,
+          // Update the cache with the result
+          // The query will be updated with the optimistic response
+          // and then with the real result of the mutation
+          update: (store, ris) => {
 
-          if (this.$route.params.user_id) {
-            path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
-          }
 
-          make_action = axios.put(path, this.form);
+            console.log('quando appare questo?',arguments);
 
-        } else {
-          make_action = axios.post(Routes.performances_path(), this.form);
-        }
-
-
-        make_action.then(ris => {
-          if (ris.data.success) {
-            me.callback_message.type = 'success';
-            me.callback_message.message = 'Performance inserita correttamente';
-            me.callback_message.count_down = 3;
-            me.onReset();
-            setTimeout(() => {
-              if (this.$route.params.user_id) {
-                me.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
-              } else {
-                me.$router.push({name: 'performance_list'})
-              }
-
-            }, 1500);
-          } else {
-            me.callback_message.type = 'danger';
-            let msg = 'Performance non valida';
-            if (ris.data.errors.base) {
-              msg += ' - ' + ris.data.errors.base[0];
-            }
-            me.callback_message.message = msg;
-            me.callback_message.count_down = 6;
-          }
-          me.errors = ris.data.errors;
-          me.show_errors = true;
-          me.disabled_save = false;
-
+            // // Read the data from our cache for this query.
+            // const data = store.readQuery({query: gql`query Rankings($id: ID!) {
+            //                                           rankings(id: $id) {
+            //                                             total_distance
+            //                                             id
+            //                                             username
+            //                                             total_points
+            //                                             total_positive_gain
+            //                                             rank
+            //                                             challenged
+            //                                             machable
+            //                                             max_lose_points
+            //                                           }
+            //                                         }`,variables:1})
+            console.log(ris);
+            // // Add our tag from the mutation to the end
+            // data.tags.push(newTag)
+            // // Write our data back to the cache.
+            // store.writeQuery({query: TAGS_QUERY, data})
+          },
+          // Optimistic UI
+          // Will be treated as a 'fake' result as soon as the request is made
+          // so that the UI can react quickly and the user be happy
+          // optimisticResponse: {
+          //   __typename: 'Mutation',
+          //   addTag: {
+          //     __typename: 'Tag',
+          //     id: -1,
+          //     label: newTag,
+          //   },
+          // },
+          // refetchQueries: [{
+          //   query:  this.$apollo.queries.rankings,
+          // }]
+        }).then((data) => {
+          // Result
+          console.log('then',data)
+          // this.reload_rank();
+        }).catch((error) => {
+          // Error
+          console.error(error)
+          // We restore the initial user input
+          // this.newTag = newTag
         })
+
       },
       onReset() {
         // Reset our form values
