@@ -1,16 +1,21 @@
 Mutations::CreatePerformance = GraphQL::Relay::Mutation.define do
   name "CreatePerformance"
-  # TODO: define return fields
-  # return_field :post, Types::PostType
 
-  # TODO: define arguments
-  # input_field :name, !types.String
+  return_field :result, Types::OperationResultType
+
+
+  input_field :distance, types.Float
+  input_field :pace, types.String
+  input_field :positive_gain, types.Int
+  input_field :url, types.String
+
 
   resolve ->(obj, args, ctx) {
-    # TODO: define resolve function
+
+    @obj = ctx[:current_user].performances.create(args.to_h)
+
+    {result: @obj}
   }
-
-
 
 
 end

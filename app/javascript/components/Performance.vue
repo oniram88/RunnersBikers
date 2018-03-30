@@ -103,7 +103,7 @@
   import axios from 'axios'
   import {mapStateFeedbackListCmp} from '../packs/helpers'
   import gql from 'graphql-tag'
-  import {EDIT_PERFORMANCE} from '../graphql/performances'
+  import {EDIT_PERFORMANCE, CREATE_PERFORMANCE} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -172,106 +172,69 @@
             console.log(ris);
             this.form = ris.data;
           });
+        } else {
+          this.onReset();
         }
       },
       dismiss_success_CountDown(counter) {
         this.callback_message.count_down = counter;
       },
-      onSubmit(evt) {
+      onSubmit() {
         const me = this;
 
-        // this.disabled_save = true;
-        let make_action = null;
+        const {distance, pace, positive_gain, url} = this.form
 
-        // if (this.persisted) {
-        //
-        //   let path = Routes.performance_path(this.$route.params.id);
-        //
-        //   if (this.$route.params.user_id) {
-        //     path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
-        //   }
-        //
-        //   make_action = axios.put(path, this.form);
-        //
-        // } else {
-        //   make_action = axios.post(Routes.performances_path(), this.form);
-        // }
-        //
-        //
-        // make_action.then(ris => {
-        //   if (ris.data.success) {
-        //     me.callback_message.type = 'success';
-        //     me.callback_message.message = 'Performance inserita correttamente';
-        //     me.callback_message.count_down = 3;
-        //     me.onReset();
-        //     setTimeout(() => {
-        //       if (this.$route.params.user_id) {
-        //         me.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
-        //       } else {
-        //         me.$router.push({name: 'performance_list'})
-        //       }
-        //
-        //     }, 1500);
-        //   } else {
-        //     me.callback_message.type = 'danger';
-        //     let msg = 'Performance non valida';
-        //     if (ris.data.errors.base) {
-        //       msg += ' - ' + ris.data.errors.base[0];
-        //     }
-        //     me.callback_message.message = msg;
-        //     me.callback_message.count_down = 6;
-        //   }
-        //   me.errors = ris.data.errors;
-        //   me.show_errors = true;
-        //   me.disabled_save = false;
-        //
-        // })
+        let variables = {
+          distance,
+          pace,
+          positive_gain,
+          url
+        }
+        let mutation = CREATE_PERFORMANCE
+
 
         if (this.persisted) {
-          const {distance, pace, positive_gain, url} = this.form
-
-          this.$apollo.mutate({
-            mutation: EDIT_PERFORMANCE,
-            variables: {
-              id: this.$route.params.id,
-              distance,
-              pace,
-              positive_gain,
-              url
-            }
-          }).then((data) => {
-            // Result
-            this.errors = data.data.editPerformance.result.errors
-            this.show_errors = true;
-
-            if (data.data.editPerformance.result.result) {
-              this.callback_message.type = 'success';
-              this.callback_message.message = 'Performance aggiornata correttamente';
-              this.callback_message.count_down = 3;
-              setTimeout(() => {
-                if (this.$route.params.user_id) {
-                  this.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
-                } else {
-                  this.$router.push({name: 'performance_list'})
-                }
-
-              }, 1500);
-            } else {
-              me.callback_message.type = 'danger';
-              let msg = 'Performance non valida';
-              if (this.base_error_obj) {
-                msg += ' - ' + this.base_feedback;
-              }
-              me.callback_message.message = msg;
-              me.callback_message.count_down = 6;
-
-            }
-
-
-          })
-        } else {
-
+          variables.id = this.$route.params.id
+          mutation = EDIT_PERFORMANCE
         }
+
+
+        this.$apollo.mutate({
+          mutation: mutation,
+          variables: variables
+        }).then((data) => {
+          // Result
+
+          let data_response = data.data[this.persisted ? 'editPerformance' : 'createPerformance'].result
+
+          this.errors = data_response.errors
+          this.show_errors = true;
+
+          if (data_response.result) {
+            this.callback_message.type = 'success';
+            this.callback_message.message = this.persisted ? 'Performance aggiornata correttamente' : 'Performance creata correttamente';
+            this.callback_message.count_down = 3;
+            setTimeout(() => {
+              if (this.$route.params.user_id) {
+                this.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
+              } else {
+                this.$router.push({name: 'performance_list'})
+              }
+
+            }, 1500);
+          } else {
+            me.callback_message.type = 'danger';
+            let msg = 'Performance non valida';
+            if (this.base_error_obj) {
+              msg += ' - ' + this.base_feedback;
+            }
+            me.callback_message.message = msg;
+            me.callback_message.count_down = 6;
+
+          }
+
+
+        })
 
 
       },
