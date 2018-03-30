@@ -19,6 +19,34 @@ Types::QueryType = GraphQL::ObjectType.define do
     resolve ->(obj, args, ctx) {Performance.find(args["id"])}
   end
 
+  field :performances do
+    type Types::PerformanceType.to_list_type
+    argument :limit, types.Int
+    argument :user_id do
+      type types.ID
+      default_value nil
+      description "Possibile passare l'id della persona su
+                                  cui scoppare la ricerca delle performances,
+                                  altrimenti le proprie"
+      prepare ->(value, ctx) {
+        value || ctx[:current_user].id
+      }
+    end
+    description "Get own performances or of an other user"
+    before_scope ->(_root, _args, ctx) {PerformancePolicy.new(ctx[:current_user], Performance.new).scope.all}
+    resolve ->(performances, args, ctx) {
+
+      if args[:user_id]
+        performances = performances.where(user_id: args[:user_id])
+      end
+
+      unless args[:limit].blank?
+        performances = performances.limit(args[:limit])
+      end
+
+      performances.to_a
+    }
+  end
 
   field :users do
     type Types::UserType.to_list_type
