@@ -35,3 +35,18 @@ export const GET_PERFORMANCE =  gql`query getPerformance($id:ID!){
     positive_gain
   }
 }`
+
+export const GET_PERFORMANCES =  gql`query getPerformances($id:ID){
+  performances(user_id:$id){
+    distance
+    pace
+    url
+    positive_gain
+    created_at
+    editable
+    destructible
+    user_id
+    id
+  }
+}
+`

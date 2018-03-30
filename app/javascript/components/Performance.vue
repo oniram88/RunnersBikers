@@ -149,8 +149,8 @@
           this.form.positive_gain = data.performance.positive_gain
           this.form.url = data.performance.url
 
-        },
-      },
+        }
+      }
     },
     computed: {
       ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url', 'base'),

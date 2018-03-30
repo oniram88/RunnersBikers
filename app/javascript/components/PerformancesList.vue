@@ -1,62 +1,60 @@
 <style scoped lang="scss">
 
-    .destroy_obj {
-        cursor: pointer;
-    }
+  .destroy_obj {
+    cursor: pointer;
+  }
 
 </style>
 
 <template>
 
-    <div>
+  <div>
 
-        <router-view></router-view>
-
-
-        <b-table striped hover
-                 :items="items"
-                 :fields="fields"
-        >
-
-            <template slot="url" slot-scope="data">
-                <b-button :href="data.value" target="_blank">
-                    <vf-icon icon="globe"/>
-                </b-button>
-            </template>
-
-            <template slot="distance" slot-scope="data">
-                {{data.value | distance_format}}
-            </template>
-
-            <template slot="created_at" slot-scope="data">
-                {{data.value | timezone | time_format}}
-            </template>
-
-            <template slot="points" slot-scope="data">
-                {{data.value | points_format}}
-            </template>
+    <router-view></router-view>
 
 
-            <template slot="actions" slot-scope="data">
-                <b-button target="" variant="info"
-                          v-authorize:performance.update?="data.item.id"
-                          :disabled="!data.item.editable"
-                          :to="perfomance_edit_cfg(data.item)">
-                    <vf-icon icon="pencil"/>
-                </b-button>
-                <b-button
-                        v-authorize:performance.destroy?="data.item.id"
-                        :disabled="!data.item.destroyable" target="" variant="danger"
-                        class="destroy_obj" @click="destroy(data.item.id)">
-                    <vf-icon icon="trash"/>
-                </b-button>
-            </template>
+    <b-table striped hover
+             :items="performances"
+             :fields="fields"
+    >
+
+      <template slot="url" slot-scope="data">
+        <b-button :href="data.value" target="_blank">
+          <vf-icon icon="globe"/>
+        </b-button>
+      </template>
+
+      <template slot="distance" slot-scope="data">
+        {{data.value | distance_format}}
+      </template>
+
+      <template slot="created_at" slot-scope="data">
+        {{data.value | timezone | time_format}}
+      </template>
+
+      <template slot="points" slot-scope="data">
+        {{data.value | points_format}}
+      </template>
 
 
-        </b-table>
+      <template slot="actions" slot-scope="data">
+        <b-button target="" variant="info"
+                  :v-if="data.item.editable"
+                  :to="perfomance_edit_cfg(data.item)">
+          <vf-icon icon="pencil"/>
+        </b-button>
+        <b-button
+            :v-if="data.item.destructible" target="" variant="danger"
+            class="destroy_obj" @click="destroy(data.item.id)">
+          <vf-icon icon="trash"/>
+        </b-button>
+      </template>
 
 
-    </div>
+    </b-table>
+
+
+  </div>
 
 </template>
 
@@ -65,6 +63,8 @@
   import axios from 'axios'
   import {mapState} from 'vuex'
   import _ from 'lodash'
+
+  import {GET_PERFORMANCES} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -105,7 +105,7 @@
             label: 'Azioni'
           }
         ],
-        items: []
+        performances: []
       }
     },
     created: function () {
@@ -117,14 +117,30 @@
     },
     computed: {
       total_distance() {
-        _.sumBy(this.items, 'distance');
+        _.sumBy(this.performances, 'distance');
       },
       total_positive_gain() {
-        _.sumBy(this.items, 'positive_gain');
+        _.sumBy(this.performances, 'positive_gain');
       },
       ...mapState([
         'user_roles'
       ])
+    },
+    apollo: {
+      performances: {
+        // GraphQL Query
+        query: GET_PERFORMANCES,
+        // Reactive variables
+        variables() {
+          if (this.$route.params.user_id) {
+            return {
+              id: this.$route.params.user_id
+            }
+          } else {
+            return {}
+          }
+        }
+      },
     },
     methods: {
       perfomance_edit_cfg(item) {
@@ -138,15 +154,6 @@
       },
       load_performances() {
 
-        let path = Routes.performances_path();
-
-        if (this.$route.params.user_id) {
-          path = Routes.user_performances_path(this.$route.params.user_id);
-        }
-
-        axios.get(path).then(ris => {
-          this.items = ris.data;
-        })
       },
       destroy(id) {
         axios.delete(Routes.performance_path(id)).then(ris => {
