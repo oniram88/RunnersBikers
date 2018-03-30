@@ -20,7 +20,7 @@
           <vue-numeric
               class="form-control"
               :separator="' '"
-              v-model="form.distance"
+              v-model="form.distance" required
               :precision="2"
               placeholder="Inserisci la distanza in Km"
           ></vue-numeric>
@@ -100,10 +100,8 @@
 
 <script>
 
-  import axios from 'axios'
   import {mapStateFeedbackListCmp} from '../packs/helpers'
-  import gql from 'graphql-tag'
-  import {EDIT_PERFORMANCE, CREATE_PERFORMANCE} from '../graphql/performances'
+  import {EDIT_PERFORMANCE, CREATE_PERFORMANCE, GET_PERFORMANCE} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -127,6 +125,32 @@
         show_errors: false,
         show: true
       }
+    },
+    apollo: {
+      performance: {
+        // GraphQL Query
+        query: GET_PERFORMANCE,
+        // Reactive variables
+        variables() {
+          return {
+            id: this.$route.params.id
+          }
+        },
+        // Disable the query
+        skip() {
+          return !this.persisted
+        },
+        update(data) {
+          this.readonly = data.performance.readonly;
+
+          console.log(data);
+          this.form.distance = data.performance.distance
+          this.form.pace = data.performance.pace
+          this.form.positive_gain = data.performance.positive_gain
+          this.form.url = data.performance.url
+
+        },
+      },
     },
     computed: {
       ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url', 'base'),
@@ -153,25 +177,8 @@
       },
       load_data() {
         if (this.$route.params.id) {
-
           this.readonly = true;
-          this.$authorize('performance', 'update?', this.$route.params.id).then((ris) => {
-            this.readonly = !ris;
-          });
-
           this.onReset();
-
-          let path = Routes.performance_path(this.$route.params.id);
-
-          if (this.$route.params.user_id) {
-            path = Routes.user_performance_path(this.$route.params.user_id, this.$route.params.id)
-          }
-
-
-          axios.get(path).then(ris => {
-            console.log(ris);
-            this.form = ris.data;
-          });
         } else {
           this.onReset();
         }

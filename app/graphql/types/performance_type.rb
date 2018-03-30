@@ -6,4 +6,10 @@ Types::PerformanceType = GraphQL::ObjectType.define do
   field :positive_gain, types.Int
   field :url, types.String
   field :points, types.Int
+
+  field :readonly, types.Boolean do
+    resolve -> (obj, args, ctx) {
+      !PerformancePolicy.new(ctx[:current_user], obj).update?
+    }
+  end
 end

@@ -11,6 +11,15 @@ Types::QueryType = GraphQL::ObjectType.define do
     resolve ->(obj, args, ctx) {User.find(args["id"])}
   end
 
+  field :performance do
+    type Types::PerformanceType
+    argument :id, !types.ID
+    description "Find a performance by ID"
+    authorize! :show, record: ->(obj, args, ctx) {Performance.find(args['id'])}
+    resolve ->(obj, args, ctx) {Performance.find(args["id"])}
+  end
+
+
   field :users do
     type Types::UserType.to_list_type
     argument :limit, types.Int

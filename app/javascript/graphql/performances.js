@@ -25,3 +25,13 @@ export const EDIT_PERFORMANCE =  gql`mutation editPerformance($id: ID!, $distanc
                           }
                         }
                         `
+
+export const GET_PERFORMANCE =  gql`query getPerformance($id:ID!){
+  performance(id:$id){
+    distance
+    pace
+    readonly
+    url
+    positive_gain
+  }
+}`
