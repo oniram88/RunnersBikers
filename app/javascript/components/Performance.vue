@@ -241,7 +241,6 @@
             }
           }).then((data) => {
             // Result
-            console.log(data)
             this.errors = data.data.editPerformance.result.errors
             this.show_errors = true;
 

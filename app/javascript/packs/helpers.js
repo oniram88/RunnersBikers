@@ -31,7 +31,7 @@ export function mapStateFeedbackListCmp(...fields) {
     };
 
     o[`${i}_feedback`] = function () {
-      console.log(this, i, 'feedback', this.errors);
+      // console.log(this, i, 'feedback', this.errors);
       let obj_key = `${i}_error_obj`
       if (this.show_errors) {
         if (this[obj_key]) {
