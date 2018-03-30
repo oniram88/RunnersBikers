@@ -5,96 +5,96 @@
 
 <template>
 
-    <b-card :title="persisted ? ( readonly ? 'Visualizza Sessione' : 'Modifica Sessione'):'Nuova Sessione' "
-            class="mb-12">
+  <b-card :title="persisted ? ( readonly ? 'Visualizza Sessione' : 'Modifica Sessione'):'Nuova Sessione' "
+          class="mb-12">
 
-        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset"
-                v-if="show && !readonly">
-
-
-            <b-form-group label="Distanza:"
-                          :state="distance_state"
-                          :feedback="distance_feedback">
-                <b-input-group right="km">
-
-                    <vue-numeric
-                            class="form-control"
-                            :separator="' '"
-                            v-model="form.distance"
-                            :precision="2"
-                            placeholder="Inserisci la distanza in Km"
-                    ></vue-numeric>
+    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset"
+            v-if="show && !readonly">
 
 
-                </b-input-group>
-            </b-form-group>
+      <b-form-group label="Distanza:"
+                    :state="distance_state"
+                    :feedback="distance_feedback">
+        <b-input-group right="km">
 
-            <b-form-group label="Ritmo Medio:"
-                          :state="pace_state"
-                          :feedback="pace_feedback">
-                <b-input-group right="m/km" left="00:00">
-                    <b-form-input type="text"
-                                  :state="pace_state"
-                                  v-model="form.pace" required
-                                  placeholder="Inserisci il ritmo in m/km 00:00"
-                    ></b-form-input>
-                </b-input-group>
-            </b-form-group>
-
-            <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
-                          :feedback="positive_gain_feedback">
-                <b-input-group right="m">
-                    <b-form-input type="number" v-model.number="form.positive_gain"
-                                  :state="positive_gain_state"
-                                  placeholder="Dislivello in m"
-                    ></b-form-input>
-                </b-input-group>
-            </b-form-group>
-
-            <b-form-group label="Url sito:" :state="url_state"
-                          :feedback="url_feedback">
-                <b-form-input type="text" v-model="form.url" required
-                              :state="url_state"
-                              placeholder="Url della sessione http://....."
-                ></b-form-input>
-            </b-form-group>
+          <vue-numeric
+              class="form-control"
+              :separator="' '"
+              v-model="form.distance"
+              :precision="2"
+              placeholder="Inserisci la distanza in Km"
+          ></vue-numeric>
 
 
-            <b-button type="submit" variant="primary" :disabled="disabled_save">
-                Salva
-            </b-button>
-            <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
-            </b-button>
-        </b-form>
+        </b-input-group>
+      </b-form-group>
 
-        <b-row v-else="">
-            <b-col>
-                <dl>
-                    <dt>Distanza</dt>
-                    <dd>{{form.distance}}</dd>
+      <b-form-group label="Ritmo Medio:"
+                    :state="pace_state"
+                    :feedback="pace_feedback">
+        <b-input-group right="m/km" left="00:00">
+          <b-form-input type="text"
+                        :state="pace_state"
+                        v-model="form.pace" required
+                        placeholder="Inserisci il ritmo in m/km 00:00"
+          ></b-form-input>
+        </b-input-group>
+      </b-form-group>
 
-                    <dt>Ritmo Medio:</dt>
-                    <dd>{{form.pace}}</dd>
+      <b-form-group label="Dislivello Positivo:" :state="positive_gain_state"
+                    :feedback="positive_gain_feedback">
+        <b-input-group right="m">
+          <b-form-input type="number" v-model.number="form.positive_gain"
+                        :state="positive_gain_state" required
+                        placeholder="Dislivello in m"
+          ></b-form-input>
+        </b-input-group>
+      </b-form-group>
 
-                    <dt>Dislivello Positivo:</dt>
-                    <dd>{{form.positive_gain}}</dd>
+      <b-form-group label="Url sito:" :state="url_state"
+                    :feedback="url_feedback">
+        <b-form-input type="text" v-model="form.url" required
+                      :state="url_state"
+                      placeholder="Url della sessione http://....."
+        ></b-form-input>
+      </b-form-group>
 
-                    <dt>Url sito:</dt>
-                    <dd>
-                        <b-link :href="form.url">{{form.url}}</b-link>
-                    </dd>
-                </dl>
-            </b-col>
-        </b-row>
 
-        <b-alert :show="callback_message.count_down"
-                 dismissible
-                 :variant="callback_message.type"
-                 @dismissed="callback_message.count_down=0"
-                 @dismiss-count-down="dismiss_success_CountDown">
-            {{callback_message.message}}
-        </b-alert>
-    </b-card>
+      <b-button type="submit" variant="primary" :disabled="disabled_save">
+        Salva
+      </b-button>
+      <b-button type="reset" variant="secondary" v-if="!reset_disabled">Reset
+      </b-button>
+    </b-form>
+
+    <b-row v-else="">
+      <b-col>
+        <dl>
+          <dt>Distanza</dt>
+          <dd>{{form.distance}}</dd>
+
+          <dt>Ritmo Medio:</dt>
+          <dd>{{form.pace}}</dd>
+
+          <dt>Dislivello Positivo:</dt>
+          <dd>{{form.positive_gain}}</dd>
+
+          <dt>Url sito:</dt>
+          <dd>
+            <b-link :href="form.url">{{form.url}}</b-link>
+          </dd>
+        </dl>
+      </b-col>
+    </b-row>
+
+    <b-alert :show="callback_message.count_down"
+             dismissible
+             :variant="callback_message.type"
+             @dismissed="callback_message.count_down=0"
+             @dismiss-count-down="dismiss_success_CountDown">
+      {{callback_message.message}}
+    </b-alert>
+  </b-card>
 
 </template>
 
@@ -103,6 +103,7 @@
   import axios from 'axios'
   import {mapStateFeedbackListCmp} from '../packs/helpers'
   import gql from 'graphql-tag'
+  import {EDIT_PERFORMANCE} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -128,7 +129,7 @@
       }
     },
     computed: {
-      ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url'),
+      ...mapStateFeedbackListCmp('distance', 'pace', 'positive_gain', 'url', 'base'),
 
       reset_disabled() {
         return this.$route.params.id;
@@ -226,70 +227,53 @@
         //
         // })
 
-        this.$apollo.mutate({
-          // Query
-          mutation: gql`mutation editPerformance($id: ID!, $distance: Float, $pace: String, $positive_gain: Int, $url: String) {
-                          editPerformance(input: {id: $id, distance: $distance, pace: $pace, positive_gain: $positive_gain, url: $url}) {
-                            result {
-                              result
-                            }
-                          }
-                        }
-                        `,
-          // Parameters
-          variables: this.form,
-          // Update the cache with the result
-          // The query will be updated with the optimistic response
-          // and then with the real result of the mutation
-          update: (store, ris) => {
+        if (this.persisted) {
+          const {distance, pace, positive_gain, url} = this.form
+
+          this.$apollo.mutate({
+            mutation: EDIT_PERFORMANCE,
+            variables: {
+              id: this.$route.params.id,
+              distance,
+              pace,
+              positive_gain,
+              url
+            }
+          }).then((data) => {
+            // Result
+            console.log(data)
+            this.errors = data.data.editPerformance.result.errors
+            this.show_errors = true;
+
+            if (data.data.editPerformance.result.result) {
+              this.callback_message.type = 'success';
+              this.callback_message.message = 'Performance aggiornata correttamente';
+              this.callback_message.count_down = 3;
+              setTimeout(() => {
+                if (this.$route.params.user_id) {
+                  this.$router.push({name: 'user_performance_list', params: {user_id: this.$route.params.user_id}})
+                } else {
+                  this.$router.push({name: 'performance_list'})
+                }
+
+              }, 1500);
+            } else {
+              me.callback_message.type = 'danger';
+              let msg = 'Performance non valida';
+              if (this.base_error_obj) {
+                msg += ' - ' + this.base_feedback;
+              }
+              me.callback_message.message = msg;
+              me.callback_message.count_down = 6;
+
+            }
 
 
-            console.log('quando appare questo?',arguments);
+          })
+        } else {
 
-            // // Read the data from our cache for this query.
-            // const data = store.readQuery({query: gql`query Rankings($id: ID!) {
-            //                                           rankings(id: $id) {
-            //                                             total_distance
-            //                                             id
-            //                                             username
-            //                                             total_points
-            //                                             total_positive_gain
-            //                                             rank
-            //                                             challenged
-            //                                             machable
-            //                                             max_lose_points
-            //                                           }
-            //                                         }`,variables:1})
-            console.log(ris);
-            // // Add our tag from the mutation to the end
-            // data.tags.push(newTag)
-            // // Write our data back to the cache.
-            // store.writeQuery({query: TAGS_QUERY, data})
-          },
-          // Optimistic UI
-          // Will be treated as a 'fake' result as soon as the request is made
-          // so that the UI can react quickly and the user be happy
-          // optimisticResponse: {
-          //   __typename: 'Mutation',
-          //   addTag: {
-          //     __typename: 'Tag',
-          //     id: -1,
-          //     label: newTag,
-          //   },
-          // },
-          // refetchQueries: [{
-          //   query:  this.$apollo.queries.rankings,
-          // }]
-        }).then((data) => {
-          // Result
-          console.log('then',data)
-          // this.reload_rank();
-        }).catch((error) => {
-          // Error
-          console.error(error)
-          // We restore the initial user input
-          // this.newTag = newTag
-        })
+        }
+
 
       },
       onReset() {

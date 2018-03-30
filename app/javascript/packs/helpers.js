@@ -6,19 +6,37 @@ export function mapStateFeedbackListCmp(...fields) {
 
   _.each(fields, (i) => {
 
+    o[`${i}_error_obj`] = function () {
+      // console.log(this, i, 'error_obj', this.errors);
+      if (this.errors) {
+        return _.find(this.errors, function (o) {
+          return o.field == i;
+        }) || false;
+      }
+      return false;
+    };
+
     o[`${i}_state`] = function () {
-      // console.log(this, i, 'state', this.json_errors);
-      if (this.errors && this.errors[i]) {
-        return this.errors[i] ? 'invalid' : 'valid'
-      } else {
+      // console.log(this, i, 'state', this.errors);
+      let obj_key = `${i}_error_obj`
+      if (this.show_errors) {
+        if (this[obj_key]) {
+          return 'invalid';
+        } else {
+          return 'valid';
+        }
+      }else{
         return '';
       }
     };
 
     o[`${i}_feedback`] = function () {
-      // console.log(this, i, 'feedback',this.json_errors);
+      console.log(this, i, 'feedback', this.errors);
+      let obj_key = `${i}_error_obj`
       if (this.show_errors) {
-        return this.errors[i] ? this.errors[i][0] : ''
+        if (this[obj_key]) {
+          return this[obj_key].message[0];
+        }
       } else {
         return '';
       }

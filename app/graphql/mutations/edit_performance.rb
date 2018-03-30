@@ -17,7 +17,7 @@ Mutations::EditPerformance = GraphQL::Relay::Mutation.define do
 
     @obj.update_attributes(args.to_h)
 
-    {result:@obj }
+    {result: @obj}
   }
 
 end
