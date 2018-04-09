@@ -25,4 +25,10 @@ Types::RankingType = GraphQL::ObjectType.define do
     }
   end
 
+  field :show_performances, types.Boolean, "Can be shown the performances of user" do
+    resolve -> (obj, args, ctx) {
+      UserPolicy.new(ctx[:current_user], obj).show_performances?
+    }
+  end
+
 end

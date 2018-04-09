@@ -17,7 +17,7 @@
     >
       <template slot="actions" slot-scope="data">
         <b-button
-            v-authorize:user.show_performances?="data.item.id"
+             v-if="data.item.show_performances"
             :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
             class="create_match_btn">
           <vf-icon icon="list"/>
@@ -86,6 +86,7 @@
           challenged
           machable
           max_lose_points
+          show_performances
         }
       }`
     },
