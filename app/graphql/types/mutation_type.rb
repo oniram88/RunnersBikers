@@ -17,4 +17,8 @@ Types::MutationType = GraphQL::ObjectType.define do
 
   end
 
+  field :deletePerformance, Mutations::DeletePerformance.field do
+    authorize! :destroy, record: ->(obj, args, ctx) {Performance.find(args[:id])}
+  end
+
 end

@@ -9,6 +9,13 @@
 <template>
 
   <div>
+    <b-alert :show="callback_message.count_down"
+             dismissible
+             :variant="callback_message.type"
+             @dismissed="callback_message.count_down=0"
+             @dismiss-count-down="dismiss_success_CountDown">
+      {{callback_message.message}}
+    </b-alert>
 
     <router-view></router-view>
 
@@ -64,7 +71,7 @@
   import {mapState} from 'vuex'
   import _ from 'lodash'
 
-  import {GET_PERFORMANCES} from '../graphql/performances'
+  import {DELETE_PERFORMANCE, GET_PERFORMANCES} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -105,7 +112,12 @@
             label: 'Azioni'
           }
         ],
-        performances: []
+        performances: [],
+        callback_message: {
+          count_down: 0,
+          type: 'success',
+          message: 'Performance inserita correttamente'
+        },
       }
     },
     created: function () {
@@ -143,6 +155,9 @@
       },
     },
     methods: {
+      dismiss_success_CountDown(counter) {
+        this.callback_message.count_down = counter;
+      },
       perfomance_edit_cfg(item) {
 
         if (_.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge')) {
@@ -156,9 +171,39 @@
 
       },
       destroy(id) {
-        axios.delete(Routes.performance_path(id)).then(ris => {
-          this.load_performances();
+        this.$apollo.mutate({
+          mutation: DELETE_PERFORMANCE,
+          variables: {
+            id: id
+          }
+        }).then((data) => {
+          // Result
+
+          let data_response = data.data['deletePerformance'].result
+
+          this.errors = data_response.errors
+          this.show_errors = true;
+
+          if (data_response.result) {
+            this.callback_message.type = 'success';
+            this.callback_message.message ='Performance eliminata correttamente';
+            this.callback_message.count_down = 3;
+
+          } else {
+            this.callback_message.type = 'danger';
+            let msg = 'Problemi nella cancellazione della performance';
+            if (this.base_error_obj) {
+              msg += ' - ' + this.base_feedback;
+            }
+            this.callback_message.message = msg;
+            this.callback_message.count_down = 6;
+
+          }
+
+
         })
+
+
       }
     }
 

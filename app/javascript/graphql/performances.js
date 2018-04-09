@@ -26,6 +26,19 @@ export const EDIT_PERFORMANCE =  gql`mutation editPerformance($id: ID!, $distanc
                         }
                         `
 
+export const DELETE_PERFORMANCE =  gql`mutation deletePerformance($id: ID!) {
+                          deletePerformance(input: {id: $id}) {
+                            result {
+                              result
+                              errors{
+                                field
+                                message
+                              }
+                            }
+                          }
+                        }
+                        `
+
 export const GET_PERFORMANCE =  gql`query getPerformance($id:ID!){
   performance(id:$id){
     distance
