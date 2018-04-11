@@ -108,6 +108,11 @@
   import {HttpLink} from 'apollo-link-http'
   import {InMemoryCache} from 'apollo-cache-inmemory'
   import VueApollo from 'vue-apollo'
+  import ActionCable from 'actioncable';
+  import ActionCableLink from 'graphql-ruby-client/subscriptions/ActionCableLink';
+
+
+  const cable = ActionCable.createConsumer()
 
   const httpLink = new HttpLink({
     // You should use an absolute URL here
@@ -126,10 +131,23 @@
     return forward(operation);
   });
 
+  const hasSubscriptionOperation = ({ query: { definitions } }) => {
+    return definitions.some(
+      ({ kind, operation }) => kind === 'OperationDefinition' && operation === 'subscription'
+    )
+  }
+
+  const link = ApolloLink.split(
+    hasSubscriptionOperation,
+    new ActionCableLink({cable}),
+    httpLink
+  );
+
+
 
   // Create the apollo client
   const apolloClient = new ApolloClient({
-    link: concat(authMiddleware, httpLink),
+    link: concat(authMiddleware, link),
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
