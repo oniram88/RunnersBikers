@@ -6,9 +6,22 @@ Types::QueryType = GraphQL::ObjectType.define do
 
   field :user do
     type Types::UserType
-    argument :id, !types.ID
-    description "Find a User by ID"
-    resolve ->(obj, args, ctx) {User.find(args["id"])}
+    argument :id, types.ID
+    description "Find a User by ID,or get the current user"
+    authorize! :show, record: ->(obj, args, ctx) {
+      if args["id"]
+        User.find(args["id"])
+      else
+        ctx[:current_user]
+      end
+    }
+    resolve ->(obj, args, ctx) {
+      if args["id"]
+        User.find(args["id"])
+      else
+        ctx[:current_user]
+      end
+    }
   end
 
   field :performance do
