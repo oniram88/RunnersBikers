@@ -17,7 +17,7 @@
     >
       <template slot="actions" slot-scope="data">
         <b-button
-             v-if="data.item.show_performances"
+            v-if="data.item.show_performances"
             :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
             class="create_match_btn">
           <vf-icon icon="list"/>
@@ -69,26 +69,12 @@
 
 <script>
 
-  import axios from 'axios';
   import _ from 'lodash';
-  import gql from 'graphql-tag'
+  import {CREATE_MATCH, RANKING_LIST} from "../graphql/rankings";
 
   export default {
     apollo: {
-      rankings: gql`{
-        rankings {
-          total_distance
-          id
-          username
-          total_points
-          total_positive_gain
-          rank
-          challenged
-          machable
-          max_lose_points
-          show_performances
-        }
-      }`
+      rankings: RANKING_LIST
     },
     data: function () {
       return {
@@ -136,7 +122,7 @@
     },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_ranking'
+      // '$route': 'load_ranking'
     },
     computed: {
       items: function () {
@@ -167,95 +153,21 @@
         // Call to the graphql mutation
         this.$apollo.mutate({
           // Query
-          mutation: gql`mutation createMatch($challenged_id:ID!,$points:Int){
-                          createMatch(input:{challenged_id:$challenged_id,points:$points}){
-                            result{
-                              result
-                            }
-                          }
-                        }
-                        `,
+          mutation: CREATE_MATCH,
           // Parameters
           variables: this.match,
-          // Update the cache with the result
-          // The query will be updated with the optimistic response
-          // and then with the real result of the mutation
-          update: (store, ris) => {
-
-
-            console.log('quando appare questo?',arguments);
-
-            // // Read the data from our cache for this query.
-            const data = store.readQuery({query: gql`query Rankings($id: ID!) {
-                                                      rankings(id: $id) {
-                                                        total_distance
-                                                        id
-                                                        username
-                                                        total_points
-                                                        total_positive_gain
-                                                        rank
-                                                        challenged
-                                                        machable
-                                                        max_lose_points
-                                                      }
-                                                    }`,variables:1})
-            console.log(data);
-            // // Add our tag from the mutation to the end
-            // data.tags.push(newTag)
-            // // Write our data back to the cache.
-            // store.writeQuery({query: TAGS_QUERY, data})
-          },
-          // Optimistic UI
-          // Will be treated as a 'fake' result as soon as the request is made
-          // so that the UI can react quickly and the user be happy
-          // optimisticResponse: {
-          //   __typename: 'Mutation',
-          //   addTag: {
-          //     __typename: 'Tag',
-          //     id: -1,
-          //     label: newTag,
-          //   },
-          // },
-          // refetchQueries: [{
-          //   query:  this.$apollo.queries.rankings,
-          // }]
-        }).then((data) => {
-          // Result
-          console.log(data)
-          // this.reload_rank();
-        }).catch((error) => {
-          // Error
-          console.error(error)
-          // We restore the initial user input
-          // this.newTag = newTag
+          refetchQueries: [{
+            query: RANKING_LIST,
+          }]
         })
-        //
-        //
-        // console.log(this.match.points);
-        // axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
-        //   // this.load_ranking();
-        //   this.reset_match();
-        // });
-      },
-      reload_rank(){
-        this.$apollo.queries.rankings.fetchMore({
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            const newTags = fetchMoreResult.tagsPage.tags
-            const hasMore = fetchMoreResult.tagsPage.hasMore
+        //   .then((data) => {
+        //   console.log('then', data);
+        // }).catch((error) => {
+        //   console.error(error)
+        // })
 
-            this.showMoreEnabled = hasMore
-
-            return {
-              tagsPage: {
-                __typename: previousResult.tagsPage.__typename,
-                // Merging the tag list
-                tags: [...previousResult.tagsPage.tags, ...newTags],
-                hasMore,
-              },
-            }
-          }
-        });
       },
+
       reset_match() {
         this.match.points = 0;
         this.match.challenged_id = null;
