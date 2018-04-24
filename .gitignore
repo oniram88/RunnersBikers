@@ -23,6 +23,7 @@
 /node_modules
 
 docker_volumes/
+docker_volumes_OLD
 
 config/secrets\.yml
 
