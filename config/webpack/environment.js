@@ -5,7 +5,7 @@ const path = require('path');
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-environment.plugins.set('UglifyJs',
+environment.plugins.append('UglifyJs',
   new UglifyJsPlugin({
     parallel: true,
     uglifyOptions: {
@@ -16,14 +16,14 @@ environment.plugins.set('UglifyJs',
   })
 );
 
-environment.plugins.set(
+environment.plugins.append(
   'Provide',
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
     'window.jQuery': 'jquery',
     Popper: ['popper.js', 'default']
-  }),
+  })
 );
 
 
