@@ -79,6 +79,11 @@ Types::QueryType = GraphQL::ObjectType.define do
     end
   end
 
+  field :client_configuration do
+    type Types::ClientConfiguration
+    description ""
+  end
+
 
   field :rankings do
     type Types::RankingType.to_list_type

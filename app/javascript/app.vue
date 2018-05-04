@@ -104,10 +104,11 @@
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
   import {ApolloClient} from 'apollo-client'
-  import {ApolloLink, concat} from 'apollo-link';
+  import {ApolloLink, concat, execute, makePromise} from 'apollo-link';
   import {HttpLink} from 'apollo-link-http'
   import {InMemoryCache} from 'apollo-cache-inmemory'
   import VueApollo from 'vue-apollo'
+  import gql from 'graphql-tag'
 
   const httpLink = new HttpLink({
     // You should use an absolute URL here
@@ -126,10 +127,11 @@
     return forward(operation);
   });
 
+  const link = concat(authMiddleware, httpLink)
 
   // Create the apollo client
   const apolloClient = new ApolloClient({
-    link: concat(authMiddleware, httpLink),
+    link: link,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
@@ -168,6 +170,30 @@
     }
   });
 
+  //
+  // makePromise(execute(link, {
+  //   query: gql`{
+  //     user{
+  //         id
+  //       }
+  //     }`
+  // })).then(() => {
+  //   console.log('cioa', arguments);
+  // })
+
+  apolloClient.query({
+    query: gql`query user{
+      user{
+          id
+        }
+      }
+      `
+  }).then((data) => {
+
+
+
+    console.log('cioa', arguments,data);
+  })
 
   axios.get(Routes.actual_user_base_infos_path({format: 'json'})).then(ris => {
     store.commit('set_current_user', ris.data);
