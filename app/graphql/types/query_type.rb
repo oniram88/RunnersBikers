@@ -81,7 +81,12 @@ Types::QueryType = GraphQL::ObjectType.define do
 
   field :client_configuration do
     type Types::ClientConfiguration
-    description ""
+    description "Configurazione del client corrente"
+    resolve ->(obj, args, ctx) do
+
+      ctx[:current_user]
+
+    end
   end
 
 
