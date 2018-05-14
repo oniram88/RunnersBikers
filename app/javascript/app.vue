@@ -92,7 +92,6 @@
 <script>
 
   import Vue from 'vue'
-  import axios from 'axios'
   import VueRouter from 'vue-router'
   import Vuex from 'vuex'
   import {mapState} from 'vuex'
