@@ -67,7 +67,6 @@
 
 <script>
 
-  import axios from 'axios'
   import {mapState} from 'vuex'
   import _ from 'lodash'
 

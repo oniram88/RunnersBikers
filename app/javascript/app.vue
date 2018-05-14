@@ -79,11 +79,11 @@
 
     <router-view></router-view>
 
-    <div class="loader_modal_hider" v-if="ajax_loading">
-      <div class="loader_container">
-        <pacman-loader :loading="true" :color="'#17a2b8'"></pacman-loader>
-      </div>
-    </div>
+    <!--<div class="loader_modal_hider" v-if="ajax_loading">-->
+      <!--<div class="loader_container">-->
+        <!--<pacman-loader :loading="true" :color="'#17a2b8'"></pacman-loader>-->
+      <!--</div>-->
+    <!--</div>-->
 
   </b-container>
 
@@ -104,10 +104,12 @@
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
   import {ApolloClient} from 'apollo-client'
-  import {ApolloLink, concat} from 'apollo-link';
+  import {ApolloLink, concat, execute, makePromise} from 'apollo-link';
   import {HttpLink} from 'apollo-link-http'
   import {InMemoryCache} from 'apollo-cache-inmemory'
   import VueApollo from 'vue-apollo'
+  import {CLIENT_CONFIGURATION} from './graphql/base_client'
+
 
   const httpLink = new HttpLink({
     // You should use an absolute URL here
@@ -126,10 +128,11 @@
     return forward(operation);
   });
 
+  const link = concat(authMiddleware, httpLink)
 
   // Create the apollo client
   const apolloClient = new ApolloClient({
-    link: concat(authMiddleware, httpLink),
+    link: link,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
@@ -154,7 +157,6 @@
     },
     mutations: {
       set_current_user(state, user) {
-        console.log(state, user);
         state.user_id = user.user_id;
         state.user_roles = user.roles;
         state.username = user.username;
@@ -168,31 +170,11 @@
     }
   });
 
-
-  axios.get(Routes.actual_user_base_infos_path({format: 'json'})).then(ris => {
-    store.commit('set_current_user', ris.data);
-  });
-
-  axios.interceptors.request.use((config) => {
-    // Do something before request is sent
-    store.commit('set_loading_state', true);
-    return config;
-  }, (error) => {
-    // Do something with request error
-    store.commit('set_loading_state', false);
-    return Promise.reject(error);
-  });
-
-  // Add a response interceptor
-  axios.interceptors.response.use((response) => {
-    // Do something with response data
-    store.commit('set_loading_state', false);
-    return response;
-  }, (error) => {
-    // Do something with response error
-    store.commit('set_loading_state', false);
-    return Promise.reject(error);
-  });
+  apolloClient.query({
+    query: CLIENT_CONFIGURATION
+  }).then((data) => {
+    store.commit('set_current_user', data.data.client_configuration);
+  })
 
   const router = new VueRouter({
     routes: [
@@ -268,8 +250,7 @@
       },
       ...mapState([
         'username',
-        'program_version',
-        'ajax_loading'
+        'program_version'
       ])
     },
     components: {
