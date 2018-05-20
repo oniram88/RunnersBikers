@@ -119,19 +119,13 @@
         query: GET_MATCHES,
       }
     },
-    created: function () {
-      this.load_matches();
-    },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_matches'
+      '$route': function(){
+        this.$apollo.queries.matches.refetch()
+      }
     },
     methods: {
-      load_matches() {
-        axios.get(Routes.matches_path()).then(ris => {
-          this.items = ris.data;
-        })
-      },
       insert_note(m) {
         this.selected_match = _.clone(m);
         this.$refs.insert_note.show();

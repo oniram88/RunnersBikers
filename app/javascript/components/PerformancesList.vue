@@ -119,12 +119,11 @@
         },
       }
     },
-    created: function () {
-      this.load_performances();
-    },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_performances'
+      '$route': function(){
+        this.$apollo.queries.performances.refetch();
+      }
     },
     computed: {
       total_distance() {
@@ -164,9 +163,6 @@
         } else {
           return {name: 'performance_edit', params: {id: item.id}};
         }
-
-      },
-      load_performances() {
 
       },
       destroy(id) {
