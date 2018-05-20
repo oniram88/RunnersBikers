@@ -16,6 +16,10 @@ class MatchPolicy < ApplicationPolicy
     user.is_judge?
   end
 
+  def note_updatable?
+    user.is_judge?
+  end
+
   def permitted_attributes
     [:id, :note]
   end

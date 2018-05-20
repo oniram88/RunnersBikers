@@ -35,15 +35,17 @@ class Match < ApplicationRecord
   belongs_to :judge, class_name: 'User', required: false
 
   validates :status, :challenged, :challenger, :points, :presence => true
-  validates :judge, :presence => true, if: -> { approved? or disapproved? }
+  validates :judge, :presence => true, if: -> {approved? or disapproved?}
 
-  validates :looser, :winner, :presence => true, if: -> { (approved? and !is_drawn?) or (timeouted? and !(challenged_performance.nil? and challenger_performance.nil?)) }
+  validates :looser, :winner, :presence => true, if: -> {(approved? and !is_drawn?) or (timeouted? and !(challenged_performance.nil? and challenger_performance.nil?))}
 
   before_validation :set_defaults
 
   validate :correct_rank_position, on: :create
   validate :max_as_challenged_or_challenger, on: :create
   validate :check_time_limits, on: :create
+  validate :one_match_at_time, on: :create
+  validate :cant_be_the_same_person, on: :create
 
   after_create :email_notify_creation
 
@@ -59,7 +61,7 @@ class Match < ApplicationRecord
     disapproved: 4
   }
 
-  scope :open_matches, -> { where(status: [Match.statuses[:wait], Match.statuses[:approval_waiting]]) }
+  scope :open_matches, -> {where(status: [Match.statuses[:wait], Match.statuses[:approval_waiting]])}
 
 
   #Data in cui non la sfida scade
@@ -246,6 +248,22 @@ class Match < ApplicationRecord
 
   end
 
+  def one_match_at_time
+    if self.challenger.open_matches.count > 0
+      self.errors.add(:challenger, :has_already_a_match)
+    end
+
+    if self.challenged.open_matches.count > 0
+      self.errors.add(:challenged, :has_already_a_match)
+    end
+  end
+
+  def cant_be_the_same_person
+    if self.challenger == self.challenged
+      self.errors.add(:challenger, :cant_be_the_same_person)
+      self.errors.add(:challenged, :cant_be_the_same_person)
+    end
+  end
 
   ##
   # Rispetto alla situazione del match cambia lo status

@@ -79,7 +79,7 @@
 
     <router-view></router-view>
 
-    <div class="loader_modal_hider" v-if="ajax_loading">
+    <div class="loader_modal_hider" v-if="store_loading_counter>0">
       <div class="loader_container">
         <pacman-loader :loading="true" :color="'#17a2b8'"></pacman-loader>
       </div>
@@ -92,7 +92,6 @@
 <script>
 
   import Vue from 'vue'
-  import axios from 'axios'
   import VueRouter from 'vue-router'
   import Vuex from 'vuex'
   import {mapState} from 'vuex'
@@ -103,6 +102,14 @@
   import logo from './images/logo_mini.jpg'
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
+  import {ApolloClient} from 'apollo-client'
+  import {ApolloLink, concat, execute, makePromise} from 'apollo-link';
+  import {HttpLink} from 'apollo-link-http'
+  import {InMemoryCache} from 'apollo-cache-inmemory'
+  import VueApollo from 'vue-apollo'
+  import {CLIENT_CONFIGURATION} from './graphql/base_client'
+
+
   Vue.use(Vuex);
 
   const store = new Vuex.Store({
@@ -111,11 +118,10 @@
       user_roles: [],
       username: null,
       program_version: null,
-      ajax_loading: false
+      store_loading_counter: 0
     },
     mutations: {
       set_current_user(state, user) {
-        console.log(state, user);
         state.user_id = user.user_id;
         state.user_roles = user.roles;
         state.username = user.username;
@@ -123,37 +129,73 @@
         state.program_version = user.program_version;
         //   state.count++
       },
-      set_loading_state(state, status) {
-        state.ajax_loading = status;
+      increment_loading_counter(state) {
+        state.store_loading_counter = state.store_loading_counter + 1;
+      },
+      decrement_loading_counter(state) {
+        state.store_loading_counter = state.store_loading_counter - 1;
       }
     }
   });
 
 
-  axios.get(Routes.actual_user_base_infos_path({format: 'json'})).then(ris => {
-    store.commit('set_current_user', ris.data);
+  const httpLink = new HttpLink({
+    // You should use an absolute URL here
+    uri: Routes.graphql_path(),
+    credentials: 'same-origin'
   });
 
-  axios.interceptors.request.use((config) => {
-    // Do something before request is sent
-    store.commit('set_loading_state', true);
-    return config;
-  }, (error) => {
-    // Do something with request error
-    store.commit('set_loading_state', false);
-    return Promise.reject(error);
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    // add the authorization to the headers
+    operation.setContext({
+      headers: {
+        'X-CSRF-Token': document.getElementsByName('csrf-token')[0].content
+      }
+    });
+
+    return forward(operation);
   });
 
-  // Add a response interceptor
-  axios.interceptors.response.use((response) => {
-    // Do something with response data
-    store.commit('set_loading_state', false);
-    return response;
-  }, (error) => {
-    // Do something with response error
-    store.commit('set_loading_state', false);
-    return Promise.reject(error);
+  const start_connection = new ApolloLink((operation, forward) => {
+
+    console.log('inizio richiesta');
+    store.commit('increment_loading_counter');
+
+    return forward(operation);
+  })
+
+  const end_connection = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+      console.log('fine richiesta');
+      store.commit('decrement_loading_counter');
+      return response;
+    });
+  })
+
+  let link = concat(authMiddleware, httpLink);
+  link = concat(start_connection, link);
+  link = end_connection.concat(link);
+
+  // Create the apollo client
+  const apolloClient = new ApolloClient({
+    link: link,
+    cache: new InMemoryCache(),
+    connectToDevTools: true
   });
+
+  const apolloProvider = new VueApollo({
+    defaultClient: apolloClient
+  });
+
+  // Install the vue plugin
+  Vue.use(VueApollo);
+
+
+  apolloClient.query({
+    query: CLIENT_CONFIGURATION
+  }).then((data) => {
+    store.commit('set_current_user', data.data.client_configuration);
+  })
 
   const router = new VueRouter({
     routes: [
@@ -214,6 +256,7 @@
   export default {
     router,
     store,
+    provide: apolloProvider.provide(),
     data: function () {
       return {}
     },
@@ -229,7 +272,7 @@
       ...mapState([
         'username',
         'program_version',
-        'ajax_loading'
+        'store_loading_counter'
       ])
     },
     components: {

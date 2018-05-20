@@ -13,7 +13,7 @@
     <router-view></router-view>
 
     <b-table striped hover
-             :items="items"
+             :items="matches"
              :fields="fields">
 
       <template slot="challenged" slot-scope="data">
@@ -41,12 +41,11 @@
 
       <template slot="action" slot-scope="data">
 
-        <b-btn v-authorize:match.update_note?="data.item.id" @click="insert_note(data.item)" class="action">
+        <b-btn v-if="data.item.note_updatable" @click="insert_note(data.item)" class="action">
           <vf-icon icon="pencil"/>
         </b-btn>
 
-        <b-btn  v-authorize:match.update?="data.item.id"
-                @click="approve(data.item)" v-if="data.item.approvable"
+        <b-btn @click.once="approve(data.item)" v-if="data.item.approvable"
                class="action">
           <vf-icon icon="thumbs-o-up"/>
         </b-btn>
@@ -75,14 +74,14 @@
 
 <script>
 
-  import axios from 'axios';
-  import _ from 'lodash';
+  import {APPROVE_MATCH, GET_MATCHES, UPDATE_MATCH} from '../graphql/matches'
+
 
   export default {
     name: "MatchesList",
     data: function () {
       return {
-        items: [],
+        matches: [],
         fields: [
           {
             key: 'challenger',
@@ -114,40 +113,60 @@
 
       }
     },
-    created: function () {
-      this.load_matches();
+    apollo: {
+      matches: {
+        query: GET_MATCHES,
+      }
     },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_matches'
+      '$route': 'reload_matches'
     },
     methods: {
-      load_matches() {
-        axios.get(Routes.matches_path()).then(ris => {
-          this.items = ris.data;
-        })
+      reload_matches(){
+        this.$apollo.queries.matches.refetch()
       },
       insert_note(m) {
-        this.selected_match = m;
+        this.selected_match = _.clone(m);
         this.$refs.insert_note.show();
       },
       aggiorna_match() {
 
-        axios.put(Routes.match_path(this.selected_match.id), this.selected_match).then(ris => {
-          if (ris.success) {
-            this.load_matches();
-            this.selected_match = {note: null};
+        this.$apollo.mutate({
+          mutation: UPDATE_MATCH,
+          variables: {
+            id: this.selected_match.id,
+            note: this.selected_match.note
+          },
+          update: (store, {data: {update_match: {result}}}) => {
+
+            if (result.result) {
+
+              const data = store.readQuery({query: GET_MATCHES})
+              const updated_match = data.matches.find(match => match.id === this.selected_match.id)
+              updated_match.note = this.selected_match.note
+              store.writeQuery({query: GET_MATCHES, data})
+
+              this.selected_match = {note: null};
+
+            }
           }
-        });
+        })
+
 
       },
       approve(item) {
-        item.approvable = false;
-        axios.post(Routes.approve_match_path(item.id)).then(ris => {
-          if (ris.data.success) {
-            this.load_matches();
+
+        this.$apollo.mutate({
+          mutation: APPROVE_MATCH,
+          variables: {
+            id: item.id,
           }
-        });
+        }).then(()=>{
+          this.reload_matches();
+        })
+
+
       }
     },
     computed: {}

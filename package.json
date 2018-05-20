@@ -3,11 +3,16 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "^3.0.2",
-    "axios": "^0.17.1",
+    "apollo-cache-inmemory": "^1.1.10",
+    "apollo-client": "^2.2.6",
+    "apollo-link": "^1.2.1",
+    "apollo-link-http": "^1.5.3",
     "bootstrap": "4.0.0-beta.2",
     "bootstrap-vue": "^1.2.0",
     "coffeescript": "1.12.7",
     "global": "^4.3.2",
+    "graphql": "^0.13.1",
+    "graphql-tag": "^2.8.0",
     "jquery": "^3.2.1",
     "lodash": "latest",
     "mjml": "^3.3.5",
@@ -17,6 +22,7 @@
     "postcss-smart-import": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.4",
     "vue": "^2.5.13",
+    "vue-apollo": "^3.0.0-beta.5",
     "vue-bootstrap-slider": "^1.1.1",
     "vue-fontawesome": "^0.0.2",
     "vue-loader": "^13.6.0",
@@ -24,7 +30,6 @@
     "vue-router": "^3.0.1",
     "vue-spinner": "^1.0.3",
     "vue-template-compiler": "^2.5.13",
-    "vue_simple_authorize": "^1.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

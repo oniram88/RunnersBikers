@@ -1,70 +1,76 @@
 <style scoped lang="scss">
 
-    .destroy_obj {
-        cursor: pointer;
-    }
+  .destroy_obj {
+    cursor: pointer;
+  }
 
 </style>
 
 <template>
 
-    <div>
+  <div>
+    <b-alert :show="callback_message.count_down"
+             dismissible
+             :variant="callback_message.type"
+             @dismissed="callback_message.count_down=0"
+             @dismiss-count-down="dismiss_success_CountDown">
+      {{callback_message.message}}
+    </b-alert>
 
-        <router-view></router-view>
-
-
-        <b-table striped hover
-                 :items="items"
-                 :fields="fields"
-        >
-
-            <template slot="url" slot-scope="data">
-                <b-button :href="data.value" target="_blank">
-                    <vf-icon icon="globe"/>
-                </b-button>
-            </template>
-
-            <template slot="distance" slot-scope="data">
-                {{data.value | distance_format}}
-            </template>
-
-            <template slot="created_at" slot-scope="data">
-                {{data.value | timezone | time_format}}
-            </template>
-
-            <template slot="points" slot-scope="data">
-                {{data.value | points_format}}
-            </template>
+    <router-view></router-view>
 
 
-            <template slot="actions" slot-scope="data">
-                <b-button target="" variant="info"
-                          v-authorize:performance.update?="data.item.id"
-                          :disabled="!data.item.editable"
-                          :to="perfomance_edit_cfg(data.item)">
-                    <vf-icon icon="pencil"/>
-                </b-button>
-                <b-button
-                        v-authorize:performance.destroy?="data.item.id"
-                        :disabled="!data.item.destroyable" target="" variant="danger"
-                        class="destroy_obj" @click="destroy(data.item.id)">
-                    <vf-icon icon="trash"/>
-                </b-button>
-            </template>
+    <b-table striped hover
+             :items="performances"
+             :fields="fields"
+    >
+
+      <template slot="url" slot-scope="data">
+        <b-button :href="data.value" target="_blank">
+          <vf-icon icon="globe"/>
+        </b-button>
+      </template>
+
+      <template slot="distance" slot-scope="data">
+        {{data.value | distance_format}}
+      </template>
+
+      <template slot="created_at" slot-scope="data">
+        {{data.value | timezone | time_format}}
+      </template>
+
+      <template slot="points" slot-scope="data">
+        {{data.value | points_format}}
+      </template>
 
 
-        </b-table>
+      <template slot="actions" slot-scope="data">
+        <b-button target="" variant="info"
+                  :v-if="data.item.editable"
+                  :to="perfomance_edit_cfg(data.item)">
+          <vf-icon icon="pencil"/>
+        </b-button>
+        <b-button
+            :v-if="data.item.destructible" target="" variant="danger"
+            class="destroy_obj" @click="destroy(data.item.id)">
+          <vf-icon icon="trash"/>
+        </b-button>
+      </template>
 
 
-    </div>
+    </b-table>
+
+
+  </div>
 
 </template>
 
 <script>
 
-  import axios from 'axios'
   import {mapState} from 'vuex'
   import _ from 'lodash'
+
+  import {DELETE_PERFORMANCE, GET_PERFORMANCES} from '../graphql/performances'
 
   export default {
     data: function () {
@@ -105,28 +111,51 @@
             label: 'Azioni'
           }
         ],
-        items: []
+        performances: [],
+        callback_message: {
+          count_down: 0,
+          type: 'success',
+          message: 'Performance inserita correttamente'
+        },
       }
-    },
-    created: function () {
-      this.load_performances();
     },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_performances'
+      '$route': function(){
+        this.$apollo.queries.performances.refetch();
+      }
     },
     computed: {
       total_distance() {
-        _.sumBy(this.items, 'distance');
+        _.sumBy(this.performances, 'distance');
       },
       total_positive_gain() {
-        _.sumBy(this.items, 'positive_gain');
+        _.sumBy(this.performances, 'positive_gain');
       },
       ...mapState([
         'user_roles'
       ])
     },
+    apollo: {
+      performances: {
+        // GraphQL Query
+        query: GET_PERFORMANCES,
+        // Reactive variables
+        variables() {
+          if (this.$route.params.user_id) {
+            return {
+              id: this.$route.params.user_id
+            }
+          } else {
+            return {}
+          }
+        }
+      },
+    },
     methods: {
+      dismiss_success_CountDown(counter) {
+        this.callback_message.count_down = counter;
+      },
       perfomance_edit_cfg(item) {
 
         if (_.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge')) {
@@ -136,22 +165,40 @@
         }
 
       },
-      load_performances() {
-
-        let path = Routes.performances_path();
-
-        if (this.$route.params.user_id) {
-          path = Routes.user_performances_path(this.$route.params.user_id);
-        }
-
-        axios.get(path).then(ris => {
-          this.items = ris.data;
-        })
-      },
       destroy(id) {
-        axios.delete(Routes.performance_path(id)).then(ris => {
-          this.load_performances();
+        this.$apollo.mutate({
+          mutation: DELETE_PERFORMANCE,
+          variables: {
+            id: id
+          }
+        }).then((data) => {
+          // Result
+
+          let data_response = data.data['deletePerformance'].result
+
+          this.errors = data_response.errors
+          this.show_errors = true;
+
+          if (data_response.result) {
+            this.callback_message.type = 'success';
+            this.callback_message.message ='Performance eliminata correttamente';
+            this.callback_message.count_down = 3;
+
+          } else {
+            this.callback_message.type = 'danger';
+            let msg = 'Problemi nella cancellazione della performance';
+            if (this.base_error_obj) {
+              msg += ' - ' + this.base_feedback;
+            }
+            this.callback_message.message = msg;
+            this.callback_message.count_down = 6;
+
+          }
+
+
         })
+
+
       }
     }
 

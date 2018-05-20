@@ -17,9 +17,9 @@
     >
       <template slot="actions" slot-scope="data">
         <b-button
-                v-authorize:user.show_performances?="data.item.id"
-                :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
-                class="create_match_btn">
+            v-if="data.item.show_performances"
+            :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
+            class="create_match_btn">
           <vf-icon icon="list"/>
         </b-button>
         <b-button @click="show_modal(data.item)" v-if="data.item.machable"
@@ -46,11 +46,11 @@
 
         <b-form-group label="Punti:">
           <b-form-input
-                  type="number"
-                  readonly
-                  :value="match.points"
-                  required
-                  placeholder="Inserisci i punti da rubare">
+              type="number"
+              readonly
+              :value="match.points"
+              required
+              placeholder="Inserisci i punti da rubare">
           </b-form-input>
           <b-form-slider class="slider_width" :min="1"
                          tooltip="always"
@@ -69,10 +69,13 @@
 
 <script>
 
-  import axios from 'axios';
   import _ from 'lodash';
+  import {CREATE_MATCH, RANKING_LIST} from "../graphql/rankings";
 
   export default {
+    apollo: {
+      rankings: RANKING_LIST
+    },
     data: function () {
       return {
         match: {
@@ -80,7 +83,7 @@
           challenged_id: null,
           max_lose_points: 100
         },
-        items: [],
+        rankings: [],
         fields: [
           {
             label: 'Rank',
@@ -115,13 +118,19 @@
       }
     },
     created: function () {
-      this.load_ranking();
+      // this.load_ranking();
     },
     watch: {
       // call again the method if the route changes
-      '$route': 'load_ranking'
+      // '$route': 'load_ranking'
     },
-    computed: {},
+    computed: {
+      items: function () {
+        return _.map(this.rankings, ele => {
+          return _.extend({_rowVariant: (ele.challenged ? 'warning' : 'default')}, ele);
+        });
+      }
+    },
     methods: {
       check_min_value(max, value) {
         if (max < parseInt(value)) {
@@ -138,21 +147,27 @@
         this.match.points = 0;
         this.$refs.modal_match.show();
       },
-      load_ranking() {
-        axios.get(Routes.ranking_index_path()).then(ris => {
-          this.items = _.map(ris.data, ele => {
-            ele._rowVariant = (ele.challanged ? 'warning' : 'default');
-            return ele;
-          });
-        })
-      },
       invio_match() {
-        console.log(this.match.points);
-        axios.post(Routes.matches_path(), {match: this.match}).then(ris => {
-          this.load_ranking();
-          this.reset_match();
-        });
+
+
+        // Call to the graphql mutation
+        this.$apollo.mutate({
+          // Query
+          mutation: CREATE_MATCH,
+          // Parameters
+          variables: this.match,
+          refetchQueries: [{
+            query: RANKING_LIST,
+          }]
+        })
+        //   .then((data) => {
+        //   console.log('then', data);
+        // }).catch((error) => {
+        //   console.error(error)
+        // })
+
       },
+
       reset_match() {
         this.match.points = 0;
         this.match.challenged_id = null;

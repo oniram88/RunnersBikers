@@ -9,10 +9,7 @@ import Vue from 'vue'
 import App from '../app.vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueRouter from 'vue-router'
-import axios from 'axios'
 import bFormSlider from 'vue-bootstrap-slider';
-import SimpleAuthorize from 'vue_simple_authorize';
-import auth from './authorizations.js';
 import VueNumeric from 'vue-numeric'
 import format from 'number-format.js'
 import moment from 'moment-timezone';
@@ -28,7 +25,6 @@ import {icon} from 'vue-fontawesome';
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(bFormSlider);
-Vue.use(new SimpleAuthorize, {authorizations: auth});
 Vue.use(VueNumeric);
 
 
@@ -61,12 +57,6 @@ Vue.filter('calendar', function (value,) {
 
 
 
-
-let token = document.getElementsByName('csrf-token')[0].getAttribute('content');
-axios.defaults.headers.common['X-CSRF-Token'] = token;
-axios.defaults.headers.common['Accept'] = 'application/json';
-
-
 document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(document.createElement('main_app'))
   const app = new Vue(App).$mount('main_app')
@@ -75,29 +65,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// The above code uses Vue without the compiler, which means you cannot
-// use Vue to target elements in your existing html templates. You would
-// need to always use single file components.
-// To be able to target elements in your existing html/erb templates,
-// comment out the above code and uncomment the below
-// Add <%= javascript_pack_tag 'hello_vue' %> to your layout
-// Then add this markup to your html template:
-//
-// <div id='hello'>
-//   {{message}}
-//   <app></app>
-// </div>
-
-
-// import Vue from 'vue/dist/vue.esm'
-// import App from './app.vue'
-//
-// document.addEventListener('DOMContentLoaded', () => {
-//   const app = new Vue({
-//     el: '#hello',
-//     data: {
-//       message: "Can you say hello?"
-//     },
-//     components: { App }
-//   })
-// })
