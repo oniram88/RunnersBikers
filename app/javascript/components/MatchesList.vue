@@ -74,7 +74,6 @@
 
 <script>
 
-  import axios from 'axios';
   import {APPROVE_MATCH, GET_MATCHES, UPDATE_MATCH} from '../graphql/matches'
 
 
