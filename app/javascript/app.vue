@@ -79,11 +79,11 @@
 
     <router-view></router-view>
 
-    <!--<div class="loader_modal_hider" v-if="ajax_loading">-->
-      <!--<div class="loader_container">-->
-        <!--<pacman-loader :loading="true" :color="'#17a2b8'"></pacman-loader>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div class="loader_modal_hider" v-if="store_loading_counter>0">
+      <div class="loader_container">
+        <pacman-loader :loading="true" :color="'#17a2b8'"></pacman-loader>
+      </div>
+    </div>
 
   </b-container>
 
@@ -110,6 +110,35 @@
   import {CLIENT_CONFIGURATION} from './graphql/base_client'
 
 
+  Vue.use(Vuex);
+
+  const store = new Vuex.Store({
+    state: {
+      user_id: null,
+      user_roles: [],
+      username: null,
+      program_version: null,
+      store_loading_counter: 0
+    },
+    mutations: {
+      set_current_user(state, user) {
+        state.user_id = user.user_id;
+        state.user_roles = user.roles;
+        state.username = user.username;
+        //TODO spostare in chiamata più adatta
+        state.program_version = user.program_version;
+        //   state.count++
+      },
+      increment_loading_counter(state) {
+        state.store_loading_counter = state.store_loading_counter + 1;
+      },
+      decrement_loading_counter(state) {
+        state.store_loading_counter = state.store_loading_counter - 1;
+      }
+    }
+  });
+
+
   const httpLink = new HttpLink({
     // You should use an absolute URL here
     uri: Routes.graphql_path(),
@@ -127,7 +156,25 @@
     return forward(operation);
   });
 
-  const link = concat(authMiddleware, httpLink)
+  const start_connection = new ApolloLink((operation, forward) => {
+
+    console.log('inizio richiesta');
+    store.commit('increment_loading_counter');
+
+    return forward(operation);
+  })
+
+  const end_connection = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+      console.log('fine richiesta');
+      store.commit('decrement_loading_counter');
+      return response;
+    });
+  })
+
+  let link = concat(authMiddleware, httpLink);
+  link = concat(start_connection, link);
+  link = end_connection.concat(link);
 
   // Create the apollo client
   const apolloClient = new ApolloClient({
@@ -143,31 +190,6 @@
   // Install the vue plugin
   Vue.use(VueApollo);
 
-
-  Vue.use(Vuex);
-
-  const store = new Vuex.Store({
-    state: {
-      user_id: null,
-      user_roles: [],
-      username: null,
-      program_version: null,
-      ajax_loading: false
-    },
-    mutations: {
-      set_current_user(state, user) {
-        state.user_id = user.user_id;
-        state.user_roles = user.roles;
-        state.username = user.username;
-        //TODO spostare in chiamata più adatta
-        state.program_version = user.program_version;
-        //   state.count++
-      },
-      set_loading_state(state, status) {
-        state.ajax_loading = status;
-      }
-    }
-  });
 
   apolloClient.query({
     query: CLIENT_CONFIGURATION
@@ -249,7 +271,8 @@
       },
       ...mapState([
         'username',
-        'program_version'
+        'program_version',
+        'store_loading_counter'
       ])
     },
     components: {
