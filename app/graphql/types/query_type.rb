@@ -105,4 +105,19 @@ Types::QueryType = GraphQL::ObjectType.define do
 
     end
   end
+
+  field :matches do
+    type Types::MatchType.to_list_type
+    argument :limit, types.Int, default_value: 100, prepare: ->(limit, ctx) {[limit, 100].min}
+    description "Elenco Sfide"
+    before_scope ->(_root, _args, ctx) {MatchPolicy.new(ctx[:current_user], Match.new).scope.all}
+    resolve ->(objs, args, ctx) do
+      unless args[:limit].blank?
+        objs = objs.limit(args[:limit])
+      end
+
+      objs
+
+    end
+  end
 end
