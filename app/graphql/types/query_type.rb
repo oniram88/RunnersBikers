@@ -116,7 +116,7 @@ Types::QueryType = GraphQL::ObjectType.define do
         objs = objs.limit(args[:limit])
       end
 
-      objs
+      objs.order(:created_at => :desc)
 
     end
   end

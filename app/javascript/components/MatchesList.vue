@@ -45,7 +45,7 @@
           <vf-icon icon="pencil"/>
         </b-btn>
 
-        <b-btn @click="approve(data.item)" v-if="data.item.approvable"
+        <b-btn @click.once="approve(data.item)" v-if="data.item.approvable"
                class="action">
           <vf-icon icon="thumbs-o-up"/>
         </b-btn>
@@ -75,7 +75,7 @@
 <script>
 
   import axios from 'axios';
-  import {GET_MATCHES, UPDATE_MATCH} from '../graphql/matches'
+  import {APPROVE_MATCH, GET_MATCHES, UPDATE_MATCH} from '../graphql/matches'
 
 
   export default {
@@ -121,11 +121,12 @@
     },
     watch: {
       // call again the method if the route changes
-      '$route': function(){
-        this.$apollo.queries.matches.refetch()
-      }
+      '$route': 'reload_matches'
     },
     methods: {
+      reload_matches(){
+        this.$apollo.queries.matches.refetch()
+      },
       insert_note(m) {
         this.selected_match = _.clone(m);
         this.$refs.insert_note.show();
@@ -156,12 +157,17 @@
 
       },
       approve(item) {
-        item.approvable = false;
-        axios.post(Routes.approve_match_path(item.id)).then(ris => {
-          if (ris.data.success) {
-            this.load_matches();
+
+        this.$apollo.mutate({
+          mutation: APPROVE_MATCH,
+          variables: {
+            id: item.id,
           }
-        });
+        }).then(()=>{
+          this.reload_matches();
+        })
+
+
       }
     },
     computed: {}

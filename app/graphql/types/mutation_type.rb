@@ -24,4 +24,9 @@ Types::MutationType = GraphQL::ObjectType.define do
   field :update_match, Mutations::UpdateMatch.field do
     authorize! :update, record: ->(obj, args, ctx) {Match.find(args[:id])}
   end
+
+
+  field :approve_match, Mutations::ApproveMatch.field do
+    authorize! :approve, record: ->(obj, args, ctx) {Match.find(args[:id])}
+  end
 end

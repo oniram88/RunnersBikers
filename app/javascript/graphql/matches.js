@@ -43,3 +43,16 @@ export const UPDATE_MATCH =  gql`mutation updateMatch($id: ID!, $note: String) {
                           }
                         }
                         `
+
+export const APPROVE_MATCH =  gql`mutation approveMatch($id: ID!) {
+                          approve_match(input: {id: $id}) {
+                            result {
+                              result
+                              errors{
+                                field
+                                message
+                              }
+                            }
+                          }
+                        }
+                        `
