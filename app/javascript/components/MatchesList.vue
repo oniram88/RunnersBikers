@@ -49,10 +49,64 @@
                class="action">
           <vf-icon icon="thumbs-o-up"/>
         </b-btn>
+
+        <b-button  @click.stop="data.toggleDetails" class="mr-2" v-if="show_match_details">
+          <vf-icon icon="info"/>
+        </b-button>
       </template>
 
       <template slot="expiration_date" slot-scope="data">
         {{data.item.expiration_date | timezone | calendar}}
+      </template>
+
+      <template slot="row-details" slot-scope="row" v-if="show_match_details">
+        <b-card>
+          <b-row>
+            <b-col>
+
+              <h3>Sfidante</h3>
+
+              <dl>
+                <dt>Distanza</dt>
+                <dd>{{row.item.challenger_performance.distance}}</dd>
+
+                <dt>Ritmo Medio:</dt>
+                <dd>{{row.item.challenger_performance.pace}}</dd>
+
+                <dt>Dislivello Positivo:</dt>
+                <dd>{{row.item.challenger_performance.positive_gain}}</dd>
+
+                <dt>Url sito:</dt>
+                <dd>
+                  <b-link target="_blank" :href="row.item.challenger_performance.url">{{row.item.challenger_performance.url}}</b-link>
+                </dd>
+              </dl>
+
+            </b-col>
+            <b-col>
+
+              <h3>Sfidato</h3>
+
+              <dl>
+                <dt>Distanza</dt>
+                <dd>{{row.item.challenged_performance.distance}}</dd>
+
+                <dt>Ritmo Medio:</dt>
+                <dd>{{row.item.challenged_performance.pace}}</dd>
+
+                <dt>Dislivello Positivo:</dt>
+                <dd>{{row.item.challenged_performance.positive_gain}}</dd>
+
+                <dt>Url sito:</dt>
+                <dd>
+                  <b-link target="_blank" :href="row.item.challenged_performance.url">{{row.item.challenged_performance.url}}</b-link>
+                </dd>
+              </dl>
+
+            </b-col>
+          </b-row>
+          <b-button size="sm" @click="row.toggleDetails">Nascondi Dettagli</b-button>
+        </b-card>
       </template>
 
 
@@ -74,8 +128,10 @@
 
 <script>
 
+  import {mapState} from 'vuex'
   import {APPROVE_MATCH, GET_MATCHES, UPDATE_MATCH} from '../graphql/matches'
-
+  import _ from 'lodash'
+  import performance_element from 'components/Performance.vue'
 
   export default {
     name: "MatchesList",
@@ -116,6 +172,11 @@
     apollo: {
       matches: {
         query: GET_MATCHES,
+        update(data) {
+          return _.map(data.matches, (r) => {
+            return _.extend({_showDetails: false}, r)
+          });
+        },
       }
     },
     watch: {
@@ -123,7 +184,7 @@
       '$route': 'reload_matches'
     },
     methods: {
-      reload_matches(){
+      reload_matches() {
         this.$apollo.queries.matches.refetch()
       },
       insert_note(m) {
@@ -162,14 +223,21 @@
           variables: {
             id: item.id,
           }
-        }).then(()=>{
+        }).then(() => {
           this.reload_matches();
         })
 
 
       }
     },
-    computed: {}
+    computed: {
+      ...mapState([
+        'user_roles'
+      ]),
+      show_match_details() {
+        return _.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge');
+      }
+    }
 
   }
 </script>

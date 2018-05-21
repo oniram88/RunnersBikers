@@ -14,10 +14,18 @@ export const GET_MATCHES = gql`query matches {
     challenged_performance{
       id
       user_id
+      distance
+      pace
+      positive_gain
+      url   
     }
     challenger_performance{
       id
       user_id
+      distance
+      pace
+      positive_gain
+      url 
     }
     status
     expiration_date

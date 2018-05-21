@@ -11,6 +11,30 @@ class PerformancePolicy < ApplicationPolicy
 
   end
 
+  def distance?
+    return check_attribute_displayability
+  end
+
+  def pace?
+    return check_attribute_displayability
+  end
+
+  def positive_gain?
+    return check_attribute_displayability
+  end
+
+  def user_id?
+    return check_attribute_displayability
+  end
+
+  def url?
+    return check_attribute_displayability
+  end
+
+  def points?
+    return check_attribute_displayability
+  end
+
 
   def show?
     # è una propria oppure è di un match
@@ -40,5 +64,13 @@ class PerformancePolicy < ApplicationPolicy
         scope.merge(user.performances)
       end
     end
+  end
+  private
+
+  #utilizzato per controllare se i campi sono visibili
+  def check_attribute_displayability
+    return true unless record.persisted?
+    return true if user.is_judge? or user.is_admin?
+    return true if is_mine?
   end
 end

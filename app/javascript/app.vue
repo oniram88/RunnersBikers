@@ -157,8 +157,6 @@
   });
 
   const start_connection = new ApolloLink((operation, forward) => {
-
-    console.log('inizio richiesta');
     store.commit('increment_loading_counter');
 
     return forward(operation);
@@ -166,7 +164,6 @@
 
   const end_connection = new ApolloLink((operation, forward) => {
     return forward(operation).map(response => {
-      console.log('fine richiesta');
       store.commit('decrement_loading_counter');
       return response;
     });
