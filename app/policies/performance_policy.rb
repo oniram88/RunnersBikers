@@ -65,12 +65,16 @@ class PerformancePolicy < ApplicationPolicy
       end
     end
   end
+
   private
 
   #utilizzato per controllare se i campi sono visibili
   def check_attribute_displayability
     return true unless record.persisted?
     return true if user.is_judge? or user.is_admin?
+    #può essere visto se appartiene al match e il match è stato completato
+    return true if !record.challenged_match.nil? and (record.challenged_match.approved? or record.challenged_match.timeouted? or record.challenged_match.disapproved?)
+    return true if !record.challenger_match.nil? and (record.challenger_match.approved? or record.challenger_match.timeouted? or record.challenger_match.disapproved?)
     return true if is_mine?
   end
 end
