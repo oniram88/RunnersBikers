@@ -50,7 +50,7 @@
           <vf-icon icon="thumbs-o-up"/>
         </b-btn>
 
-        <b-button  @click.stop="data.toggleDetails" class="mr-2" v-if="show_match_details">
+        <b-button @click.stop="data.toggleDetails" class="mr-2" v-if="show_match_details">
           <vf-icon icon="info"/>
         </b-button>
       </template>
@@ -62,7 +62,7 @@
       <template slot="row-details" slot-scope="row" v-if="show_match_details">
         <b-card>
           <b-row>
-            <b-col>
+            <b-col v-if="row.item.challenger_performance">
 
               <h3>Sfidante</h3>
 
@@ -78,12 +78,14 @@
 
                 <dt>Url sito:</dt>
                 <dd>
-                  <b-link target="_blank" :href="row.item.challenger_performance.url">{{row.item.challenger_performance.url}}</b-link>
+                  <b-link target="_blank" :href="row.item.challenger_performance.url">
+                    {{row.item.challenger_performance.url}}
+                  </b-link>
                 </dd>
               </dl>
 
             </b-col>
-            <b-col>
+            <b-col v-if="row.item.challenged_performance">
 
               <h3>Sfidato</h3>
 
@@ -99,7 +101,9 @@
 
                 <dt>Url sito:</dt>
                 <dd>
-                  <b-link target="_blank" :href="row.item.challenged_performance.url">{{row.item.challenged_performance.url}}</b-link>
+                  <b-link target="_blank" :href="row.item.challenged_performance.url">
+                    {{row.item.challenged_performance.url}}
+                  </b-link>
                 </dd>
               </dl>
 
@@ -181,10 +185,13 @@
     },
     watch: {
       // call again the method if the route changes
-      '$route': 'reload_matches'
+      '$route': function () {
+        this.reload_matches();
+      }
     },
     methods: {
       reload_matches() {
+        console.log('refetch');
         this.$apollo.queries.matches.refetch()
       },
       insert_note(m) {
