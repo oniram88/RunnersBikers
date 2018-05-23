@@ -158,7 +158,7 @@
           {
             key: 'expiration_date',
             sortable: true,
-            label: 'Scadenza'
+            label: 'Scadenza ORA ITA'
           },
           {
             key: 'points',
