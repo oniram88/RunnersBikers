@@ -6,10 +6,12 @@ export const GET_MATCHES = gql`query matches {
     id
      
     challenger {
-      username
+      first_name
+      last_name
     }
     challenged {
-      username
+      first_name
+      last_name
     }
     challenged_performance{
       id

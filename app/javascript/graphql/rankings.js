@@ -4,7 +4,8 @@ export const RANKING_LIST =  gql`{
         rankings {
           total_distance
           id
-          username
+          first_name
+          last_name
           total_points
           total_positive_gain
           rank

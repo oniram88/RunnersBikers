@@ -67,7 +67,7 @@
           <b-nav-item-dropdown right>
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <em>{{username}}</em>
+              <em>{{first_name}} {{last_name}}</em>
             </template>
             <!--<b-dropdown-item href="#">Profile</b-dropdown-item>-->
             <b-dropdown-item :href="logout()">Signout</b-dropdown-item>
@@ -117,6 +117,8 @@
       user_id: null,
       user_roles: [],
       username: null,
+      first_name: null,
+      last_name: null,
       program_version: null,
       store_loading_counter: 0
     },
@@ -125,6 +127,8 @@
         state.user_id = user.user_id;
         state.user_roles = user.roles;
         state.username = user.username;
+        state.first_name = user.first_name;
+        state.last_name = user.last_name;
         //TODO spostare in chiamata più adatta
         state.program_version = user.program_version;
         //   state.count++
@@ -267,7 +271,8 @@
         return logo;
       },
       ...mapState([
-        'username',
+        'first_name',
+        'last_name',
         'program_version',
         'store_loading_counter'
       ])

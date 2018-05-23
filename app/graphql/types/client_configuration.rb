@@ -22,5 +22,7 @@ Types::ClientConfiguration = GraphQL::ObjectType.define do
   end
 
   field :username, types.String
+  field :first_name, types.String
+  field :last_name, types.String
 
 end

@@ -17,7 +17,7 @@
              :fields="fields">
 
       <template slot="challenged" slot-scope="data">
-        {{data.value.username}}
+        {{data.value.first_name}} {{data.value.last_name}}
         <vf-icon title="Vincitore" v-if="data.item.challenged_id==data.item.winner_id" icon="diamond"/>
         <template v-if="data.item.challenged_performance">
           <b-button target="" variant="info"
@@ -30,7 +30,7 @@
 
       <template slot="challenger" slot-scope="data">
         <vf-icon title="Vincitore" v-if="data.item.challenger_id==data.item.winner_id" icon="diamond"/>
-        {{data.value.username}}
+        {{data.value.first_name}} {{data.value.last_name}}
         <template v-if="data.item.challenger_performance">
           <b-button target="" variant="info"
                     :to="{name:'match_performance_edit',params:data.item.challenger_performance}">

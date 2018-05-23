@@ -40,7 +40,7 @@ class User < ApplicationRecord
 
   validates :rank, :presence => true, numericality: { greater_than: 0 }
   validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
-  validates :username, :presence => { allow_blank: false }, uniqueness: true
+  # validates :username, :presence => { allow_blank: false }, uniqueness: true
   validates :first_name, :last_name, :presence => true
   validate :check_max_registration
 

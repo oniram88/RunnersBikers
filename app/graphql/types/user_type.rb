@@ -3,6 +3,8 @@ Types::UserType = GraphQL::ObjectType.define do
   field :id, types.Int
   field :email, types.String
   field :username, types.String
+  field :first_name, types.String
+  field :last_name, types.String
   field :total_points, types.Int, "Il totale dei punti dell'utente"
   field :performances, types[Types::PerformanceType]
   field :matches_as_challenger, types[Types::MatchType]

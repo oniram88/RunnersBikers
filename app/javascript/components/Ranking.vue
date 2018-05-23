@@ -29,6 +29,10 @@
 
       </template>
 
+      <template slot="user" slot-scope="data">
+        {{data.item.first_name}} {{data.item.last_name}}
+      </template>
+
       <template slot="total_distance" slot-scope="data">
         {{data.value | distance_format}}
       </template>
@@ -91,7 +95,7 @@
             sortable: true
           },
           {
-            key: 'username',
+            key: 'user',
             sortable: true,
             label: 'Utente'
           },

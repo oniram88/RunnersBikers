@@ -5,6 +5,8 @@ Types::RankingType = GraphQL::ObjectType.define do
   field :total_positive_gain, types.Int, "Total Positive Gain run for user"
   field :rank, types.Int, "Ranking in the challenger"
   field :username, types.String
+  field :first_name, types.String
+  field :last_name, types.String
   field :total_points, types.Int, "Total points in the match"
 
   field :challenged, types.Boolean, "If the user is inside a challenge" do
