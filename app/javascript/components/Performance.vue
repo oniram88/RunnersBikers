@@ -53,10 +53,15 @@
 
       <b-form-group label="Url sito:" :state="url_state"
                     :feedback="url_feedback">
-        <b-form-input type="text" v-model="form.url" required
-                      :state="url_state"
-                      placeholder="Url della sessione http://....."
-        ></b-form-input>
+        <b-input-group>
+          <b-form-input type="text" v-model="form.url" required
+                        :state="url_state"
+                        placeholder="Url della sessione http://....."
+          ></b-form-input>
+          <b-input-group-append>
+            <b-button :href="form.url" target="_blank"><vf-icon icon="globe"/></b-button>
+          </b-input-group-append>
+        </b-input-group>
       </b-form-group>
 
 
