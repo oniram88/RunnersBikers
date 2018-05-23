@@ -158,7 +158,7 @@
           {
             key: 'expiration_date',
             sortable: true,
-            label: 'Scadenza ORA ITA'
+            label: 'Data fine sfida (ora italia)'
           },
           {
             key: 'points',
