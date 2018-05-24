@@ -33,4 +33,10 @@ Types::RankingType = GraphQL::ObjectType.define do
     }
   end
 
+  field :user, Types::UserType, "posso estrapolare direttamente i dati dell'utente" do
+    resolve ->(obj, args, ctx) {
+      obj.becomes(User)
+    }
+  end
+
 end

@@ -12,5 +12,7 @@ Types::UserType = GraphQL::ObjectType.define do
   field :matches_as_winner, types[Types::MatchType]
   field :matches_as_looser, types[Types::MatchType]
 
+  field :referal_points, types.Int
+
 
 end

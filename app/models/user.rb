@@ -38,14 +38,18 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable #, omniauth_providers: [:strava, :facebook]
 
-  validates :rank, :presence => true, numericality: { greater_than: 0 }
-  validates :total_points, :presence => true, numericality: { greater_than_or_equal_to: 0 }
+  attribute :referal_points, :integer, default: 0
+
+  validates :rank, :presence => true, numericality: {greater_than: 0}
+  validates :total_points, :presence => true, numericality: {greater_than_or_equal_to: 0}
   # validates :username, :presence => { allow_blank: false }, uniqueness: true
   validates :first_name, :last_name, :presence => true
   validate :check_max_registration
+  validates :referal_points, numericality: {greater_than_or_equal_to: 0, only_integer: true}
 
   after_create :assign_default_role
   before_validation :set_rank
+
 
   has_many :performances
   has_many :matches_as_challenger, class_name: 'Match', foreign_key: :challenger_id
@@ -61,19 +65,19 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
 
       case auth.provider.to_sym
-        when :strava
-          user.first_name = auth.info.first_name # assuming the user model has a name
-          user.last_name = auth.info.last_name # assuming the user model has a name
-          user.image = auth.extra.raw_info.image # assuming the user model has an image
-          user.api_token = auth.credentials.token
+      when :strava
+        user.first_name = auth.info.first_name # assuming the user model has a name
+        user.last_name = auth.info.last_name # assuming the user model has a name
+        user.image = auth.extra.raw_info.image # assuming the user model has an image
+        user.api_token = auth.credentials.token
 
-        when :facebook
-          user.first_name = auth.info.first_name
-          user.last_name = auth.info.last_name
-          user.image = auth.info.image
-          user.api_token = auth.credentials.token
-        else
-          raise auth.inspect
+      when :facebook
+        user.first_name = auth.info.first_name
+        user.last_name = auth.info.last_name
+        user.image = auth.info.image
+        user.api_token = auth.credentials.token
+      else
+        raise auth.inspect
       end
 
       # If you are using confirmable and the provider(s) you use validate emails,
@@ -106,30 +110,30 @@ class User < ApplicationRecord
 
   # questa istanza può sfidate l'utente passato come parametro?
   def machable(user)
-    logger.debug { "matches_0.5" }
+    logger.debug {"matches_0.5"}
     return false if Time.now > RunnersBikers::MAX_TIME_FOR_START_CHALLENGES
     return false if Time.now < RunnersBikers::TIME_TO_START_CHALLENGES
-    logger.debug { "matches_1" }
+    logger.debug {"matches_1"}
     return false if user.id == self.id
-    logger.debug { "matches_1.2" }
+    logger.debug {"matches_1.2"}
     return false if self.matches_as_challenger.where(:challenged => user).count > 0
-    logger.debug { "matches_2" }
+    logger.debug {"matches_2"}
     return false if self.open_matches.length > 0
-    logger.debug { "matches_3" }
+    logger.debug {"matches_3"}
     return false if self.matches_as_challenger.count >= RunnersBikers::MAX_AS_CHALLENGER
-    logger.debug { "matches_4" }
+    logger.debug {"matches_4"}
     return false if self.total_points == 0
-    logger.debug { "matches_5" }
+    logger.debug {"matches_5"}
     return false if user.total_points == 0
-    logger.debug { "matches_6" }
+    logger.debug {"matches_6"}
     if self.rank - 3 > user.rank or self.rank + 3 < user.rank
       return false
     end
-    logger.debug { "matches_7" }
+    logger.debug {"matches_7"}
     return false if user.open_matches.length > 0
-    logger.debug { "matches_8" }
+    logger.debug {"matches_8"}
     return false if user.matches_as_challenged.count >= RunnersBikers::MAX_AS_CHALLENGED
-    logger.debug { "matches_9" }
+    logger.debug {"matches_9"}
     return true
   end
 
@@ -160,6 +164,7 @@ class User < ApplicationRecord
   end
 
   private
+
   def assign_default_role
     self.add_role(:newuser) if self.roles.blank?
   end
@@ -170,7 +175,7 @@ class User < ApplicationRecord
 
   def check_max_registration
     if Time.now >= RunnersBikers::MAX_ISCRIZIONE and !self.persisted?
-    self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
+      self.errors.add(:base, :max_iscrizione_superata, max_time: I18n.l(RunnersBikers::MAX_ISCRIZIONE, format: :short))
     end
   end
 
