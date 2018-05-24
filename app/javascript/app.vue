@@ -99,6 +99,7 @@
   import PerformancesList from 'components/PerformancesList.vue'
   import Ranking from 'components/Ranking.vue'
   import MatchesList from 'components/MatchesList.vue'
+  import UserList from 'components/UserList'
   import logo from './images/logo_mini.jpg'
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
@@ -246,6 +247,11 @@
         alias: '/',
         name: 'ranking',
         component: Ranking
+      },
+      {
+        path: '/users',
+        name: 'users_list',
+        component: UserList
       },
       {
         path: '*',
