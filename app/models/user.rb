@@ -93,6 +93,8 @@ class User < ApplicationRecord
     Rails.logger.debug {"Punti con sfide vinte #{points}"}
     points -= self.matches_as_looser.reload.sum(:points)
     Rails.logger.debug {"Punti con sfide perse #{points}"}
+    points += self.referal_points.to_i
+    Rails.logger.debug {"Punti con referals #{points}"}
     self.update_attributes(total_points: points)
   end
 
