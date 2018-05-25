@@ -44,6 +44,8 @@
           </b-nav-item>
           <b-nav-item :to="{name:'matches'}">Sfide
           </b-nav-item>
+          <b-nav-item :to="{name:'users_list'}" v-if="is_admin">Utenti
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -280,8 +282,12 @@
         'first_name',
         'last_name',
         'program_version',
-        'store_loading_counter'
-      ])
+        'store_loading_counter',
+        'user_roles'
+      ]),
+      is_admin(){
+        return _.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge');
+      }
     },
     components: {
       Performance,

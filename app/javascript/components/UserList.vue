@@ -13,7 +13,7 @@
 
     <template slot="referal_points" slot-scope="{value,item}">
       <b-form-input :value="value"
-                    @input="update_user_points(item.id,arguments[0])"
+                    @input="update_user_points(item,arguments[0])"
                     type="number"
                     placeholder="Punti Referal"></b-form-input>
     </template>
@@ -48,8 +48,9 @@
 
 <script>
 
+  import _ from 'lodash'
 
-  import {ADMIN_USER_LIST} from "../graphql/users";
+  import {ADMIN_USER_LIST, SET_REFERAL_POINTS} from "../graphql/users";
 
   export default {
     name: "UserList",
@@ -80,10 +81,32 @@
       },
     },
     methods: {
-      update_user_points(id, points) {
+      update_user_points: _.debounce(function (item, points) {
         points = parseInt(points);
-        console.log(id, points);
-      }
+        console.log(item, points);
+
+        if (item.referal_points != points) {
+          this.$apollo.mutate({
+            mutation: SET_REFERAL_POINTS,
+            variables: {
+              id: item.id,
+              points: points
+            },
+            update: (store, {data: {set_referal_points: {result: {result}}}}) => {
+
+              if (result) {
+
+                const data = store.readQuery({query: ADMIN_USER_LIST})
+                const updated_match = data.users.find(user => user.id === item.id)
+                updated_match.referal_points = points
+                store.writeQuery({query: ADMIN_USER_LIST, data})
+
+              }
+            }
+          });
+        }
+
+      }, 1000)
     }
   }
 </script>
