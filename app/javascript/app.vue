@@ -57,6 +57,10 @@
           <!--</b-nav-form>-->
 
           <b-nav-item>
+            Punti Referal: {{referal_points}}
+          </b-nav-item>
+
+          <b-nav-item>
             Versione: {{program_version}}
           </b-nav-item>
           <!--<b-nav-item-dropdown text="Lang" right>-->
@@ -123,7 +127,8 @@
       first_name: null,
       last_name: null,
       program_version: null,
-      store_loading_counter: 0
+      store_loading_counter: 0,
+      referal_points: null
     },
     mutations: {
       set_current_user(state, user) {
@@ -132,6 +137,7 @@
         state.username = user.username;
         state.first_name = user.first_name;
         state.last_name = user.last_name;
+        state.referal_points = user.referal_points;
         //TODO spostare in chiamata più adatta
         state.program_version = user.program_version;
         //   state.count++
@@ -283,9 +289,10 @@
         'last_name',
         'program_version',
         'store_loading_counter',
-        'user_roles'
+        'user_roles',
+        'referal_points'
       ]),
-      is_admin(){
+      is_admin() {
         return _.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge');
       }
     },
