@@ -14,7 +14,7 @@
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",
     "jquery": "^3.2.1",
-    "lodash": "latest",
+    "lodash": "^4.17.10",
     "mjml": "^3.3.5",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",

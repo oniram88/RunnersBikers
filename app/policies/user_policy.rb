@@ -13,4 +13,8 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+
+  def set_referal_points?
+    user.is_judge?
+  end
 end

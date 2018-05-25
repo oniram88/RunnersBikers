@@ -58,9 +58,11 @@
                         :state="url_state"
                         placeholder="Url della sessione http://....."
           ></b-form-input>
+
           <b-input-group-append>
             <b-button :href="form.url" target="_blank"><vf-icon icon="globe"/></b-button>
           </b-input-group-append>
+
         </b-input-group>
       </b-form-group>
 
@@ -232,6 +234,8 @@
               } else {
                 this.$router.push({name: 'performance_list'})
               }
+
+              this.update_user_data();
 
             }, 1500);
           } else {

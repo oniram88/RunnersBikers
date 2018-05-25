@@ -2,6 +2,7 @@ Types::MutationType = GraphQL::ObjectType.define do
   name "Mutation"
 
 
+  field :setReferalPoints, Mutations::SetReferalPoints.field
   field :createPerformance, Mutations::CreatePerformance.field do
     authorize! :update, record: ->(obj, args, ctx) {ctx[:current_user].performances.new(args.to_h)}
   end
@@ -29,4 +30,9 @@ Types::MutationType = GraphQL::ObjectType.define do
   field :approve_match, Mutations::ApproveMatch.field do
     authorize! :approve, record: ->(obj, args, ctx) {Match.find(args[:id])}
   end
+
+  field :set_referal_points, Mutations::SetReferalPoints.field do
+    authorize! :set_referal_points, record: ->(obj, args, ctx) {User.find(args[:user_id])}
+  end
+
 end

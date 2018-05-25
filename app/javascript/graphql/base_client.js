@@ -9,5 +9,7 @@ export const CLIENT_CONFIGURATION = gql`query client_configuration{
         first_name
         last_name
         program_version
+        referal_points
+        total_points
       }
   }`

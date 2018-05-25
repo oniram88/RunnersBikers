@@ -44,6 +44,8 @@
           </b-nav-item>
           <b-nav-item :to="{name:'matches'}">Sfide
           </b-nav-item>
+          <b-nav-item :to="{name:'users_list'}" v-if="is_admin">Utenti
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -53,6 +55,14 @@
           <!--<b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>-->
           <!--<b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>-->
           <!--</b-nav-form>-->
+
+          <b-nav-item>
+            Punti Referal: {{referal_points}}
+          </b-nav-item>
+
+          <b-nav-item>
+            Punti Totali: {{total_points}}
+          </b-nav-item>
 
           <b-nav-item>
             Versione: {{program_version}}
@@ -99,6 +109,7 @@
   import PerformancesList from 'components/PerformancesList.vue'
   import Ranking from 'components/Ranking.vue'
   import MatchesList from 'components/MatchesList.vue'
+  import UserList from 'components/UserList'
   import logo from './images/logo_mini.jpg'
   import PacmanLoader from 'vue-spinner/src/PacmanLoader'
 
@@ -120,7 +131,9 @@
       first_name: null,
       last_name: null,
       program_version: null,
-      store_loading_counter: 0
+      store_loading_counter: 0,
+      referal_points: null,
+      total_points: null
     },
     mutations: {
       set_current_user(state, user) {
@@ -129,6 +142,8 @@
         state.username = user.username;
         state.first_name = user.first_name;
         state.last_name = user.last_name;
+        state.referal_points = user.referal_points;
+        state.total_points = user.total_points;
         //TODO spostare in chiamata più adatta
         state.program_version = user.program_version;
         //   state.count++
@@ -191,12 +206,21 @@
   // Install the vue plugin
   Vue.use(VueApollo);
 
-
-  apolloClient.query({
-    query: CLIENT_CONFIGURATION
-  }).then((data) => {
-    store.commit('set_current_user', data.data.client_configuration);
+  Vue.mixin({
+    methods: {
+      update_user_data:function () {
+        console.log('dati del client');
+        apolloClient.query({
+          query: CLIENT_CONFIGURATION,
+          fetchPolicy:"network-only"
+        }).then((data) => {
+          store.commit('set_current_user', data.data.client_configuration);
+        })
+      }
+    }
   })
+
+
 
   const router = new VueRouter({
     routes: [
@@ -248,6 +272,11 @@
         component: Ranking
       },
       {
+        path: '/users',
+        name: 'users_list',
+        component: UserList
+      },
+      {
         path: '*',
         redirect: '/'
       }
@@ -266,6 +295,9 @@
         return Routes.destroy_user_session_path();
       }
     },
+    created:function(){
+      this.update_user_data();
+    },
     computed: {
       logo() {
         return logo;
@@ -274,8 +306,14 @@
         'first_name',
         'last_name',
         'program_version',
-        'store_loading_counter'
-      ])
+        'store_loading_counter',
+        'user_roles',
+        'referal_points',
+        'total_points'
+      ]),
+      is_admin() {
+        return _.includes(this.user_roles, 'admin') || _.includes(this.user_roles, 'judge');
+      }
     },
     components: {
       Performance,
