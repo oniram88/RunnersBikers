@@ -10,5 +10,6 @@ export const CLIENT_CONFIGURATION = gql`query client_configuration{
         last_name
         program_version
         referal_points
+        total_points
       }
   }`
