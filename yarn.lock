@@ -6389,6 +6389,10 @@ vue-bootstrap-slider@^1.1.1:
   dependencies:
     bootstrap-slider "^9.8.0"
 
+vue-carousel@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.8.0.tgz#2020c45c08b9f36fd7ce339ba34103e73365a403"
+
 vue-fontawesome@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/vue-fontawesome/-/vue-fontawesome-0.0.2.tgz#b1b9c922652b9fb2d74fe66a28411628502bb3eb"

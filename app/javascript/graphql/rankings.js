@@ -25,3 +25,11 @@ export const CREATE_MATCH = gql`mutation createMatch($challenged_id:ID!,$points:
                           }
                         }
                         `
+
+export const STATISTICS =  gql`{
+       statistics{
+          total_distance
+          total_positive_gain
+          total_run_time
+        }
+      }`
