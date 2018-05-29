@@ -41,6 +41,10 @@ class Performance < ApplicationRecord
     (100.0 * (distance.to_f + positive_gain.to_f / 100.0) / (PaceType.to_seconds(pace).to_f / 60.0) ** 2).round(3)
   end
 
+  def running_time
+    PaceType.to_seconds(pace) * distance
+  end
+
   private
 
   def update_points
