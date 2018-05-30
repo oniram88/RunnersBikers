@@ -27,6 +27,12 @@ class PerformancePolicy < ApplicationPolicy
     return check_attribute_displayability
   end
 
+  def user?
+    return check_attribute_displayability
+  end
+
+
+
   def url?
     return check_attribute_displayability
   end

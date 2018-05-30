@@ -20,8 +20,39 @@ Types::StatisticsType = GraphQL::ObjectType.define do
     }
   end
 
-  # field :session_max_positive_gain,description:'dislivello più alto singola sessione'
-  # field :session_max_distance,description:'percorso più lungo singola sessione'
-  # field :session_max_average_speed,description:'velocità media più alta singola sessione'
-  # field :user_with_max_sessions,description:'utente che ha fatto più sessioni'
+  field :max_positive_gain_in_a_session, types.String, 'dislivello più alto singola sessione' do
+    resolve -> (obj, args, ctx) {
+      p = Performance.order(:positive_gain => :desc).first
+      "#{p.user.full_name} - #{p.distance} km"
+    }
+  end
+
+  field :max_distance_in_a_session, types.String, 'percorso più lungo singola sessione' do
+    resolve -> (obj, args, ctx) {
+      p = Performance.order(:distance => :desc).first
+      "#{p.user.full_name} - #{p.distance} km"
+    }
+  end
+
+
+  field :max_average_speed_in_a_session, types.String, 'velocità media più alta singola sessione' do
+    resolve -> (obj, args, ctx) {
+      p = Performance.order(:pace => :asc).first
+      "#{p.user.full_name} - #{p.pace}"
+    }
+  end
+
+  field :user_with_max_sessions, description: 'utente che ha fatto più sessioni'
+
+  field :user_with_max_sessions, types.String, 'velocità media più alta singola sessione' do
+    resolve -> (obj, args, ctx) {
+      begin
+        id = Performance.group(:user_id).count.sort_by {|k, v| v}.reverse.first[0]
+        user = User.find(id)
+        "#{user.full_name} - #{user.performances.count}"
+      rescue
+        ""
+      end
+    }
+  end
 end

@@ -14,6 +14,9 @@ Types::PerformanceType = GraphQL::ObjectType.define do
   field :user_id, types.Int do
     authorize
   end
+  field :user, Types::UserType do
+    authorize
+  end
   field :url, types.String do
     authorize
   end

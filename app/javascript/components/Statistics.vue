@@ -3,7 +3,7 @@
   <b-row>
     <b-col>
 
-      <carousel :autoplay="true" :perPage="1" :loop="true" :paginationEnabled="false">
+      <carousel :autoplay="true" :perPage="2" :loop="true" :paginationEnabled="false">
 
         <slide>
           <b-card>
