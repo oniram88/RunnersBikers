@@ -89,6 +89,15 @@ Types::QueryType = GraphQL::ObjectType.define do
     end
   end
 
+  field :statistics do
+    type Types::StatisticsType
+    description "Statistiche di Challenge"
+    resolve ->(obj, args, ctx) do
+      {}
+    end
+  end
+
+
 
   field :rankings do
     type Types::RankingType.to_list_type

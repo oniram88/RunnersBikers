@@ -119,6 +119,7 @@
   import {InMemoryCache} from 'apollo-cache-inmemory'
   import VueApollo from 'vue-apollo'
   import {CLIENT_CONFIGURATION} from './graphql/base_client'
+  import _ from 'lodash'
 
 
   Vue.use(Vuex);
@@ -216,6 +217,12 @@
         }).then((data) => {
           store.commit('set_current_user', data.data.client_configuration);
         })
+      }
+    },
+    filters: {
+      round: function (value) {
+        if (!value) return ''
+        return  _.round(value,2);
       }
     }
   })

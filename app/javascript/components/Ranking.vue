@@ -11,62 +11,71 @@
 
 <template>
   <div>
-    <b-table striped hover
-             :items="items"
-             :fields="fields"
-    >
-      <template slot="actions" slot-scope="data">
-        <b-button
-            v-if="data.item.show_performances"
-            :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
-            class="create_match_btn">
-          <vf-icon icon="list"/>
-        </b-button>
-        <b-button @click="show_modal(data.item)" v-if="data.item.machable"
-                  target="_blank" class="create_match_btn" title="Crea Sfida">
-          <vf-icon icon="crosshairs"/>
-        </b-button>
+    <b-row>
+      <b-col>
+        <statistics></statistics>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-table striped hover
+                 :items="items"
+                 :fields="fields"
+        >
+          <template slot="actions" slot-scope="data">
+            <b-button
+                v-if="data.item.show_performances"
+                :to="{name:'user_performance_list',params:{user_id:data.item.id}}"
+                class="create_match_btn">
+              <vf-icon icon="list"/>
+            </b-button>
+            <b-button @click="show_modal(data.item)" v-if="data.item.machable"
+                      target="_blank" class="create_match_btn" title="Crea Sfida">
+              <vf-icon icon="crosshairs"/>
+            </b-button>
 
-      </template>
+          </template>
 
-      <template slot="user" slot-scope="data">
-        {{data.item.first_name}} {{data.item.last_name}}
-      </template>
+          <template slot="user" slot-scope="data">
+            {{data.item.first_name}} {{data.item.last_name}}
+          </template>
 
-      <template slot="total_distance" slot-scope="data">
-        {{data.value | distance_format}}
-      </template>
+          <template slot="total_distance" slot-scope="data">
+            {{data.value | distance_format}}
+          </template>
 
-      <template slot="total_points" slot-scope="data">
-        {{data.value | points_format}}
-      </template>
-    </b-table>
+          <template slot="total_points" slot-scope="data">
+            {{data.value | points_format}}
+          </template>
+        </b-table>
 
-    <b-modal title="Punteggio Sfida" ref="modal_match" @ok="invio_match"
-             @cancel="reset_match">
-
-
-      <b-form>
-
-        <b-form-group label="Punti:">
-          <b-form-input
-              type="number"
-              readonly
-              :value="match.points"
-              required
-              placeholder="Inserisci i punti da rubare">
-          </b-form-input>
-          <b-form-slider class="slider_width" :min="1"
-                         tooltip="always"
-                         :max="match.max_lose_points"
-                         :step="1"
-                         v-model="match.points"/>
-        </b-form-group>
-
-      </b-form>
+        <b-modal title="Punteggio Sfida" ref="modal_match" @ok="invio_match"
+                 @cancel="reset_match">
 
 
-    </b-modal>
+          <b-form>
+
+            <b-form-group label="Punti:">
+              <b-form-input
+                  type="number"
+                  readonly
+                  :value="match.points"
+                  required
+                  placeholder="Inserisci i punti da rubare">
+              </b-form-input>
+              <b-form-slider class="slider_width" :min="1"
+                             tooltip="always"
+                             :max="match.max_lose_points"
+                             :step="1"
+                             v-model="match.points"/>
+            </b-form-group>
+
+          </b-form>
+
+
+        </b-modal>
+      </b-col>
+    </b-row>
   </div>
 
 </template>
@@ -75,8 +84,12 @@
 
   import _ from 'lodash';
   import {CREATE_MATCH, RANKING_LIST} from "../graphql/rankings";
+  import statistics from './Statistics'
 
   export default {
+    components:{
+      statistics
+    },
     apollo: {
       rankings: RANKING_LIST
     },
