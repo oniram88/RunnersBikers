@@ -42,9 +42,7 @@ Types::StatisticsType = GraphQL::ObjectType.define do
     }
   end
 
-  field :user_with_max_sessions, description: 'utente che ha fatto più sessioni'
-
-  field :user_with_max_sessions, types.String, 'velocità media più alta singola sessione' do
+  field :user_with_max_sessions, types.String, 'utente con più sessioni' do
     resolve -> (obj, args, ctx) {
       begin
         id = Performance.group(:user_id).count.sort_by {|k, v| v}.reverse.first[0]

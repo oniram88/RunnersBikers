@@ -3,7 +3,7 @@
   <b-row>
     <b-col>
 
-      <carousel :autoplay="true" :perPage="2" :loop="true" :paginationEnabled="false">
+      <carousel :autoplay="true" :perPage="2" :loop="true" :paginationEnabled="false" :autoplayTimeout="3000">
 
         <slide>
           <b-card>
@@ -15,9 +15,33 @@
             Totale Dislivello guadagnato: {{statistics.total_positive_gain}} m
           </b-card>
         </slide>
+
         <slide>
           <b-card>
             Tempo totale di corsa: {{total_run_duration}}
+          </b-card>
+        </slide>
+
+        <slide>
+          <b-card>
+            Dislivello più alto singola sessione: {{statistics.max_positive_gain_in_a_session}}
+          </b-card>
+        </slide>
+
+
+        <slide>
+          <b-card>
+           Percorso più lungo singola sessione: {{statistics.max_distance_in_a_session}}
+          </b-card>
+        </slide>
+        <slide>
+          <b-card>
+            Velocità media più alta singola sessione: {{statistics.max_average_speed_in_a_session}}
+          </b-card>
+        </slide>
+        <slide>
+          <b-card>
+            utente con più sessioni: {{statistics.user_with_max_sessions}}
           </b-card>
         </slide>
 
@@ -47,9 +71,13 @@
     data: function () {
       return {
         statistics: {
-          total_distance: null,
-          total_positive_gain: null,
-          total_run_time: null
+          max_average_speed_in_a_session:null,
+          max_distance_in_a_session:null,
+          max_positive_gain_in_a_session:null,
+          user_with_max_sessions:null,
+          total_run_time:null,
+          total_positive_gain:null,
+          total_distance:null
         }
       }
     },
