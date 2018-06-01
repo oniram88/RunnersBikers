@@ -92,4 +92,12 @@ class MatchNotifierMailer < ApplicationMailer
 
     mail(to: judge.email, subject: object, &:mjml)
   end
+
+
+  ##
+  # Spedizione email di attivazione match
+  def activation_matches(user)
+    @user=user
+    mail(to: user.email, subject: 'TORNEO NEXT CHALLENGE PER RUNNER – AVVIO SFIDE', &:mjml)
+  end
 end
