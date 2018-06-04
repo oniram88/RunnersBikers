@@ -23,14 +23,14 @@ Types::StatisticsType = GraphQL::ObjectType.define do
   field :max_positive_gain_in_a_session, types.String, 'dislivello più alto singola sessione' do
     resolve -> (obj, args, ctx) {
       p = Performance.order(:positive_gain => :desc).first
-      "#{p.user.full_name} - #{p.distance} km"
+      "#{p.user.full_name} - #{p.distance} km" if p
     }
   end
 
   field :max_distance_in_a_session, types.String, 'percorso più lungo singola sessione' do
     resolve -> (obj, args, ctx) {
       p = Performance.order(:distance => :desc).first
-      "#{p.user.full_name} - #{p.distance} km"
+      "#{p.user.full_name} - #{p.distance} km" if p
     }
   end
 
@@ -38,7 +38,7 @@ Types::StatisticsType = GraphQL::ObjectType.define do
   field :max_average_speed_in_a_session, types.String, 'velocità media più alta singola sessione' do
     resolve -> (obj, args, ctx) {
       p = Performance.order(:pace => :asc).first
-      "#{p.user.full_name} - #{p.pace}"
+      "#{p.user.full_name} - #{p.pace}" if p
     }
   end
 
@@ -47,7 +47,7 @@ Types::StatisticsType = GraphQL::ObjectType.define do
       begin
         id = Performance.group(:user_id).count.sort_by {|k, v| v}.reverse.first[0]
         user = User.find(id)
-        "#{user.full_name} - #{user.performances.count}"
+        "#{user.full_name} - #{user.performances.count}" if user
       rescue
         ""
       end
