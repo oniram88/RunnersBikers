@@ -121,6 +121,9 @@
   import {CLIENT_CONFIGURATION} from './graphql/base_client'
   import _ from 'lodash'
 
+  import ActionCable from 'actioncable';
+  import ActionCableLink from 'graphql-ruby-client/subscriptions/ActionCableLink';
+
 
   Vue.use(Vuex);
 
@@ -159,11 +162,19 @@
   });
 
 
+  const cable = ActionCable.createConsumer()
+
   const httpLink = new HttpLink({
     // You should use an absolute URL here
     uri: Routes.graphql_path(),
     credentials: 'same-origin'
   });
+
+  const hasSubscriptionOperation = ({ query: { definitions } }) => {
+    return definitions.some(
+      ({ kind, operation }) => kind === 'OperationDefinition' && operation === 'subscription'
+    )
+  }
 
   const authMiddleware = new ApolloLink((operation, forward) => {
     // add the authorization to the headers
@@ -192,6 +203,13 @@
   let link = concat(authMiddleware, httpLink);
   link = concat(start_connection, link);
   link = end_connection.concat(link);
+
+
+  link = ApolloLink.split(
+    hasSubscriptionOperation,
+    new ActionCableLink({cable}),
+    link
+  );
 
   // Create the apollo client
   const apolloClient = new ApolloClient({

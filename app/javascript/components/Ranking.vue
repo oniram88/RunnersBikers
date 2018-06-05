@@ -91,7 +91,28 @@
       statistics
     },
     apollo: {
-      rankings: RANKING_LIST
+      rankings: {
+        query: RANKING_LIST,
+        // subscribeToMore: {
+        //   document: gql`subscription name($param: String!) {
+        //     itemAdded(param: $param) {
+        //       id
+        //       label
+        //     }
+        //   }`,
+        //   // Variables passed to the subscription. Since we're using a function,
+        //   // they are reactive
+        //   variables () {
+        //     return {
+        //       param: this.param,
+        //     }
+        //   },
+        //   // Mutate the previous result
+        //   updateQuery: (previousResult, { subscriptionData }) => {
+        //     // Here, return the new result from the previous with the new data
+        //   },
+        // }
+      }
     },
     data: function () {
       return {
